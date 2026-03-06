@@ -159,7 +159,7 @@ export default function Portfolio() {
 
   useEffect(() => {
     axios.get('/api/projects/')
-      .then(res => setProjects(res.data))
+      .then(res => { if (Array.isArray(res.data)) setProjects(res.data) })
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
