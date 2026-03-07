@@ -5,6 +5,7 @@ import { FiX, FiCheck, FiArrowRight, FiExternalLink } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import SEOHead from '../components/SEOHead'
+import { projects as localProjects } from '../data/projects'
 
 const categories = ['All', 'Voice AI & Chatbots', 'Machine Learning & AI', 'Web Scraping & Automation', 'Full-Stack Development', 'Workflow Automation']
 
@@ -159,8 +160,11 @@ export default function Portfolio() {
 
   useEffect(() => {
     axios.get('/api/projects/')
-      .then(res => { if (Array.isArray(res.data)) setProjects(res.data) })
-      .catch(() => {})
+      .then(res => {
+        if (Array.isArray(res.data) && res.data.length > 0) setProjects(res.data)
+        else setProjects(localProjects)
+      })
+      .catch(() => setProjects(localProjects))
       .finally(() => setLoading(false))
   }, [])
 
