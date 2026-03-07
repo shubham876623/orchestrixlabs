@@ -207,14 +207,14 @@ export default function Portfolio() {
       </section>
 
       {/* Filters */}
-      <section className="py-8 sticky top-16 z-40 bg-dark-950/90 backdrop-blur-xl border-b border-white/[0.04]">
+      <section className="py-4 sticky top-16 z-40 bg-dark-950/90 backdrop-blur-xl border-b border-white/[0.04]">
         <div className="container">
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-1 -mb-1">
             {categories.map(cat => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
+                className={`flex-shrink-0 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                   activeCategory === cat
                     ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/25'
                     : 'bg-white/[0.04] border border-white/[0.07] text-slate-400 hover:text-white hover:border-white/[0.15]'
