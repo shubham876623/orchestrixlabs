@@ -233,7 +233,7 @@ export default function Reviews() {
           <Section className="text-center">
             <motion.div variants={fadeUp} custom={0} className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
-                href="https://www.upwork.com/freelancers/djangodeveloper"
+                href="https://www.upwork.com/agencies/1464061503601672192/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-[#14a800]/10 border border-[#14a800]/30 text-[#14a800] font-semibold text-sm hover:bg-[#14a800]/20 transition-all duration-200"

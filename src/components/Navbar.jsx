@@ -78,7 +78,7 @@ export default function Navbar() {
         {/* CTA */}
         <div className="hidden md:flex items-center gap-3">
           <a
-            href="https://www.upwork.com/freelancers/djangodeveloper"
+            href="https://www.upwork.com/agencies/1464061503601672192/"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-sm font-semibold px-4 py-2.5 rounded-xl border border-[#14a800]/40 text-[#14a800] hover:bg-[#14a800]/10 hover:border-[#14a800]/70 transition-all duration-200"
@@ -127,7 +127,7 @@ export default function Navbar() {
               ))}
               <div className="pt-3 border-t border-white/[0.06] mt-2 flex flex-col gap-3">
                 <a
-                  href="https://www.upwork.com/freelancers/djangodeveloper"
+                  href="https://www.upwork.com/agencies/1464061503601672192/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 text-sm font-semibold px-4 py-3 rounded-xl border border-[#14a800]/40 text-[#14a800] hover:bg-[#14a800]/10 transition-all duration-200"

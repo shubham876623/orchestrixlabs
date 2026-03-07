@@ -112,23 +112,25 @@ export default function About() {
             <div>
               <motion.span variants={fadeUp} custom={0} className="section-tag mb-5 inline-flex">Our Story</motion.span>
               <motion.h2 variants={fadeUp} custom={1} className="text-3xl font-black text-white mb-6">
-                From freelancer to<br /><span className="gradient-text">full AI company</span>
+                Purpose-built for<br /><span className="gradient-text">the AI era</span>
               </motion.h2>
               <div className="space-y-4 text-slate-400 text-base leading-relaxed">
                 <motion.p variants={fadeUp} custom={2}>
-                  Orchestrix Labs grew out of 6+ years of hands-on work as a top-rated Python
-                  developer and AI specialist. Starting with automation scripts and web scrapers,
-                  the work evolved into complex voice AI pipelines, multi-agent systems, and
-                  production-grade full-stack platforms.
+                  Orchestrix Labs was founded with a single mission: make enterprise-grade AI
+                  accessible to ambitious businesses of every size. We combine deep Python & AI
+                  expertise — honed across 143+ production projects — with the structured delivery
+                  process that serious engagements demand.
                 </motion.p>
                 <motion.p variants={fadeUp} custom={3}>
-                  Having delivered 16+ projects across industries — from healthcare AI assistants
-                  to restaurant voice ordering systems — we formalized as Orchestrix Labs to bring
-                  that expertise to a wider range of businesses with a structured, reliable process.
+                  From healthcare AI assistants to restaurant voice ordering systems, our work
+                  spans industries and continents. Each engagement builds on battle-tested
+                  architecture patterns, real-world deployment experience, and a relentless focus
+                  on measurable business outcomes.
                 </motion.p>
                 <motion.p variants={fadeUp} custom={4}>
-                  Today, Orchestrix Labs serves startups and growing businesses worldwide, helping
-                  them harness AI and automation to operate faster, smarter, and at scale.
+                  Today, Orchestrix Labs partners with startups and growth-stage companies
+                  worldwide — helping them harness AI and automation to operate faster, smarter,
+                  and at scale.
                 </motion.p>
               </div>
             </div>

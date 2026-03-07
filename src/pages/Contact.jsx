@@ -34,7 +34,7 @@ const services = [
 const contactInfo = [
   { icon: FiMail, label: 'Email', value: 'hello@orchestrixlabs.com', href: 'mailto:hello@orchestrixlabs.com' },
   { icon: FiLinkedin, label: 'LinkedIn', value: 'linkedin.com/company/orchestrix-labs', href: 'https://linkedin.com/company/orchestrix-labs' },
-  { icon: SiUpwork, label: 'Upwork', value: 'upwork.com/freelancers/djangodeveloper', href: 'https://www.upwork.com/freelancers/djangodeveloper' },
+  { icon: SiUpwork, label: 'Upwork', value: 'upwork.com/agencies/orchestrixlabs', href: 'https://www.upwork.com/agencies/1464061503601672192/' },
   { icon: FiGithub, label: 'GitHub', value: 'github.com/orchestrix-labs', href: 'https://github.com/orchestrix-labs' },
 ]
 

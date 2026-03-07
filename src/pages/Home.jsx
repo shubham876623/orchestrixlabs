@@ -167,9 +167,9 @@ function Hero() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-slate-400 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed mb-10"
         >
-          Orchestrix Labs delivers production-ready AI systems, voice bots,
-          automation pipelines, and full-stack applications — built by a
-          6+ year Python & AI specialist.
+          Orchestrix Labs builds production-ready AI systems, voice bots,
+          automation pipelines, and full-stack applications — delivered by
+          a specialized team with 6+ years of Python & AI expertise.
         </motion.p>
 
         {/* CTAs */}
@@ -568,7 +568,7 @@ function Testimonials() {
         {/* ── Layer 4: Upwork CTA ── */}
         <motion.div variants={fadeUp} custom={9} className="text-center">
           <a
-            href="https://www.upwork.com/freelancers/djangodeveloper"
+            href="https://www.upwork.com/agencies/1464061503601672192/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-[#14a800]/10 border border-[#14a800]/30 text-[#14a800] font-semibold text-sm hover:bg-[#14a800]/20 transition-all duration-200"
