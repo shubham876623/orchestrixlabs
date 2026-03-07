@@ -205,7 +205,7 @@ export default function Portfolio() {
             Every project shipped to production, actively used by clients, and delivering measurable business impact.
           </motion.p>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="text-slate-500 text-xs mt-3">
-            143+ total Upwork jobs completed — these 24 are in-depth case studies showcasing the most complex engagements.
+            143+ projects delivered across clients worldwide — these 24 are in-depth case studies of our most complex engagements.
           </motion.p>
         </div>
       </section>
@@ -278,10 +278,10 @@ export default function Portfolio() {
         <div className="container">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             {[
-              { v: '143+',   l: 'Jobs Completed on Upwork' },
+              { v: '143+',   l: 'Projects Delivered' },
               { v: '100%',   l: 'Job Success Score' },
-              { v: '$100K+', l: 'Total Earnings' },
-              { v: '4,824',  l: 'Hours Worked' },
+              { v: '$100K+', l: 'Revenue Generated' },
+              { v: '4,824',  l: 'Engineering Hours' },
             ].map(({ v, l }) => (
               <div key={l}>
                 <div className="text-3xl font-black gradient-text mb-1">{v}</div>

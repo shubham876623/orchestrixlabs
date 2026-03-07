@@ -205,9 +205,9 @@ function Hero() {
             <span className="text-white font-bold text-xs">100% Job Success</span>
           </div>
           {[
-            { v: `${siteStats.total_jobs}+`, l: 'Jobs Completed' },
-            { v: siteStats.total_hours.toLocaleString(), l: 'Hours Worked' },
-            { v: siteStats.total_earnings, l: 'Earned' },
+            { v: `${siteStats.total_jobs}+`, l: 'Projects Delivered' },
+            { v: siteStats.total_hours.toLocaleString(), l: 'Engineering Hours' },
+            { v: siteStats.total_earnings, l: 'Revenue Generated' },
           ].map(({ v, l }) => (
             <div key={l} className="px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.07]">
               <span className="text-white font-bold text-xs">{v}</span>
@@ -476,7 +476,7 @@ function Testimonials() {
             Trusted by clients <span className="gradient-text">worldwide</span>
           </motion.h2>
           <motion.p variants={fadeUp} custom={2} className="section-sub mx-auto">
-            {siteStats.total_jobs} completed jobs. {siteStats.jss_score}% Job Success Score. Top Rated on Upwork.
+            {siteStats.total_jobs}+ projects delivered. {siteStats.jss_score}% Job Success Score. Top Rated on Upwork.
           </motion.p>
         </div>
 
@@ -499,15 +499,15 @@ function Testimonials() {
           </div>
           {/* Jobs */}
           <div className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
-            <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.total_jobs}</span> Jobs Completed</span>
+            <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.total_jobs}</span> Projects Delivered</span>
           </div>
           {/* Hours */}
           <div className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
-            <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.total_hours.toLocaleString()}</span> Hours Worked</span>
+            <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.total_hours.toLocaleString()}</span> Engineering Hours</span>
           </div>
           {/* Earnings */}
           <div className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
-            <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.total_earnings}</span> Total Earned</span>
+            <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.total_earnings}</span> Revenue Generated</span>
           </div>
         </motion.div>
 

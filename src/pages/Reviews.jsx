@@ -138,7 +138,7 @@ export default function Reviews() {
             transition={{ duration: 0.55, delay: 0.2 }}
             className="section-sub mx-auto mb-10"
           >
-            {siteStats.total_jobs} completed jobs. {siteStats.jss_score}% Job Success Score. Top Rated on Upwork.
+            {siteStats.total_jobs}+ projects delivered. {siteStats.jss_score}% Job Success Score. Top Rated on Upwork.
           </motion.p>
 
           {/* Stats bar */}
@@ -159,13 +159,13 @@ export default function Reviews() {
               <span className="text-white font-bold text-sm">100% Job Success</span>
             </div>
             <div className="px-5 py-3 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
-              <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.total_jobs}</span> Jobs Completed</span>
+              <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.total_jobs}</span> Projects Delivered</span>
             </div>
             <div className="px-5 py-3 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
-              <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.total_hours.toLocaleString()}</span> Hours Worked</span>
+              <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.total_hours.toLocaleString()}</span> Engineering Hours</span>
             </div>
             <div className="px-5 py-3 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
-              <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.total_earnings}</span> Total Earned</span>
+              <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.total_earnings}</span> Revenue Generated</span>
             </div>
           </motion.div>
 

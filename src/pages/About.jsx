@@ -137,9 +137,9 @@ export default function About() {
             <motion.div variants={fadeUp} custom={2} className="grid grid-cols-2 gap-4">
               {[
                 { v: '100%',   l: 'Job Success Score' },
-                { v: '143+',   l: 'Jobs Completed' },
-                { v: '$100K+', l: 'Earned on Upwork' },
-                { v: '4,824',  l: 'Hours Worked' },
+                { v: '143+',   l: 'Projects Delivered' },
+                { v: '$100K+', l: 'Revenue Generated' },
+                { v: '4,824',  l: 'Engineering Hours' },
               ].map(({ v, l }) => (
                 <div key={l} className="card text-center py-8">
                   <div className="text-4xl font-black gradient-text mb-2">{v}</div>
