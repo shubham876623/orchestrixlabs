@@ -14,7 +14,7 @@ const orgSchema = {
   contactPoint: {
     '@type': 'ContactPoint',
     contactType: 'customer service',
-    email: 'hello@orchestrixlabs.com',
+    email: 'contact@orchestrixlabs.com',
   },
   sameAs: [
     'https://linkedin.com/company/orchestrix-labs',

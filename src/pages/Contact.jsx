@@ -32,7 +32,7 @@ const services = [
 ]
 
 const contactInfo = [
-  { icon: FiMail, label: 'Email', value: 'hello@orchestrixlabs.com', href: 'mailto:hello@orchestrixlabs.com' },
+  { icon: FiMail, label: 'Email', value: 'contact@orchestrixlabs.com', href: 'mailto:contact@orchestrixlabs.com' },
   { icon: FiLinkedin, label: 'LinkedIn', value: 'linkedin.com/company/orchestrix-labs', href: 'https://linkedin.com/company/orchestrix-labs' },
   { icon: SiUpwork, label: 'Upwork', value: 'upwork.com/agencies/orchestrixlabs', href: 'https://www.upwork.com/agencies/1464061503601672192/' },
   { icon: FiGithub, label: 'GitHub', value: 'github.com/orchestrix-labs', href: 'https://github.com/orchestrix-labs' },
@@ -193,7 +193,7 @@ export default function Contact() {
 
                     {status === 'error' && (
                       <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3">
-                        Something went wrong. Please email us directly at hello@orchestrixlabs.com
+                        Something went wrong. Please email us directly at contact@orchestrixlabs.com
                       </p>
                     )}
 
