@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { FiArrowRight, FiCheck, FiMic, FiCpu, FiCode, FiGlobe, FiZap } from 'react-icons/fi'
@@ -41,6 +42,13 @@ const faq = [
 ]
 
 export default function Services() {
+  const { hash } = useLocation()
+  useEffect(() => {
+    if (!hash) return
+    const el = document.querySelector(hash)
+    if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
+  }, [hash])
+
   return (
     <>
       <SEOHead
