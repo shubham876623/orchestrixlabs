@@ -295,12 +295,25 @@ function JobRow({ project, onClick }) {
 
         {/* Action buttons */}
         <div className="flex items-center gap-3 mt-4">
-          <button
-            onClick={() => onClick(project)}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-slate-300 hover:text-white hover:border-white/[0.15] text-xs font-medium transition-all"
-          >
-            <FiExternalLink size={12} /> View Details
-          </button>
+          {project.upwork_url ? (
+            <a
+              href={project.upwork_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-[#14a800]/30 text-[#14a800] hover:bg-[#14a800]/10 hover:border-[#14a800]/50 text-xs font-medium transition-all"
+            >
+              <SiUpwork size={12} /> View on Upwork
+            </a>
+          ) : (
+            <a
+              href={UPWORK_PROFILE}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-[#14a800]/30 text-[#14a800] hover:bg-[#14a800]/10 hover:border-[#14a800]/50 text-xs font-medium transition-all"
+            >
+              <SiUpwork size={12} /> View on Upwork
+            </a>
+          )}
           <Link
             to="/contact"
             className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary-500/10 border border-primary-500/25 text-primary-400 hover:bg-primary-500/20 text-xs font-medium transition-all"
