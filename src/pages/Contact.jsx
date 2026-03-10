@@ -59,8 +59,9 @@ export default function Contact() {
     if (errors[e.target.name]) setErrors(er => ({ ...er, [e.target.name]: '' }))
   }
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    e.stopPropagation()
     const errs = validate()
     if (Object.keys(errs).length) { setErrors(errs); return }
     setStatus('loading')
@@ -68,7 +69,8 @@ export default function Contact() {
       await api.post('/api/contact/', form)
       setStatus('success')
       setForm(initialForm)
-    } catch {
+    } catch (err) {
+      console.error('Contact form error:', err)
       setStatus('error')
     }
   }
@@ -120,7 +122,7 @@ export default function Contact() {
                     </p>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} noValidate className="space-y-5">
+                  <form onSubmit={handleSubmit} action="#" noValidate className="space-y-5">
                     <h2 className="text-white font-bold text-xl mb-6">Send us a message</h2>
 
                     {/* Name + Email */}
