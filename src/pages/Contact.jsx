@@ -50,7 +50,7 @@ export default function Contact() {
     if (!form.name.trim()) e.name = 'Name is required'
     if (!form.email.trim()) e.email = 'Email is required'
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Enter a valid email'
-    if (!form.message.trim()) e.message = 'Message is required'
+    // message is optional
     return e
   }
 
@@ -182,7 +182,7 @@ export default function Contact() {
                     {/* Message */}
                     <div>
                       <label className="text-slate-400 text-xs font-medium mb-1.5 block">
-                        Tell us about your project <span className="text-red-400">*</span>
+                        Tell us about your project
                       </label>
                       <textarea
                         name="message" rows={5}
