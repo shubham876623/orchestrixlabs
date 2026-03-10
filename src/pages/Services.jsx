@@ -53,7 +53,7 @@ export default function Services() {
     <>
       <SEOHead
         title="Services"
-        description="Voice AI, machine learning, full-stack development, web scraping, and workflow automation services from Orchestrix Labs. Production-ready Python & AI solutions."
+        description="Expert AI development services: Voice AI agents, machine learning, full-stack web development, web scraping, and workflow automation. Hire top-rated Python & AI developers at Orchestrix Labs."
         path="/services"
       />
 

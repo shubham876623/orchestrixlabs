@@ -69,7 +69,7 @@ export default function About() {
     <>
       <SEOHead
         title="About"
-        description="Orchestrix Labs is a Python & AI development company with 6+ years experience. We build voice AI, automation systems, and full-stack applications that deliver real business outcomes."
+        description="Orchestrix Labs is a top-rated AI development agency with 6+ years experience and 200+ projects delivered. We specialize in voice AI, automation, web development, and machine learning solutions."
         path="/about"
       />
 
@@ -118,7 +118,7 @@ export default function About() {
                 <motion.p variants={fadeUp} custom={2}>
                   Orchestrix Labs was founded with a single mission: make enterprise-grade AI
                   accessible to ambitious businesses of every size. We combine deep Python & AI
-                  expertise — honed across 143+ production projects — with the structured delivery
+                  expertise — honed across 200+ production projects — with the structured delivery
                   process that serious engagements demand.
                 </motion.p>
                 <motion.p variants={fadeUp} custom={3}>
@@ -139,7 +139,7 @@ export default function About() {
             <motion.div variants={fadeUp} custom={2} className="grid grid-cols-2 gap-4">
               {[
                 { v: '100%',   l: 'Job Success Score' },
-                { v: '143+',   l: 'Projects Delivered' },
+                { v: '200+',   l: 'Projects Delivered' },
                 { v: '$100K+', l: 'Revenue Generated' },
                 { v: '4,824',  l: 'Engineering Hours' },
               ].map(({ v, l }) => (

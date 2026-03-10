@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { HiMenuAlt3, HiX } from 'react-icons/hi'
 import { SiUpwork } from 'react-icons/si'
+import { FiArrowRight } from 'react-icons/fi'
 
 const navLinks = [
   { name: 'Home', path: '/' },
@@ -87,7 +88,7 @@ export default function Navbar() {
             Upwork
           </a>
           <Link to="/contact" className="btn-primary text-sm py-2.5 px-5">
-            Get a Quote
+            Get a Quote <FiArrowRight size={14} />
           </Link>
         </div>
 

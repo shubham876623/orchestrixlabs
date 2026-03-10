@@ -176,7 +176,7 @@ export default function Portfolio() {
     <>
       <SEOHead
         title="Portfolio"
-        description="16+ production projects across Voice AI, Machine Learning, Full-Stack Development, Web Scraping, and Workflow Automation. See real case studies from Orchestrix Labs."
+        description="200+ production projects across Voice AI, Machine Learning, Full-Stack Development, Web Scraping, and Workflow Automation. See real case studies and results from Orchestrix Labs."
         path="/portfolio"
       />
 

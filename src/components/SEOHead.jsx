@@ -10,7 +10,7 @@ const orgSchema = {
   url: SITE,
   logo: `${SITE}/favicon.svg`,
   description:
-    'Orchestrix Labs builds AI systems, voice bots, automation pipelines, and full-stack web applications for businesses worldwide.',
+    'Orchestrix Labs is a top-rated AI development agency specializing in voice AI agents, intelligent automation, machine learning, and full-stack web applications. 200+ projects delivered worldwide.',
   contactPoint: {
     '@type': 'ContactPoint',
     contactType: 'customer service',
@@ -19,13 +19,15 @@ const orgSchema = {
   sameAs: [
     'https://linkedin.com/company/orchestrix-labs',
     'https://github.com/orchestrix-labs',
+    'https://www.instagram.com/orchestrix_labs__ai_dev_agency',
+    'https://www.upwork.com/agencies/1464061503601672192/',
   ],
 }
 
 export default function SEOHead({ title, description, path = '', image = DEFAULT_IMAGE, schema }) {
   const fullTitle = title
-    ? `${title} | Orchestrix Labs`
-    : 'Orchestrix Labs | AI Development, Voice AI & Python Automation'
+    ? `${title} — Orchestrix Labs | AI Development Agency`
+    : 'Orchestrix Labs — AI Development Agency | Voice AI, Automation & Full-Stack Software'
   const fullUrl = `${SITE}${path}`
 
   return (

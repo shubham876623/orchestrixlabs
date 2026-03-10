@@ -65,7 +65,7 @@ const techStack = [
 ]
 
 function useSiteStats() {
-  const defaults = { total_earnings: '$100K+', total_hours: 4828, total_jobs: 143, years_experience: 6, jss_score: 100 }
+  const defaults = { total_earnings: '$100K+', total_hours: 4828, total_jobs: 200, years_experience: 6, jss_score: 100 }
   const [s, setS] = useState(defaults)
   useEffect(() => {
     axios.get('/api/site-stats/').then(r => {
@@ -384,7 +384,7 @@ function FeaturedWork() {
 
         <motion.div variants={fadeUp} custom={8} className="text-center mt-10">
           <Link to="/portfolio" className="btn-primary">
-            View All 16 Projects <FiArrowRight />
+            View All Projects <FiArrowRight />
           </Link>
         </motion.div>
       </div>
@@ -628,7 +628,7 @@ export default function Home() {
   return (
     <>
       <SEOHead
-        description="Orchestrix Labs builds AI systems, voice bots, automation pipelines, and full-stack applications. 6+ years Python & AI expertise. Production-ready solutions delivered worldwide."
+        description="Orchestrix Labs is a top-rated AI development agency. We build voice AI agents, automation pipelines, full-stack web apps & ML solutions. 200+ projects delivered worldwide with 100% job success."
         path="/"
       />
       <Hero />

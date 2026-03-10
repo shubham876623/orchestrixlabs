@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
-import { FiGithub, FiLinkedin, FiMail, FiTwitter } from 'react-icons/fi'
+import { FiGithub, FiLinkedin, FiMail, FiInstagram } from 'react-icons/fi'
 import { SiUpwork } from 'react-icons/si'
 
 const footerLinks = {
   Company: [
-    { name: 'About', path: '/about' },
+    { name: 'About Us', path: '/about' },
+    { name: 'Our Services', path: '/services' },
     { name: 'Portfolio', path: '/portfolio' },
+    { name: 'Client Reviews', path: '/reviews' },
     { name: 'Contact', path: '/contact' },
   ],
   Services: [
@@ -21,6 +23,7 @@ const socials = [
   { icon: FiLinkedin, href: 'https://linkedin.com/company/orchestrix-labs', label: 'LinkedIn' },
   { icon: FiGithub, href: 'https://github.com/orchestrix-labs', label: 'GitHub' },
   { icon: SiUpwork, href: 'https://www.upwork.com/agencies/1464061503601672192/', label: 'Upwork' },
+  { icon: FiInstagram, href: 'https://www.instagram.com/orchestrix_labs__ai_dev_agency', label: 'Instagram' },
   { icon: FiMail, href: 'mailto:contact@orchestrixlabs.com', label: 'Email' },
 ]
 
@@ -40,9 +43,10 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
-              We build intelligent AI systems, voice bots, and automation tools
-              that help businesses scale. Production-ready solutions, delivered with expertise.
+              Top-rated AI development agency building voice AI agents, intelligent
+              automation, and full-stack software. 200+ projects delivered worldwide.
             </p>
+            <p className="text-slate-500 text-xs mt-3">contact@orchestrixlabs.com</p>
             <div className="flex items-center gap-3 mt-6">
               {socials.map(({ icon: Icon, href, label }) => (
                 <a
@@ -89,6 +93,9 @@ export default function Footer() {
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               Available for new projects
             </span>
+            <Link to="/contact" className="text-xs text-primary-400 hover:text-white transition-colors font-medium">
+              Get a Quote &rarr;
+            </Link>
           </div>
         </div>
       </div>

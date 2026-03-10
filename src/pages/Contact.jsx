@@ -80,7 +80,7 @@ export default function Contact() {
     <>
       <SEOHead
         title="Contact"
-        description="Start a project with Orchestrix Labs. Get in touch for AI development, voice bots, automation, or full-stack web development. We respond within 24 hours."
+        description="Get a free consultation from Orchestrix Labs. Hire expert AI developers for voice AI, automation, web scraping, Django, React & full-stack projects. 24-hour response guaranteed."
         path="/contact"
       />
 
@@ -130,7 +130,7 @@ export default function Contact() {
                           Your Name <span className="text-red-400">*</span>
                         </label>
                         <input
-                          type="text" name="name" placeholder="John Smith"
+                          type="text" name="name" placeholder=""
                           value={form.name} onChange={handleChange}
                           className={inputClass('name')}
                         />
@@ -141,7 +141,7 @@ export default function Contact() {
                           Email Address <span className="text-red-400">*</span>
                         </label>
                         <input
-                          type="email" name="email" placeholder="john@company.com"
+                          type="email" name="email" placeholder=""
                           value={form.email} onChange={handleChange}
                           className={inputClass('email')}
                         />
@@ -184,7 +184,7 @@ export default function Contact() {
                       </label>
                       <textarea
                         name="message" rows={5}
-                        placeholder="Describe your project, goals, and any specific requirements..."
+                        placeholder=""
                         value={form.message} onChange={handleChange}
                         className={`${inputClass('message')} resize-none`}
                       />
