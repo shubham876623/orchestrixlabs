@@ -3,7 +3,7 @@ import { useInView } from 'react-intersection-observer'
 import { FiCheckCircle, FiStar } from 'react-icons/fi'
 import { SiUpwork } from 'react-icons/si'
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../lib/axios'
 import { Link } from 'react-router-dom'
 import { FiArrowRight } from 'react-icons/fi'
 import SEOHead from '../components/SEOHead'
@@ -34,7 +34,7 @@ function useSiteStats() {
   const defaults = { total_earnings: '$100K+', total_hours: 4828, total_jobs: 143, years_experience: 6, jss_score: 100 }
   const [s, setS] = useState(defaults)
   useEffect(() => {
-    axios.get('/api/site-stats/').then(r => {
+    api.get('/api/site-stats/').then(r => {
       if (r.data && typeof r.data === 'object' && !Array.isArray(r.data))
         setS(prev => ({ ...prev, ...r.data }))
     }).catch(() => {})

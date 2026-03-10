@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { FiMail, FiSend, FiCheckCircle, FiLinkedin, FiGithub } from 'react-icons/fi'
 import { SiUpwork } from 'react-icons/si'
-import axios from 'axios'
+import api from '../lib/axios'
 import SEOHead from '../components/SEOHead'
 
 const fadeUp = {
@@ -65,7 +65,7 @@ export default function Contact() {
     if (Object.keys(errs).length) { setErrors(errs); return }
     setStatus('loading')
     try {
-      await axios.post('/api/contact/', form)
+      await api.post('/api/contact/', form)
       setStatus('success')
       setForm(initialForm)
     } catch {

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { FiX, FiCheck, FiArrowRight, FiExternalLink } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
+import api from '../lib/axios'
 import SEOHead from '../components/SEOHead'
 import { projects as localProjects } from '../data/projects'
 
@@ -159,7 +159,7 @@ export default function Portfolio() {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.05 })
 
   useEffect(() => {
-    axios.get('/api/projects/')
+    api.get('/api/projects/')
       .then(res => {
         if (Array.isArray(res.data) && res.data.length > 0) setProjects(res.data)
         else setProjects(localProjects)

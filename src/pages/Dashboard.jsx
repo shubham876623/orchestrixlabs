@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import axios from 'axios'
+import api from '../lib/axios'
 import {
   FiMail, FiEye, FiUsers, FiTrendingUp, FiCheck, FiArchive,
   FiRefreshCw, FiLogOut, FiEdit2, FiSave, FiX, FiMessageSquare,
@@ -108,7 +108,7 @@ function SiteStatsEditor() {
   const [saving, setSaving] = useState(false)
 
   const load = useCallback(() => {
-    axios.get('/api/dashboard/site-stats/', { headers: authHeader() })
+    api.get('/api/dashboard/site-stats/', { headers: authHeader() })
       .then(r => { setStats(r.data); setForm(r.data) })
   }, [])
 
@@ -117,7 +117,7 @@ function SiteStatsEditor() {
   const save = async () => {
     setSaving(true)
     try {
-      const r = await axios.patch('/api/dashboard/site-stats/', form, { headers: authHeader() })
+      const r = await api.patch('/api/dashboard/site-stats/', form, { headers: authHeader() })
       setStats(r.data)
       setEditing(false)
     } finally {
@@ -185,7 +185,7 @@ function LoginScreen({ onLogin }) {
     setLoading(true)
     setError('')
     try {
-      await axios.get('/api/dashboard/stats/', {
+      await api.get('/api/dashboard/stats/', {
         headers: { Authorization: `Bearer ${password}` },
       })
       localStorage.setItem(STORAGE_KEY, password)
@@ -244,8 +244,8 @@ export default function Dashboard() {
     setRefreshing(true)
     try {
       const [s, c] = await Promise.all([
-        axios.get('/api/dashboard/stats/', { headers: authHeader() }),
-        axios.get('/api/dashboard/contacts/', { headers: authHeader() }),
+        api.get('/api/dashboard/stats/', { headers: authHeader() }),
+        api.get('/api/dashboard/contacts/', { headers: authHeader() }),
       ])
       setStats(s.data)
       setContacts(c.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)))
@@ -264,7 +264,7 @@ export default function Dashboard() {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      await axios.patch(`/api/dashboard/contacts/${id}/`, { status: newStatus }, { headers: authHeader() })
+      await api.patch(`/api/dashboard/contacts/${id}/`, { status: newStatus }, { headers: authHeader() })
       setContacts(prev => prev.map(c => c.id === id ? { ...c, status: newStatus } : c))
       if (stats) {
         setStats(prev => ({
