@@ -8,7 +8,7 @@ import { FiArrowRight } from 'react-icons/fi'
 const navLinks = [
   { name: 'Home', path: '/' },
   { name: 'Services', path: '/services' },
-  { name: 'Portfolio', path: '/portfolio' },
+  { name: 'Work History', path: '/portfolio' },
   { name: 'Reviews', path: '/reviews' },
   { name: 'About', path: '/about' },
   { name: 'Contact', path: '/contact' },

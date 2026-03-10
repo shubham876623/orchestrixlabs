@@ -191,7 +191,8 @@ const emptyProject = {
   title: '', category: 'Full-Stack Development', status: 'in_progress',
   summary: '', description: '', tech: [], highlights: [], impact: [], tags: [],
   featured: false, order: 0, client_name: '', rating: '', review: '',
-  project_value: '', hours_worked: '', start_date: '', completion_date: '',
+  project_value: '', hours_worked: '', price_type: '', start_date: '', completion_date: '',
+  job_description: '', deliverables: '', live_url: '', upwork_url: '', images: [],
 }
 
 function ProjectFormModal({ project, onClose, onSave }) {
@@ -209,6 +210,7 @@ function ProjectFormModal({ project, onClose, onSave }) {
       highlights: project.highlights || [],
       impact: project.impact || [],
       tags: project.tags || [],
+      images: project.images || [],
     }
   })
   const [saving, setSaving] = useState(false)
@@ -219,6 +221,7 @@ function ProjectFormModal({ project, onClose, onSave }) {
   const [highlightInput, setHighlightInput] = useState('')
   const [impactInput, setImpactInput] = useState('')
   const [tagInput, setTagInput] = useState('')
+  const [imageInput, setImageInput] = useState('')
 
   const addToArray = (key, input, setInput) => {
     if (!input.trim()) return
@@ -230,8 +233,8 @@ function ProjectFormModal({ project, onClose, onSave }) {
   }
 
   const handleSave = async () => {
-    if (!form.title.trim() || !form.summary.trim()) {
-      setError('Title and Summary are required.')
+    if (!form.title.trim()) {
+      setError('Title is required.')
       return
     }
     setSaving(true)
@@ -315,7 +318,7 @@ function ProjectFormModal({ project, onClose, onSave }) {
           </div>
 
           {/* Client Info */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
             <div>
               <label className={labelCls}>Client Name</label>
               <input value={form.client_name} onChange={e => setForm(f => ({ ...f, client_name: e.target.value }))} className={inputCls} />
@@ -323,6 +326,10 @@ function ProjectFormModal({ project, onClose, onSave }) {
             <div>
               <label className={labelCls}>Project Value</label>
               <input value={form.project_value} onChange={e => setForm(f => ({ ...f, project_value: e.target.value }))} className={inputCls} placeholder="e.g. $1,454.16" />
+            </div>
+            <div>
+              <label className={labelCls}>Price Type</label>
+              <input value={form.price_type} onChange={e => setForm(f => ({ ...f, price_type: e.target.value }))} className={inputCls} placeholder="e.g. $25.00 /hr or Fixed price" />
             </div>
             <div>
               <label className={labelCls}>Hours Worked</label>
@@ -342,21 +349,49 @@ function ProjectFormModal({ project, onClose, onSave }) {
             </div>
           </div>
 
+          {/* URLs */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className={labelCls}>Live Project URL</label>
+              <input value={form.live_url} onChange={e => setForm(f => ({ ...f, live_url: e.target.value }))} className={inputCls} placeholder="https://..." />
+            </div>
+            <div>
+              <label className={labelCls}>Upwork Job URL</label>
+              <input value={form.upwork_url} onChange={e => setForm(f => ({ ...f, upwork_url: e.target.value }))} className={inputCls} placeholder="https://www.upwork.com/..." />
+            </div>
+          </div>
+
           {/* Summary + Description */}
           <div>
-            <label className={labelCls}>Summary *</label>
-            <textarea rows={2} value={form.summary} onChange={e => setForm(f => ({ ...f, summary: e.target.value }))} className={`${inputCls} resize-none`} />
+            <label className={labelCls}>Summary</label>
+            <textarea rows={2} value={form.summary} onChange={e => setForm(f => ({ ...f, summary: e.target.value }))} className={`${inputCls} resize-none`} placeholder="Brief one-line summary..." />
           </div>
+
+          {/* Job Description (what client posted) */}
           <div>
-            <label className={labelCls}>Description</label>
-            <textarea rows={3} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} className={`${inputCls} resize-none`} />
+            <label className={labelCls}>Job Description (what client posted)</label>
+            <textarea rows={3} value={form.job_description} onChange={e => setForm(f => ({ ...f, job_description: e.target.value }))} className={`${inputCls} resize-none`} placeholder="Paste the original job posting..." />
+          </div>
+
+          {/* Deliverables (what you provided) */}
+          <div>
+            <label className={labelCls}>What We Delivered</label>
+            <textarea rows={3} value={form.deliverables} onChange={e => setForm(f => ({ ...f, deliverables: e.target.value }))} className={`${inputCls} resize-none`} placeholder="What you built / delivered..." />
+          </div>
+
+          <div>
+            <label className={labelCls}>Description (extra detail)</label>
+            <textarea rows={2} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} className={`${inputCls} resize-none`} />
           </div>
 
           {/* Client Review */}
           <div>
             <label className={labelCls}>Client Review</label>
-            <textarea rows={2} value={form.review} onChange={e => setForm(f => ({ ...f, review: e.target.value }))} className={`${inputCls} resize-none`} placeholder="Client's feedback..." />
+            <textarea rows={2} value={form.review} onChange={e => setForm(f => ({ ...f, review: e.target.value }))} className={`${inputCls} resize-none`} placeholder="Client's feedback from Upwork..." />
           </div>
+
+          {/* Array fields: Images */}
+          <ArrayField label="Project Images (paste URLs)" items={form.images} input={imageInput} setInput={setImageInput} onAdd={() => addToArray('images', imageInput, setImageInput)} onRemove={i => removeFromArray('images', i)} placeholder="https://i.imgur.com/..." />
 
           {/* Array fields: Tech */}
           <ArrayField label="Tech Stack" items={form.tech} input={techInput} setInput={setTechInput} onAdd={() => addToArray('tech', techInput, setTechInput)} onRemove={i => removeFromArray('tech', i)} placeholder="e.g. React" />
