@@ -18,7 +18,7 @@ const orgSchema = {
   },
   sameAs: [
     'https://linkedin.com/company/orchestrix-labs',
-    'https://github.com/orchestrix-labs',
+    'https://github.com/orchestrixlabs',
     'https://www.instagram.com/orchestrix_labs__ai_dev_agency',
     'https://www.upwork.com/agencies/1464061503601672192/',
   ],

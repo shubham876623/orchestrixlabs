@@ -21,7 +21,7 @@ const footerLinks = {
 
 const socials = [
   { icon: FiLinkedin, href: 'https://linkedin.com/company/orchestrix-labs', label: 'LinkedIn' },
-  { icon: FiGithub, href: 'https://github.com/orchestrix-labs', label: 'GitHub' },
+  { icon: FiGithub, href: 'https://github.com/orchestrixlabs', label: 'GitHub' },
   { icon: SiUpwork, href: 'https://www.upwork.com/agencies/1464061503601672192/', label: 'Upwork' },
   { icon: FiInstagram, href: 'https://www.instagram.com/orchestrix_labs__ai_dev_agency', label: 'Instagram' },
   { icon: FiMail, href: 'mailto:contact@orchestrixlabs.com', label: 'Email' },
