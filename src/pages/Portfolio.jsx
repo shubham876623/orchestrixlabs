@@ -59,10 +59,26 @@ function ProjectDetailModal({ project, onClose }) {
   if (!project) return null
 
   const dateRange = project.start_date && project.completion_date
-    ? `${new Date(project.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} - ${new Date(project.completion_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
+    ? `${new Date(project.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} – ${new Date(project.completion_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
     : project.start_date
     ? `Started ${new Date(project.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
     : ''
+
+  const hasRichContent = project.job_description || project.deliverables || project.description ||
+    (project.highlights && project.highlights.length > 0) ||
+    (project.impact && project.impact.length > 0) ||
+    (project.tech && project.tech.length > 0) ||
+    getEmbedUrl(project.video_url) ||
+    (project.images && project.images.length > 0)
+
+  // Calculate project duration in months
+  const durationText = (() => {
+    if (!project.start_date) return null
+    const start = new Date(project.start_date)
+    const end = project.completion_date ? new Date(project.completion_date) : new Date()
+    const months = Math.max(1, Math.round((end - start) / (1000 * 60 * 60 * 24 * 30)))
+    return months === 1 ? '1 month' : `${months} months`
+  })()
 
   return (
     <AnimatePresence>
@@ -86,8 +102,20 @@ function ProjectDetailModal({ project, onClose }) {
                 <h2 className="text-white font-bold text-xl sm:text-2xl leading-tight mb-3">{project.title}</h2>
                 <div className="flex items-center gap-3 flex-wrap">
                   {project.rating && <StarRating rating={project.rating} />}
-                  {dateRange && (
-                    <span className="text-slate-500 text-sm">{dateRange}</span>
+                  {project.category && (
+                    <span className="px-2.5 py-0.5 rounded-full bg-primary-500/10 border border-primary-500/25 text-primary-400 text-xs font-medium">
+                      {project.category}
+                    </span>
+                  )}
+                  {project.status === 'completed' && (
+                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-medium flex items-center gap-1">
+                      <FiCheck size={10} /> Completed
+                    </span>
+                  )}
+                  {project.status === 'in_progress' && (
+                    <span className="px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-400 text-xs font-medium flex items-center gap-1">
+                      <FiClock size={10} /> In Progress
+                    </span>
                   )}
                 </div>
               </div>
@@ -96,9 +124,31 @@ function ProjectDetailModal({ project, onClose }) {
               </button>
             </div>
 
+            {/* Date + Duration info bar */}
+            {(dateRange || durationText) && (
+              <div className="flex items-center gap-4 mt-2 text-sm text-slate-500">
+                {dateRange && <span>{dateRange}</span>}
+                {durationText && (
+                  <>
+                    <span className="text-slate-700">•</span>
+                    <span>{durationText}</span>
+                  </>
+                )}
+              </div>
+            )}
+
             {/* Client review */}
             {project.review && (
               <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-4 mt-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500/20 to-emerald-500/20 border border-white/[0.08] flex items-center justify-center text-xs font-bold text-primary-400">
+                    {project.client_name ? project.client_name.charAt(0).toUpperCase() : 'C'}
+                  </div>
+                  <div>
+                    <p className="text-white text-sm font-medium">{project.client_name || 'Client'}</p>
+                    {project.rating && <StarRating rating={project.rating} size={11} />}
+                  </div>
+                </div>
                 <p className="text-slate-300 text-sm leading-relaxed italic">"{project.review}"</p>
               </div>
             )}
@@ -113,23 +163,17 @@ function ProjectDetailModal({ project, onClose }) {
                 ))}
               </div>
             )}
-
-            {/* Meta row */}
-            <div className="flex items-center gap-4 flex-wrap mt-4 text-sm">
-              {project.project_value && (
-                <span className="text-white font-semibold">{project.project_value}</span>
-              )}
-              {project.price_type && (
-                <span className="text-slate-400">{project.price_type}</span>
-              )}
-              {project.hours_worked && (
-                <span className="text-slate-400">{project.hours_worked} hours</span>
-              )}
-            </div>
           </div>
 
           {/* Body */}
           <div className="p-6 sm:p-8 space-y-6">
+            {/* Summary */}
+            {project.summary && (
+              <div>
+                <p className="text-slate-300 text-sm leading-relaxed">{project.summary}</p>
+              </div>
+            )}
+
             {/* Job Description (what client posted) */}
             {project.job_description && (
               <div>
@@ -235,6 +279,19 @@ function ProjectDetailModal({ project, onClose }) {
                 </div>
               </div>
             )}
+
+            {/* Empty state — when no rich content yet */}
+            {!hasRichContent && !project.summary && !project.review && (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary-500/10 to-emerald-500/10 border border-white/[0.06] flex items-center justify-center">
+                  <FiStar className="text-primary-400" size={24} />
+                </div>
+                <h3 className="text-white font-semibold mb-2">Project details coming soon</h3>
+                <p className="text-slate-500 text-sm max-w-sm mx-auto leading-relaxed">
+                  We're adding detailed case studies, tech stacks, and client testimonials for every project. Check back soon or view the full project on Upwork.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Footer buttons */}
@@ -244,11 +301,9 @@ function ProjectDetailModal({ project, onClose }) {
                 <FiGlobe size={14} /> View Live Project
               </a>
             )}
-            {project.upwork_url && (
-              <a href={project.upwork_url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-[#14a800]/40 text-[#14a800] hover:bg-[#14a800]/10 text-sm font-medium transition-all">
-                <SiUpwork size={14} /> View on Upwork
-              </a>
-            )}
+            <a href={project.upwork_url || UPWORK_PROFILE} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-[#14a800]/40 text-[#14a800] hover:bg-[#14a800]/10 text-sm font-medium transition-all">
+              <SiUpwork size={14} /> View on Upwork
+            </a>
             <Link to="/contact" onClick={onClose} className="btn-primary justify-center flex-1 sm:flex-none">
               Build Something Similar <FiArrowRight size={14} />
             </Link>
