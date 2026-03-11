@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import {
-  FiX, FiCheck, FiArrowRight, FiExternalLink, FiStar, FiClock,
-  FiChevronDown, FiChevronUp, FiGlobe, FiImage,
+  FiX, FiCheck, FiArrowRight, FiStar, FiClock,
+  FiGlobe, FiImage,
 } from 'react-icons/fi'
 import { SiUpwork } from 'react-icons/si'
 import { Link } from 'react-router-dom'
@@ -355,7 +355,7 @@ export default function Portfolio() {
     <>
       <SEOHead
         title="Work History"
-        description="133+ completed jobs and 10 in-progress projects. See our full work history with real client ratings, reviews, and verified results from Upwork."
+        description={`${completedProjects.length}+ completed jobs and ${inProgressProjects.length} in-progress projects. See our full work history with real client ratings, reviews, and verified results from Upwork.`}
         path="/portfolio"
       />
 
