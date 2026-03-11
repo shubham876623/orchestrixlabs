@@ -1,11 +1,10 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { FiCheckCircle, FiStar } from 'react-icons/fi'
+import { FiCheckCircle, FiStar, FiArrowRight } from 'react-icons/fi'
 import { SiUpwork } from 'react-icons/si'
 import { useState, useEffect } from 'react'
 import api from '../lib/axios'
 import { Link } from 'react-router-dom'
-import { FiArrowRight } from 'react-icons/fi'
 import SEOHead from '../components/SEOHead'
 
 const fadeUp = {
@@ -42,68 +41,44 @@ function useSiteStats() {
   return s
 }
 
-const testimonials = [
-  {
-    name: 'Verified Upwork Client',
-    role: 'AI Framework Development',
-    stars: 5,
-    tags: ['Collaborative', 'Committed to Quality'],
-    text: "Love working with Shubham, he's the best at what he does and he always tries his best! Thanks Shubham!",
-  },
-  {
-    name: 'Verified Upwork Client',
-    role: 'Qualitative Data Analysis',
-    stars: 5,
-    tags: ['Committed to Quality'],
-    text: 'Shubham delivered high-quality work on the qualitative analysis project. He had a strong understanding of qualitative research methods, provided well-structured and insightful analysis and ensured that all deliverables were aligned with the project requirements.',
-  },
-  {
-    name: 'Verified Upwork Client',
-    role: 'Web Scraping & Data Collection',
-    stars: 5,
-    tags: ['Reliable', 'Committed to Quality', 'Solution Oriented'],
-    text: 'He was excellent to work with and would highly recommend. Fast, reliable, and did great work.',
-  },
-  {
-    name: 'Verified Upwork Client',
-    role: 'AI & Full-Stack Development',
-    stars: 5,
-    tags: ['Clear Communicator', 'Collaborative'],
-    text: 'Experienced coder for AI related projects offering full stack development, great communicator and cooperator.',
-  },
-  {
-    name: 'Verified Upwork Client',
-    role: 'Django Backend Development',
-    stars: 5,
-    tags: ['Reliable', 'Solution Oriented'],
-    text: 'Shubham is a skilled developer who completed the project ahead of schedule. He understood the requirements immediately and delivered clean, well-documented code.',
-  },
-  {
-    name: 'Verified Upwork Client',
-    role: 'Python Automation',
-    stars: 5,
-    tags: ['Collaborative', 'Accountable for Outcomes'],
-    text: 'Really great experience. Shubham was proactive in flagging potential issues early and always kept us in the loop. Will definitely hire again.',
-  },
+// Fallback data in case API hasn't seeded yet
+const fallbackTestimonials = [
+  { client_name: 'Verified Upwork Client', client_role: 'AI Framework Development', rating: 5, tags: ['Collaborative', 'Committed to Quality'], quote: "Love working with Shubham, he's the best at what he does and he always tries his best! Thanks Shubham!" },
+  { client_name: 'Verified Upwork Client', client_role: 'Qualitative Data Analysis', rating: 5, tags: ['Committed to Quality'], quote: 'Shubham delivered high-quality work on the qualitative analysis project. He had a strong understanding of qualitative research methods, provided well-structured and insightful analysis and ensured that all deliverables were aligned with the project requirements.' },
+  { client_name: 'Verified Upwork Client', client_role: 'Web Scraping & Data Collection', rating: 5, tags: ['Reliable', 'Committed to Quality', 'Solution Oriented'], quote: 'He was excellent to work with and would highly recommend. Fast, reliable, and did great work.' },
+  { client_name: 'Verified Upwork Client', client_role: 'AI & Full-Stack Development', rating: 5, tags: ['Clear Communicator', 'Collaborative'], quote: 'Experienced coder for AI related projects offering full stack development, great communicator and cooperator.' },
+  { client_name: 'Verified Upwork Client', client_role: 'Django Backend Development', rating: 5, tags: ['Reliable', 'Solution Oriented'], quote: 'Shubham is a skilled developer who completed the project ahead of schedule. He understood the requirements immediately and delivered clean, well-documented code.' },
+  { client_name: 'Verified Upwork Client', client_role: 'Python Automation', rating: 5, tags: ['Collaborative', 'Accountable for Outcomes'], quote: 'Really great experience. Shubham was proactive in flagging potential issues early and always kept us in the loop. Will definitely hire again.' },
 ]
 
-const insightBadges = [
-  { label: 'Collaborative',            count: 28 },
-  { label: 'Clear Communicator',       count: 24 },
-  { label: 'Committed to Quality',     count: 23 },
-  { label: 'Reliable',                 count: 18 },
-  { label: 'Solution Oriented',        count: 15 },
-  { label: 'Accountable for Outcomes', count: 8  },
+const fallbackBadges = [
+  { label: 'Collaborative', count: 28 },
+  { label: 'Clear Communicator', count: 24 },
+  { label: 'Committed to Quality', count: 23 },
+  { label: 'Reliable', count: 18 },
+  { label: 'Solution Oriented', count: 15 },
+  { label: 'Accountable for Outcomes', count: 8 },
 ]
 
 export default function Reviews() {
   const siteStats = useSiteStats()
+  const [testimonials, setTestimonials] = useState(fallbackTestimonials)
+  const [badges, setBadges] = useState(fallbackBadges)
+
+  useEffect(() => {
+    api.get('/api/testimonials/').then(r => {
+      if (Array.isArray(r.data) && r.data.length > 0) setTestimonials(r.data)
+    }).catch(() => {})
+    api.get('/api/badges/').then(r => {
+      if (Array.isArray(r.data) && r.data.length > 0) setBadges(r.data)
+    }).catch(() => {})
+  }, [])
 
   return (
     <>
       <SEOHead
         title="Client Reviews — Orchestrix Labs"
-        description="133+ verified Upwork reviews. 100% Job Success Score. Top Rated. See what clients say about working with Orchestrix Labs."
+        description={`${siteStats.total_jobs}+ verified Upwork reviews. ${siteStats.jss_score}% Job Success Score. Top Rated. See what clients say about working with Orchestrix Labs.`}
         path="/reviews"
       />
 
@@ -176,7 +151,7 @@ export default function Reviews() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="flex flex-wrap justify-center gap-2"
           >
-            {insightBadges.map(({ label, count }) => (
+            {badges.map(({ label, count }) => (
               <span
                 key={label}
                 className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.07] text-slate-400 text-xs font-medium"
@@ -199,30 +174,34 @@ export default function Reviews() {
               <motion.div key={i} custom={i} variants={fadeUp} className="card flex flex-col">
                 {/* Stars */}
                 <div className="flex gap-0.5 mb-3">
-                  {[...Array(t.stars)].map((_, j) => (
+                  {[...Array(Math.round(Number(t.rating || t.stars || 5)))].map((_, j) => (
                     <FiStar key={j} className="text-amber-400" style={{ fill: '#FBBF24' }} size={13} />
                   ))}
                 </div>
                 {/* Quote */}
                 <p className="text-slate-300 text-sm leading-relaxed flex-1 mb-4 italic">
-                  "{t.text}"
+                  "{t.quote || t.text}"
                 </p>
                 {/* Skill tags */}
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {t.tags.map(tag => (
-                    <span key={tag} className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+                {t.tags && t.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {t.tags.map(tag => (
+                      <span key={tag} className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 {/* Author */}
                 <div className="pt-3 border-t border-white/[0.05] flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center flex-shrink-0">
-                    <span className="text-primary-400 text-xs font-bold">V</span>
+                    <span className="text-primary-400 text-xs font-bold">
+                      {(t.client_name || t.name || 'V').charAt(0).toUpperCase()}
+                    </span>
                   </div>
                   <div>
-                    <p className="text-white font-semibold text-xs">{t.name}</p>
-                    <p className="text-slate-500 text-xs mt-0.5">{t.role} · Upwork</p>
+                    <p className="text-white font-semibold text-xs">{t.client_name || t.name}</p>
+                    <p className="text-slate-500 text-xs mt-0.5">{t.client_role || t.role} · {t.source || 'Upwork'}</p>
                   </div>
                 </div>
               </motion.div>
@@ -239,7 +218,7 @@ export default function Reviews() {
                 className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-[#14a800]/10 border border-[#14a800]/30 text-[#14a800] font-semibold text-sm hover:bg-[#14a800]/20 transition-all duration-200"
               >
                 <SiUpwork size={16} />
-                View all 133 reviews on Upwork
+                View all {siteStats.total_jobs} reviews on Upwork
               </a>
               <Link to="/contact" className="btn-primary text-sm px-6 py-3">
                 Start a Project <FiArrowRight />

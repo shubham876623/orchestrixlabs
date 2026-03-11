@@ -1,9 +1,10 @@
 import { Link, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { FiArrowRight, FiCheck, FiMic, FiCpu, FiCode, FiGlobe, FiZap } from 'react-icons/fi'
 import SEOHead from '../components/SEOHead'
+import api from '../lib/axios'
 import { services, process } from '../data/services'
 
 const fadeUp = {
@@ -33,21 +34,29 @@ const gradients = {
   orange:  { card: 'from-orange-500/10  to-dark-900',  badge: 'bg-orange-500/10  border-orange-500/20  text-orange-400',  icon: 'bg-orange-500/15  text-orange-400'  },
 }
 
-const faq = [
-  { q: 'How long does a typical project take?', a: 'Depends on scope — automation bots take 1–2 weeks, voice AI systems 2–4 weeks, full-stack platforms 4–8 weeks. You\'ll get a detailed estimate before we start.' },
-  { q: 'Do you work on fixed-price or hourly contracts?', a: 'Both. For well-defined projects, fixed-price works great. For evolving or research-heavy work, hourly with weekly milestones keeps things transparent.' },
-  { q: 'What\'s your tech stack preference?', a: 'Python-first backend (Django, FastAPI, Flask), React frontend, PostgreSQL or Supabase for databases, AWS/DigitalOcean for deployment.' },
-  { q: 'Do you provide post-launch support?', a: 'Yes. We offer bug fixes, feature additions, and maintenance. Most projects include a free 2-week post-launch support window.' },
-  { q: 'Can you work with our existing codebase?', a: 'Absolutely. We\'ve migrated legacy systems, added features to existing apps, and extended third-party platforms. We always read the code before touching it.' },
+const fallbackFaq = [
+  { question: 'How long does a typical project take?', answer: 'Depends on scope — automation bots take 1–2 weeks, voice AI systems 2–4 weeks, full-stack platforms 4–8 weeks. You\'ll get a detailed estimate before we start.' },
+  { question: 'Do you work on fixed-price or hourly contracts?', answer: 'Both. For well-defined projects, fixed-price works great. For evolving or research-heavy work, hourly with weekly milestones keeps things transparent.' },
+  { question: 'What\'s your tech stack preference?', answer: 'Python-first backend (Django, FastAPI, Flask), React frontend, PostgreSQL or Supabase for databases, AWS/DigitalOcean for deployment.' },
+  { question: 'Do you provide post-launch support?', answer: 'Yes. We offer bug fixes, feature additions, and maintenance. Most projects include a free 2-week post-launch support window.' },
+  { question: 'Can you work with our existing codebase?', answer: 'Absolutely. We\'ve migrated legacy systems, added features to existing apps, and extended third-party platforms. We always read the code before touching it.' },
 ]
 
 export default function Services() {
   const { hash } = useLocation()
+  const [faq, setFaq] = useState(fallbackFaq)
+
   useEffect(() => {
     if (!hash) return
     const el = document.querySelector(hash)
     if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
   }, [hash])
+
+  useEffect(() => {
+    api.get('/api/faqs/').then(r => {
+      if (Array.isArray(r.data) && r.data.length > 0) setFaq(r.data)
+    }).catch(() => {})
+  }, [])
 
   return (
     <>
@@ -182,8 +191,8 @@ export default function Services() {
           <div className="space-y-4">
             {faq.map((item, i) => (
               <motion.div key={i} custom={i} variants={fadeUp} className="card">
-                <h3 className="text-white font-semibold text-base mb-2">{item.q}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">{item.a}</p>
+                <h3 className="text-white font-semibold text-base mb-2">{item.question}</h3>
+                <p className="text-slate-400 text-sm leading-relaxed">{item.answer}</p>
               </motion.div>
             ))}
           </div>

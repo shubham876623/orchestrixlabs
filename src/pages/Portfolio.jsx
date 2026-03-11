@@ -13,7 +13,7 @@ import { projects as localProjects } from '../data/projects'
 
 const UPWORK_PROFILE = 'https://www.upwork.com/agencies/1464061503601672192/'
 
-const insightBadges = [
+const fallbackBadges = [
   { label: 'Collaborative', count: 28 },
   { label: 'Clear Communicator', count: 24 },
   { label: 'Committed to Quality', count: 23 },
@@ -420,7 +420,14 @@ export default function Portfolio() {
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
+  const [insightBadges, setInsightBadges] = useState(fallbackBadges)
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.05 })
+
+  useEffect(() => {
+    api.get('/api/badges/').then(r => {
+      if (Array.isArray(r.data) && r.data.length > 0) setInsightBadges(r.data)
+    }).catch(() => {})
+  }, [])
 
   useEffect(() => {
     api.get('/api/projects/')

@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import api from '../lib/axios'
 import {
-  FiMail, FiEye, FiUsers, FiTrendingUp, FiCheck, FiArchive,
-  FiRefreshCw, FiLogOut, FiEdit2, FiSave, FiX, FiMessageSquare,
-  FiPlus, FiTrash2, FiFolder, FiStar, FiClock, FiCheckCircle,
-  FiHome, FiGrid, FiSettings, FiChevronDown,
+  FiMail, FiEye, FiTrendingUp, FiCheck,
+  FiRefreshCw, FiLogOut, FiEdit2, FiSave, FiX,
+  FiPlus, FiTrash2, FiFolder, FiStar, FiCheckCircle,
+  FiHome, FiGrid, FiSettings, FiFileText,
 } from 'react-icons/fi'
 
 const STORAGE_KEY = 'orchestrix_dash_secret'
@@ -668,11 +668,412 @@ function LoginScreen({ onLogin }) {
   )
 }
 
+// ─── Content Manager ─────────────────────────────────────────────────────────
+
+function CrudSection({ title, endpoint, fields, emptyItem, renderRow }) {
+  const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [editing, setEditing] = useState(null) // null | 'new' | item
+  const [form, setForm] = useState({})
+  const [saving, setSaving] = useState(false)
+
+  const load = useCallback(() => {
+    setLoading(true)
+    api.get(`/api/dashboard/${endpoint}/`, { headers: authHeader() })
+      .then(r => setItems(r.data))
+      .finally(() => setLoading(false))
+  }, [endpoint])
+
+  useEffect(() => { load() }, [load])
+
+  const startNew = () => { setForm({ ...emptyItem }); setEditing('new') }
+  const startEdit = (item) => { setForm({ ...item }); setEditing(item) }
+  const cancel = () => { setEditing(null); setForm({}) }
+
+  const save = async () => {
+    setSaving(true)
+    try {
+      if (editing === 'new') {
+        const r = await api.post(`/api/dashboard/${endpoint}/`, form, { headers: authHeader() })
+        setItems(prev => [...prev, r.data])
+      } else {
+        const r = await api.patch(`/api/dashboard/${endpoint}/${editing.id}/`, form, { headers: authHeader() })
+        setItems(prev => prev.map(i => i.id === editing.id ? r.data : i))
+      }
+      setEditing(null)
+      setForm({})
+    } catch (err) {
+      alert(err.response?.data?.detail || JSON.stringify(err.response?.data) || 'Save failed')
+    } finally { setSaving(false) }
+  }
+
+  const remove = async (id) => {
+    if (!confirm('Delete this item?')) return
+    try {
+      await api.delete(`/api/dashboard/${endpoint}/${id}/`, { headers: authHeader() })
+      setItems(prev => prev.filter(i => i.id !== id))
+    } catch { /* ignore */ }
+  }
+
+  const inputCls = 'w-full bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-primary-500/60 transition-colors'
+  const labelCls = 'text-slate-400 text-xs font-medium mb-1 block'
+
+  return (
+    <div className="bg-dark-900 border border-white/[0.07] rounded-2xl p-6">
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="text-white font-semibold text-base">{title}</h3>
+        <button onClick={startNew} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs transition-colors">
+          <FiPlus size={12} /> Add
+        </button>
+      </div>
+
+      {/* Edit/Create form */}
+      {editing && (
+        <div className="bg-dark-950/50 border border-white/[0.06] rounded-xl p-4 mb-5 space-y-3">
+          {fields.map(f => (
+            <div key={f.key}>
+              <label className={labelCls}>{f.label}</label>
+              {f.type === 'textarea' ? (
+                <textarea
+                  value={form[f.key] ?? ''}
+                  onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
+                  rows={3}
+                  className={inputCls}
+                />
+              ) : f.type === 'checkbox' ? (
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={!!form[f.key]}
+                    onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.checked }))}
+                    className="rounded"
+                  />
+                  <span className="text-slate-300 text-sm">{f.checkLabel || 'Yes'}</span>
+                </label>
+              ) : f.type === 'tags' ? (
+                <TagsInput
+                  value={form[f.key] || []}
+                  onChange={v => setForm(prev => ({ ...prev, [f.key]: v }))}
+                />
+              ) : (
+                <input
+                  type={f.type || 'text'}
+                  value={form[f.key] ?? ''}
+                  onChange={e => setForm(prev => ({
+                    ...prev,
+                    [f.key]: f.type === 'number' ? (e.target.value === '' ? '' : Number(e.target.value)) : e.target.value,
+                  }))}
+                  className={inputCls}
+                />
+              )}
+            </div>
+          ))}
+          <div className="flex gap-2 pt-2">
+            <button onClick={save} disabled={saving} className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs transition-colors disabled:opacity-60">
+              <FiSave size={12} /> {saving ? 'Saving...' : 'Save'}
+            </button>
+            <button onClick={cancel} className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-white/[0.1] text-slate-400 hover:text-white text-xs transition-colors">
+              <FiX size={12} /> Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {loading ? (
+        <div className="space-y-2">
+          {[1, 2, 3].map(i => <div key={i} className="h-12 bg-white/[0.03] rounded-lg animate-pulse" />)}
+        </div>
+      ) : items.length === 0 ? (
+        <p className="text-slate-500 text-sm text-center py-8">No items yet. Click "Add" to create one.</p>
+      ) : (
+        <div className="space-y-2">
+          {items.map(item => (
+            <div key={item.id} className="flex items-center gap-3 p-3 rounded-xl bg-dark-950/30 border border-white/[0.04] hover:border-white/[0.08] transition-colors">
+              <div className="flex-1 min-w-0">
+                {renderRow(item)}
+              </div>
+              <div className="flex items-center gap-1 flex-shrink-0">
+                <button onClick={() => startEdit(item)} className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors">
+                  <FiEdit2 size={13} />
+                </button>
+                <button onClick={() => remove(item.id)} className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-white/[0.06] transition-colors">
+                  <FiTrash2 size={13} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function TagsInput({ value, onChange }) {
+  const [input, setInput] = useState('')
+  const add = () => {
+    if (!input.trim()) return
+    onChange([...value, input.trim()])
+    setInput('')
+  }
+  return (
+    <div>
+      <div className="flex flex-wrap gap-1.5 mb-2">
+        {value.map((tag, i) => (
+          <span key={i} className="flex items-center gap-1 px-2 py-0.5 rounded bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs">
+            {tag}
+            <button onClick={() => onChange(value.filter((_, j) => j !== i))} className="hover:text-rose-400"><FiX size={10} /></button>
+          </span>
+        ))}
+      </div>
+      <div className="flex gap-2">
+        <input
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), add())}
+          placeholder="Add tag..."
+          className="flex-1 bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-1.5 text-white text-xs outline-none focus:border-primary-500/60 transition-colors"
+        />
+        <button onClick={add} className="px-3 py-1.5 rounded-lg bg-white/[0.06] text-slate-400 hover:text-white text-xs transition-colors">Add</button>
+      </div>
+    </div>
+  )
+}
+
+function SiteContentEditor() {
+  const [content, setContent] = useState(null)
+  const [editing, setEditing] = useState(false)
+  const [form, setForm] = useState({})
+  const [saving, setSaving] = useState(false)
+
+  const load = useCallback(() => {
+    api.get('/api/dashboard/site-content/', { headers: authHeader() })
+      .then(r => { setContent(r.data); setForm(r.data) })
+  }, [])
+
+  useEffect(() => { load() }, [load])
+
+  const save = async () => {
+    setSaving(true)
+    try {
+      const r = await api.patch('/api/dashboard/site-content/', form, { headers: authHeader() })
+      setContent(r.data)
+      setEditing(false)
+    } finally { setSaving(false) }
+  }
+
+  if (!content) return <div className="text-slate-500 text-sm p-6">Loading...</div>
+
+  const inputCls = 'w-full bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-primary-500/60 transition-colors'
+  const labelCls = 'text-slate-400 text-xs font-medium mb-1 block'
+
+  const sections = [
+    {
+      title: 'Home Page Hero',
+      fields: [
+        { key: 'hero_headline', label: 'Headline' },
+        { key: 'hero_subheadline', label: 'Subheadline', type: 'textarea' },
+        { key: 'hero_cta_primary', label: 'Primary CTA Text' },
+        { key: 'hero_cta_secondary', label: 'Secondary CTA Text' },
+      ],
+    },
+    {
+      title: 'About Page',
+      fields: [
+        { key: 'about_headline', label: 'Headline' },
+        { key: 'about_story', label: 'Story (separate paragraphs with blank lines)', type: 'textarea' },
+      ],
+    },
+    {
+      title: 'Contact Info',
+      fields: [
+        { key: 'contact_email', label: 'Email' },
+        { key: 'contact_linkedin', label: 'LinkedIn URL' },
+        { key: 'contact_github', label: 'GitHub URL' },
+        { key: 'contact_upwork', label: 'Upwork URL' },
+      ],
+    },
+    {
+      title: 'Services Page',
+      fields: [
+        { key: 'services_headline', label: 'Headline' },
+      ],
+    },
+    {
+      title: 'Global / SEO',
+      fields: [
+        { key: 'site_name', label: 'Site Name' },
+        { key: 'site_tagline', label: 'Site Tagline' },
+      ],
+    },
+  ]
+
+  return (
+    <div className="bg-dark-900 border border-white/[0.07] rounded-2xl p-6">
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-white font-semibold text-base">Page Content & Settings</h3>
+        {editing ? (
+          <div className="flex gap-2">
+            <button onClick={() => { setEditing(false); setForm(content) }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-400 hover:text-white border border-white/[0.1] text-xs transition-colors">
+              <FiX size={12} /> Cancel
+            </button>
+            <button onClick={save} disabled={saving} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs transition-colors disabled:opacity-60">
+              <FiSave size={12} /> {saving ? 'Saving...' : 'Save All'}
+            </button>
+          </div>
+        ) : (
+          <button onClick={() => setEditing(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-400 hover:text-white border border-white/[0.1] text-xs transition-colors">
+            <FiEdit2 size={12} /> Edit
+          </button>
+        )}
+      </div>
+
+      <div className="space-y-6">
+        {sections.map(section => (
+          <div key={section.title}>
+            <h4 className="text-slate-300 text-sm font-semibold mb-3 border-b border-white/[0.06] pb-2">{section.title}</h4>
+            <div className="space-y-3">
+              {section.fields.map(f => (
+                <div key={f.key}>
+                  <label className={labelCls}>{f.label}</label>
+                  {editing ? (
+                    f.type === 'textarea' ? (
+                      <textarea
+                        value={form[f.key] ?? ''}
+                        onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
+                        rows={3}
+                        className={inputCls}
+                      />
+                    ) : (
+                      <input
+                        value={form[f.key] ?? ''}
+                        onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
+                        className={inputCls}
+                      />
+                    )
+                  ) : (
+                    <p className="text-slate-300 text-sm whitespace-pre-line">{content[f.key] || <span className="text-slate-600 italic">Not set</span>}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function ContentManager() {
+  const [tab, setTab] = useState('testimonials')
+
+  const tabs = [
+    { id: 'testimonials', label: 'Testimonials' },
+    { id: 'faqs', label: 'FAQs' },
+    { id: 'badges', label: 'Insight Badges' },
+    { id: 'site', label: 'Page Content' },
+  ]
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-white font-bold text-xl">Content Management</h2>
+
+      <div className="flex items-center gap-1 border-b border-white/[0.06] pb-1 overflow-x-auto">
+        {tabs.map(t => (
+          <button
+            key={t.id}
+            onClick={() => setTab(t.id)}
+            className={`px-4 py-2 rounded-t-lg text-sm font-medium transition-colors flex-shrink-0 ${
+              tab === t.id ? 'text-white border-b-2 border-primary-500' : 'text-slate-500 hover:text-white'
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {tab === 'testimonials' && (
+        <CrudSection
+          title="Client Testimonials"
+          endpoint="testimonials"
+          emptyItem={{ client_name: '', client_role: '', rating: 5.0, quote: '', tags: [], source: 'Upwork', featured: false, order: 0, is_active: true }}
+          fields={[
+            { key: 'client_name', label: 'Client Name' },
+            { key: 'client_role', label: 'Role / Project Type' },
+            { key: 'rating', label: 'Rating (1-5)', type: 'number' },
+            { key: 'quote', label: 'Review Text', type: 'textarea' },
+            { key: 'tags', label: 'Tags', type: 'tags' },
+            { key: 'source', label: 'Source (e.g., Upwork)' },
+            { key: 'order', label: 'Display Order', type: 'number' },
+            { key: 'featured', label: 'Featured?', type: 'checkbox', checkLabel: 'Show on homepage' },
+            { key: 'is_active', label: 'Active?', type: 'checkbox', checkLabel: 'Visible on website' },
+          ]}
+          renderRow={item => (
+            <div>
+              <div className="flex items-center gap-2 mb-0.5">
+                <span className="text-white text-sm font-medium">{item.client_name}</span>
+                <span className="text-slate-500 text-xs">— {item.client_role}</span>
+                <span className="text-amber-400 text-xs flex items-center gap-0.5"><FiStar size={10} /> {item.rating}</span>
+                {!item.is_active && <span className="text-rose-400 text-xs">(hidden)</span>}
+              </div>
+              <p className="text-slate-400 text-xs truncate italic">"{item.quote}"</p>
+            </div>
+          )}
+        />
+      )}
+
+      {tab === 'faqs' && (
+        <CrudSection
+          title="Frequently Asked Questions"
+          endpoint="faqs"
+          emptyItem={{ question: '', answer: '', order: 0, is_active: true }}
+          fields={[
+            { key: 'question', label: 'Question' },
+            { key: 'answer', label: 'Answer', type: 'textarea' },
+            { key: 'order', label: 'Display Order', type: 'number' },
+            { key: 'is_active', label: 'Active?', type: 'checkbox', checkLabel: 'Visible on website' },
+          ]}
+          renderRow={item => (
+            <div>
+              <p className="text-white text-sm font-medium">{item.question}</p>
+              <p className="text-slate-400 text-xs truncate mt-0.5">{item.answer}</p>
+              {!item.is_active && <span className="text-rose-400 text-xs">(hidden)</span>}
+            </div>
+          )}
+        />
+      )}
+
+      {tab === 'badges' && (
+        <CrudSection
+          title="Upwork Insight Badges"
+          endpoint="badges"
+          emptyItem={{ label: '', count: 0, order: 0, is_active: true }}
+          fields={[
+            { key: 'label', label: 'Badge Label' },
+            { key: 'count', label: 'Count', type: 'number' },
+            { key: 'order', label: 'Display Order', type: 'number' },
+            { key: 'is_active', label: 'Active?', type: 'checkbox', checkLabel: 'Visible on website' },
+          ]}
+          renderRow={item => (
+            <div className="flex items-center gap-3">
+              <span className="text-white text-sm font-medium">{item.label}</span>
+              <span className="px-2 py-0.5 rounded-full bg-primary-500/10 text-primary-400 text-xs font-bold">{item.count}</span>
+              {!item.is_active && <span className="text-rose-400 text-xs">(hidden)</span>}
+            </div>
+          )}
+        />
+      )}
+
+      {tab === 'site' && <SiteContentEditor />}
+    </div>
+  )
+}
+
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 const PAGES = [
   { id: 'overview', label: 'Overview', icon: FiHome },
   { id: 'projects', label: 'Projects', icon: FiGrid },
   { id: 'contacts', label: 'Leads', icon: FiMail },
+  { id: 'content', label: 'Content', icon: FiFileText },
   { id: 'settings', label: 'Settings', icon: FiSettings },
 ]
 
@@ -927,6 +1328,9 @@ export default function Dashboard() {
               )}
             </div>
           )}
+
+          {/* ── Content Page ── */}
+          {page === 'content' && <ContentManager />}
 
           {/* ── Settings Page ── */}
           {page === 'settings' && (

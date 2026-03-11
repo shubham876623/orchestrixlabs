@@ -76,46 +76,21 @@ function useSiteStats() {
   return s
 }
 
-// Real Upwork reviews — verified
-const testimonials = [
-  {
-    name: 'Verified Upwork Client',
-    role: 'AI Framework Development',
-    stars: 5,
-    tags: ['Collaborative', 'Committed to Quality'],
-    text: 'Love working with Shubham, he\'s the best at what he does and he always tries his best! Thanks Shubham!',
-  },
-  {
-    name: 'Verified Upwork Client',
-    role: 'Qualitative Data Analysis',
-    stars: 5,
-    tags: ['Committed to Quality'],
-    text: 'Shubham delivered high-quality work on the qualitative analysis project. He had a strong understanding of qualitative research methods, provided well-structured and insightful analysis and ensured that all deliverables were aligned with the project requirements.',
-  },
-  {
-    name: 'Verified Upwork Client',
-    role: 'Web Scraping & Data Collection',
-    stars: 5,
-    tags: ['Reliable', 'Committed to Quality', 'Solution Oriented'],
-    text: 'He was excellent to work with and would highly recommend. Fast, reliable, and did great work.',
-  },
-  {
-    name: 'Verified Upwork Client',
-    role: 'AI & Full-Stack Development',
-    stars: 5,
-    tags: ['Clear Communicator', 'Collaborative'],
-    text: 'Experienced coder for AI related projects offering full stack development, great communicator and cooperator.',
-  },
+// Fallback data — overridden by CMS API when available
+const fallbackTestimonials = [
+  { client_name: 'Verified Upwork Client', client_role: 'AI Framework Development', rating: 5, tags: ['Collaborative', 'Committed to Quality'], quote: 'Love working with Shubham, he\'s the best at what he does and he always tries his best! Thanks Shubham!' },
+  { client_name: 'Verified Upwork Client', client_role: 'Qualitative Data Analysis', rating: 5, tags: ['Committed to Quality'], quote: 'Shubham delivered high-quality work on the qualitative analysis project. He had a strong understanding of qualitative research methods, provided well-structured and insightful analysis and ensured that all deliverables were aligned with the project requirements.' },
+  { client_name: 'Verified Upwork Client', client_role: 'Web Scraping & Data Collection', rating: 5, tags: ['Reliable', 'Committed to Quality', 'Solution Oriented'], quote: 'He was excellent to work with and would highly recommend. Fast, reliable, and did great work.' },
+  { client_name: 'Verified Upwork Client', client_role: 'AI & Full-Stack Development', rating: 5, tags: ['Clear Communicator', 'Collaborative'], quote: 'Experienced coder for AI related projects offering full stack development, great communicator and cooperator.' },
 ]
 
-// Upwork insight badges — real data from profile
-const insightBadges = [
-  { label: 'Collaborative',           count: 28 },
-  { label: 'Clear Communicator',      count: 24 },
-  { label: 'Committed to Quality',    count: 23 },
-  { label: 'Reliable',                count: 18 },
-  { label: 'Solution Oriented',       count: 15 },
-  { label: 'Accountable for Outcomes',count: 8  },
+const fallbackBadges = [
+  { label: 'Collaborative', count: 28 },
+  { label: 'Clear Communicator', count: 24 },
+  { label: 'Committed to Quality', count: 23 },
+  { label: 'Reliable', count: 18 },
+  { label: 'Solution Oriented', count: 15 },
+  { label: 'Accountable for Outcomes', count: 8 },
 ]
 
 // ─── Sections ─────────────────────────────────────────────────────────────────
@@ -463,6 +438,17 @@ function ProcessSection() {
 
 function Testimonials() {
   const siteStats = useSiteStats()
+  const [testimonials, setTestimonials] = useState(fallbackTestimonials)
+  const [insightBadges, setInsightBadges] = useState(fallbackBadges)
+
+  useEffect(() => {
+    api.get('/api/testimonials/').then(r => {
+      if (Array.isArray(r.data) && r.data.length > 0) setTestimonials(r.data)
+    }).catch(() => {})
+    api.get('/api/badges/').then(r => {
+      if (Array.isArray(r.data) && r.data.length > 0) setInsightBadges(r.data)
+    }).catch(() => {})
+  }, [])
   return (
     <Section className="py-24 bg-dark-900/30">
       <div className="container">
@@ -535,30 +521,34 @@ function Testimonials() {
             <motion.div key={i} custom={i + 5} variants={fadeUp} className="card flex flex-col">
               {/* Stars */}
               <div className="flex gap-0.5 mb-3">
-                {[...Array(t.stars)].map((_, j) => (
+                {[...Array(Math.round(Number(t.rating || t.stars || 5)))].map((_, j) => (
                   <FiStar key={j} className="text-amber-400" style={{ fill: '#FBBF24' }} size={13} />
                 ))}
               </div>
               {/* Quote */}
               <p className="text-slate-300 text-sm leading-relaxed flex-1 mb-4 italic">
-                "{t.text}"
+                "{t.quote || t.text}"
               </p>
               {/* Skill tags */}
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {t.tags.map(tag => (
-                  <span key={tag} className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs">
-                    {tag}
-                  </span>
-                ))}
-              </div>
+              {t.tags && t.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mb-4">
+                  {t.tags.map(tag => (
+                    <span key={tag} className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
               {/* Author */}
               <div className="pt-3 border-t border-white/[0.05] flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-primary-400 text-xs font-bold">V</span>
+                  <span className="text-primary-400 text-xs font-bold">
+                    {(t.client_name || t.name || 'V').charAt(0).toUpperCase()}
+                  </span>
                 </div>
                 <div>
-                  <p className="text-white font-semibold text-xs">{t.name}</p>
-                  <p className="text-slate-500 text-xs mt-0.5">{t.role} · Upwork</p>
+                  <p className="text-white font-semibold text-xs">{t.client_name || t.name}</p>
+                  <p className="text-slate-500 text-xs mt-0.5">{t.client_role || t.role} · {t.source || 'Upwork'}</p>
                 </div>
               </div>
             </motion.div>
@@ -576,7 +566,7 @@ function Testimonials() {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
               <path d="M18.561 13.158c-1.102 0-2.135-.467-3.074-1.227l.228-1.076.008-.042c.207-1.143.849-3.06 2.839-3.06 1.492 0 2.703 1.212 2.703 2.703-.001 1.489-1.212 2.702-2.704 2.702zm0-8.14c-2.539 0-4.51 1.649-5.31 4.366-1.22-1.834-2.148-4.036-2.687-5.892H7.828v7.112c-.002 1.406-1.141 2.546-2.547 2.546-1.405 0-2.543-1.14-2.545-2.546V3.492H0v7.112c0 2.914 2.37 5.303 5.281 5.303 2.913 0 5.283-2.389 5.283-5.303v-1.19c.529 1.107 1.182 2.229 1.974 3.221l-1.673 7.873h2.797l1.213-5.71c1.063.679 2.285 1.109 3.686 1.109 3 0 5.439-2.452 5.439-5.45 0-3-2.439-5.439-5.439-5.439z"/>
             </svg>
-            View all 133 reviews on Upwork
+            View all {siteStats.total_jobs} reviews on Upwork
           </a>
         </motion.div>
 
