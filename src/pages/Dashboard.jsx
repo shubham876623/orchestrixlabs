@@ -4,7 +4,9 @@ import {
   FiMail, FiEye, FiTrendingUp, FiCheck,
   FiRefreshCw, FiLogOut, FiEdit2, FiSave, FiX,
   FiPlus, FiTrash2, FiFolder, FiStar, FiCheckCircle,
-  FiHome, FiGrid, FiSettings, FiFileText,
+  FiHome, FiGrid, FiSettings, FiFileText, FiUsers,
+  FiMonitor, FiSmartphone, FiTablet, FiGlobe,
+  FiChevronLeft, FiChevronRight, FiSearch, FiFilter,
 } from 'react-icons/fi'
 
 const STORAGE_KEY = 'orchestrix_dash_secret'
@@ -1068,9 +1070,361 @@ function ContentManager() {
   )
 }
 
+// ─── Visitor Analytics ────────────────────────────────────────────────────────
+
+const deviceIcons = { desktop: FiMonitor, mobile: FiSmartphone, tablet: FiTablet, bot: FiGlobe, other: FiGlobe }
+
+function VisitorAnalytics({ stats }) {
+  const [visitors, setVisitors] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [filters, setFilters] = useState({ path: '', country: '', device: '' })
+  const [showFilters, setShowFilters] = useState(false)
+  const [search, setSearch] = useState('')
+
+  const load = useCallback((pg = 1) => {
+    setLoading(true)
+    const params = new URLSearchParams({ page: pg, per_page: 30 })
+    if (filters.path) params.set('path', filters.path)
+    if (filters.country) params.set('country', filters.country)
+    if (filters.device) params.set('device', filters.device)
+    api.get(`/api/dashboard/visitors/?${params}`, { headers: authHeader() })
+      .then(r => {
+        setVisitors(r.data.results)
+        setTotalPages(r.data.total_pages)
+        setTotal(r.data.total)
+        setPage(r.data.page)
+      })
+      .finally(() => setLoading(false))
+  }, [filters])
+
+  useEffect(() => { load(1) }, [load])
+
+  const applySearch = () => {
+    setFilters(f => ({ ...f, path: search }))
+  }
+
+  const filteredVisitors = visitors
+
+  // Breakdown mini-charts from stats
+  const devices = stats?.visits?.devices || []
+  const countries = stats?.visits?.countries || []
+  const browsers = stats?.visits?.browsers || []
+  const referrers = stats?.visits?.referrers || []
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-white font-bold text-xl">Visitor Analytics</h2>
+          <p className="text-slate-500 text-sm">{total.toLocaleString()} total page views tracked</p>
+        </div>
+      </div>
+
+      {/* Quick stats row */}
+      {stats && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="bg-dark-900 border border-white/[0.07] rounded-xl p-4">
+            <p className="text-slate-500 text-xs mb-0.5">Today</p>
+            <p className="text-white font-bold text-xl">{stats.visits.today}</p>
+            <p className="text-slate-600 text-xs mt-0.5">{stats.visits.unique_today} unique</p>
+          </div>
+          <div className="bg-dark-900 border border-white/[0.07] rounded-xl p-4">
+            <p className="text-slate-500 text-xs mb-0.5">This Week</p>
+            <p className="text-white font-bold text-xl">{stats.visits.this_week}</p>
+            <p className="text-slate-600 text-xs mt-0.5">{stats.visits.unique_week} unique</p>
+          </div>
+          <div className="bg-dark-900 border border-white/[0.07] rounded-xl p-4">
+            <p className="text-slate-500 text-xs mb-0.5">This Month</p>
+            <p className="text-white font-bold text-xl">{stats.visits.this_month}</p>
+            <p className="text-slate-600 text-xs mt-0.5">{stats.visits.unique_month} unique</p>
+          </div>
+          <div className="bg-dark-900 border border-white/[0.07] rounded-xl p-4">
+            <p className="text-slate-500 text-xs mb-0.5">All Time</p>
+            <p className="text-white font-bold text-xl">{stats.visits.total}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Breakdown cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Devices */}
+        <div className="bg-dark-900 border border-white/[0.07] rounded-xl p-4">
+          <h4 className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <FiMonitor size={12} /> Devices
+          </h4>
+          {devices.length > 0 ? (
+            <div className="space-y-2">
+              {devices.map(d => {
+                const Icon = deviceIcons[d.device_type] || FiGlobe
+                const pct = stats.visits.this_month > 0 ? Math.round((d.count / stats.visits.this_month) * 100) : 0
+                return (
+                  <div key={d.device_type} className="flex items-center gap-2">
+                    <Icon size={12} className="text-slate-500 flex-shrink-0" />
+                    <span className="text-slate-300 text-xs capitalize flex-1">{d.device_type}</span>
+                    <span className="text-slate-500 text-xs">{pct}%</span>
+                    <span className="text-white text-xs font-semibold w-8 text-right">{d.count}</span>
+                  </div>
+                )
+              })}
+            </div>
+          ) : <p className="text-slate-600 text-xs">No data yet</p>}
+        </div>
+
+        {/* Browsers */}
+        <div className="bg-dark-900 border border-white/[0.07] rounded-xl p-4">
+          <h4 className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <FiGlobe size={12} /> Browsers
+          </h4>
+          {browsers.length > 0 ? (
+            <div className="space-y-2">
+              {browsers.map(b => (
+                <div key={b.browser} className="flex items-center gap-2">
+                  <span className="text-slate-300 text-xs flex-1 truncate">{b.browser}</span>
+                  <span className="text-white text-xs font-semibold">{b.count}</span>
+                </div>
+              ))}
+            </div>
+          ) : <p className="text-slate-600 text-xs">No data yet</p>}
+        </div>
+
+        {/* Countries */}
+        <div className="bg-dark-900 border border-white/[0.07] rounded-xl p-4">
+          <h4 className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <FiGlobe size={12} /> Countries
+          </h4>
+          {countries.length > 0 ? (
+            <div className="space-y-2">
+              {countries.map(c => (
+                <div key={c.country} className="flex items-center gap-2">
+                  <span className="text-slate-300 text-xs flex-1 truncate">{c.country}</span>
+                  <span className="text-white text-xs font-semibold">{c.count}</span>
+                </div>
+              ))}
+            </div>
+          ) : <p className="text-slate-600 text-xs">No data yet</p>}
+        </div>
+
+        {/* Referrers */}
+        <div className="bg-dark-900 border border-white/[0.07] rounded-xl p-4">
+          <h4 className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-1.5">
+            <FiTrendingUp size={12} /> Referrers
+          </h4>
+          {referrers.length > 0 ? (
+            <div className="space-y-2">
+              {referrers.map(r => {
+                let display = r.referrer
+                try { display = new URL(r.referrer).hostname } catch {}
+                return (
+                  <div key={r.referrer} className="flex items-center gap-2">
+                    <span className="text-slate-300 text-xs flex-1 truncate" title={r.referrer}>{display}</span>
+                    <span className="text-white text-xs font-semibold">{r.count}</span>
+                  </div>
+                )
+              })}
+            </div>
+          ) : <p className="text-slate-600 text-xs">No data yet</p>}
+        </div>
+      </div>
+
+      {/* Search + Filters */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex-1 flex gap-2">
+          <div className="relative flex-1">
+            <FiSearch size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+            <input
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && applySearch()}
+              placeholder="Search by page path..."
+              className="w-full bg-dark-900 border border-white/[0.1] rounded-xl pl-9 pr-3 py-2.5 text-white text-sm outline-none focus:border-primary-500/60 transition-colors"
+            />
+          </div>
+          <button onClick={applySearch} className="px-4 py-2.5 rounded-xl bg-primary-500/20 text-primary-400 text-sm hover:bg-primary-500/30 transition-colors">
+            Search
+          </button>
+        </div>
+        <button
+          onClick={() => setShowFilters(f => !f)}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm transition-colors ${
+            showFilters ? 'border-primary-500/40 text-primary-400 bg-primary-500/10' : 'border-white/[0.1] text-slate-400 hover:text-white'
+          }`}
+        >
+          <FiFilter size={14} /> Filters
+        </button>
+      </div>
+
+      {showFilters && (
+        <div className="flex flex-wrap gap-3 bg-dark-900 border border-white/[0.07] rounded-xl p-4">
+          <div>
+            <label className="text-slate-500 text-xs block mb-1">Country</label>
+            <input
+              value={filters.country}
+              onChange={e => setFilters(f => ({ ...f, country: e.target.value }))}
+              placeholder="e.g. India"
+              className="bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-primary-500/60 transition-colors w-40"
+            />
+          </div>
+          <div>
+            <label className="text-slate-500 text-xs block mb-1">Device</label>
+            <select
+              value={filters.device}
+              onChange={e => setFilters(f => ({ ...f, device: e.target.value }))}
+              className="bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-primary-500/60 transition-colors w-36 cursor-pointer"
+            >
+              <option value="" className="bg-dark-900">All</option>
+              <option value="desktop" className="bg-dark-900">Desktop</option>
+              <option value="mobile" className="bg-dark-900">Mobile</option>
+              <option value="tablet" className="bg-dark-900">Tablet</option>
+              <option value="bot" className="bg-dark-900">Bot</option>
+            </select>
+          </div>
+          <div className="flex items-end">
+            <button
+              onClick={() => { setFilters({ path: '', country: '', device: '' }); setSearch('') }}
+              className="px-3 py-2 rounded-lg text-slate-400 hover:text-white border border-white/[0.1] text-xs transition-colors"
+            >
+              Clear All
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Visitor Log Table */}
+      <div className="bg-dark-900 border border-white/[0.07] rounded-2xl overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="border-b border-white/[0.06]">
+                <th className="px-4 py-3 text-slate-500 text-xs font-semibold uppercase tracking-wider">Time</th>
+                <th className="px-4 py-3 text-slate-500 text-xs font-semibold uppercase tracking-wider">Page</th>
+                <th className="px-4 py-3 text-slate-500 text-xs font-semibold uppercase tracking-wider hidden md:table-cell">Location</th>
+                <th className="px-4 py-3 text-slate-500 text-xs font-semibold uppercase tracking-wider hidden lg:table-cell">Device</th>
+                <th className="px-4 py-3 text-slate-500 text-xs font-semibold uppercase tracking-wider hidden lg:table-cell">Browser / OS</th>
+                <th className="px-4 py-3 text-slate-500 text-xs font-semibold uppercase tracking-wider hidden xl:table-cell">Screen</th>
+                <th className="px-4 py-3 text-slate-500 text-xs font-semibold uppercase tracking-wider hidden xl:table-cell">Referrer</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                Array.from({ length: 8 }).map((_, i) => (
+                  <tr key={i} className="border-b border-white/[0.03]">
+                    <td colSpan={7} className="px-4 py-3"><div className="h-4 bg-white/[0.04] rounded animate-pulse" /></td>
+                  </tr>
+                ))
+              ) : filteredVisitors.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-4 py-12 text-center text-slate-500 text-sm">No visitor data found.</td>
+                </tr>
+              ) : (
+                filteredVisitors.map(v => {
+                  const DeviceIcon = deviceIcons[v.device_type] || FiGlobe
+                  const time = new Date(v.timestamp)
+                  const isToday = new Date().toDateString() === time.toDateString()
+                  const timeStr = isToday
+                    ? time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+                    : time.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+                  let refDisplay = ''
+                  if (v.referrer) {
+                    try { refDisplay = new URL(v.referrer).hostname } catch { refDisplay = v.referrer.slice(0, 30) }
+                  }
+
+                  return (
+                    <tr key={v.id} className="border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors">
+                      <td className="px-4 py-3">
+                        <span className="text-slate-300 text-xs whitespace-nowrap">{timeStr}</span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="text-white text-sm font-mono">{v.path}</span>
+                      </td>
+                      <td className="px-4 py-3 hidden md:table-cell">
+                        <div className="text-slate-300 text-xs">
+                          {v.city && v.country ? `${v.city}, ${v.country}` : v.country || <span className="text-slate-600">—</span>}
+                        </div>
+                        {v.ip_address && <p className="text-slate-600 text-xs font-mono mt-0.5">{v.ip_address}</p>}
+                      </td>
+                      <td className="px-4 py-3 hidden lg:table-cell">
+                        <div className="flex items-center gap-1.5">
+                          <DeviceIcon size={12} className="text-slate-500" />
+                          <span className="text-slate-300 text-xs capitalize">{v.device_type || '—'}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 hidden lg:table-cell">
+                        <p className="text-slate-300 text-xs">{v.browser || '—'}</p>
+                        <p className="text-slate-600 text-xs mt-0.5">{v.os || '—'}</p>
+                      </td>
+                      <td className="px-4 py-3 hidden xl:table-cell">
+                        <span className="text-slate-400 text-xs">
+                          {v.screen_width && v.screen_height ? `${v.screen_width}×${v.screen_height}` : '—'}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 hidden xl:table-cell">
+                        <span className="text-slate-400 text-xs truncate max-w-[120px] block" title={v.referrer}>
+                          {refDisplay || <span className="text-slate-600">Direct</span>}
+                        </span>
+                      </td>
+                    </tr>
+                  )
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between px-4 py-3 border-t border-white/[0.06]">
+            <span className="text-slate-500 text-xs">
+              Page {page} of {totalPages} ({total.toLocaleString()} results)
+            </span>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => load(page - 1)}
+                disabled={page <= 1}
+                className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <FiChevronLeft size={14} />
+              </button>
+              {/* Page numbers */}
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pg
+                if (totalPages <= 5) pg = i + 1
+                else if (page <= 3) pg = i + 1
+                else if (page >= totalPages - 2) pg = totalPages - 4 + i
+                else pg = page - 2 + i
+                return (
+                  <button
+                    key={pg}
+                    onClick={() => load(pg)}
+                    className={`w-8 h-8 rounded-lg text-xs font-medium transition-colors ${
+                      pg === page ? 'bg-primary-500 text-white' : 'text-slate-400 hover:text-white hover:bg-white/[0.06]'
+                    }`}
+                  >
+                    {pg}
+                  </button>
+                )
+              })}
+              <button
+                onClick={() => load(page + 1)}
+                disabled={page >= totalPages}
+                className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <FiChevronRight size={14} />
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 const PAGES = [
   { id: 'overview', label: 'Overview', icon: FiHome },
+  { id: 'visitors', label: 'Visitors', icon: FiUsers },
   { id: 'projects', label: 'Projects', icon: FiGrid },
   { id: 'contacts', label: 'Leads', icon: FiMail },
   { id: 'content', label: 'Content', icon: FiFileText },
@@ -1237,9 +1591,10 @@ export default function Dashboard() {
           {page === 'overview' && (
             <div className="space-y-8">
               {stats ? (
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                  <StatCard icon={FiEye} label="Total Visits" value={stats.visits.total} color="primary" />
-                  <StatCard icon={FiTrendingUp} label="This Week" value={stats.visits.this_week} color="emerald" />
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                  <StatCard icon={FiEye} label="Total Visits" value={stats.visits.total} color="primary" sub={`${stats.visits.unique_month || 0} unique this month`} />
+                  <StatCard icon={FiTrendingUp} label="This Week" value={stats.visits.this_week} color="emerald" sub={`${stats.visits.unique_week || 0} unique`} />
+                  <StatCard icon={FiUsers} label="Today" value={stats.visits.today} color="amber" sub={`${stats.visits.unique_today || 0} unique`} />
                   <StatCard icon={FiMail} label="New Leads" value={stats.contacts.unread} color={stats.contacts.unread > 0 ? 'amber' : 'emerald'} sub={stats.contacts.unread > 0 ? 'Needs attention' : 'All caught up'} />
                   <StatCard icon={FiGrid} label="Total Projects" value={stats.projects?.total || 0} color="violet" sub={`${stats.projects?.in_progress || 0} in progress`} />
                 </div>
@@ -1249,26 +1604,54 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {/* Top Pages */}
-              {stats && stats.top_pages.length > 0 && (
-                <div className="bg-dark-900 border border-white/[0.07] rounded-2xl p-6">
-                  <h3 className="text-white font-semibold text-base mb-4 flex items-center gap-2">
-                    <FiEye size={16} className="text-primary-400" /> Top Pages
-                  </h3>
-                  <div className="space-y-2">
-                    {stats.top_pages.map(({ path, count }) => {
-                      const max = stats.top_pages[0]?.count || 1
-                      return (
-                        <div key={path} className="flex items-center gap-3">
-                          <span className="text-slate-400 text-xs font-mono w-40 truncate flex-shrink-0">{path || '/'}</span>
-                          <div className="flex-1 bg-white/[0.04] rounded-full h-2 overflow-hidden">
-                            <div className="h-full bg-primary-500/60 rounded-full transition-all" style={{ width: `${(count / max) * 100}%` }} />
-                          </div>
-                          <span className="text-slate-400 text-xs w-8 text-right flex-shrink-0">{count}</span>
-                        </div>
-                      )
-                    })}
-                  </div>
+              {/* Daily Views Chart + Top Pages side by side */}
+              {stats && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  {/* Daily views bar chart */}
+                  {stats.visits.daily.length > 0 && (
+                    <div className="bg-dark-900 border border-white/[0.07] rounded-2xl p-6">
+                      <h3 className="text-white font-semibold text-base mb-4 flex items-center gap-2">
+                        <FiTrendingUp size={16} className="text-emerald-400" /> Daily Views (Last 7 Days)
+                      </h3>
+                      <div className="flex items-end gap-2 h-32">
+                        {stats.visits.daily.map(d => {
+                          const maxDaily = Math.max(...stats.visits.daily.map(x => x.count), 1)
+                          const h = Math.max((d.count / maxDaily) * 100, 4)
+                          const dayLabel = new Date(d.date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short' })
+                          return (
+                            <div key={d.date} className="flex-1 flex flex-col items-center gap-1">
+                              <span className="text-white text-xs font-semibold">{d.count}</span>
+                              <div className="w-full bg-primary-500/60 rounded-t-lg transition-all" style={{ height: `${h}%` }} />
+                              <span className="text-slate-500 text-xs">{dayLabel}</span>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Top Pages */}
+                  {stats.top_pages.length > 0 && (
+                    <div className="bg-dark-900 border border-white/[0.07] rounded-2xl p-6">
+                      <h3 className="text-white font-semibold text-base mb-4 flex items-center gap-2">
+                        <FiEye size={16} className="text-primary-400" /> Top Pages
+                      </h3>
+                      <div className="space-y-2">
+                        {stats.top_pages.map(({ path, count }) => {
+                          const max = stats.top_pages[0]?.count || 1
+                          return (
+                            <div key={path} className="flex items-center gap-3">
+                              <span className="text-slate-400 text-xs font-mono w-40 truncate flex-shrink-0">{path || '/'}</span>
+                              <div className="flex-1 bg-white/[0.04] rounded-full h-2 overflow-hidden">
+                                <div className="h-full bg-primary-500/60 rounded-full transition-all" style={{ width: `${(count / max) * 100}%` }} />
+                              </div>
+                              <span className="text-slate-400 text-xs w-8 text-right flex-shrink-0">{count}</span>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -1288,6 +1671,9 @@ export default function Dashboard() {
               )}
             </div>
           )}
+
+          {/* ── Visitors Page ── */}
+          {page === 'visitors' && <VisitorAnalytics stats={stats} />}
 
           {/* ── Projects Page ── */}
           {page === 'projects' && <ProjectManager />}
