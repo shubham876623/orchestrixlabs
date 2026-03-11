@@ -284,15 +284,6 @@ function JobRow({ project, onClick }) {
           </div>
         )}
 
-        {/* Value + Hours row */}
-        <div className="flex items-center gap-6 flex-wrap text-sm text-slate-500">
-          {project.project_value && (
-            <span className="font-medium text-slate-300">{project.project_value}</span>
-          )}
-          {project.price_type && <span>{project.price_type}</span>}
-          {project.hours_worked && <span>{project.hours_worked} hours</span>}
-        </div>
-
         {/* Action buttons */}
         <div className="flex items-center gap-3 mt-4">
           {project.upwork_url ? (
@@ -327,11 +318,14 @@ function JobRow({ project, onClick }) {
 }
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
+const ITEMS_PER_PAGE = 15
+
 export default function Portfolio() {
   const [statusFilter, setStatusFilter] = useState('completed')
   const [selectedProject, setSelectedProject] = useState(null)
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.05 })
 
   useEffect(() => {
@@ -350,6 +344,9 @@ export default function Portfolio() {
   const filtered = statusFilter === 'completed' ? completedProjects
     : statusFilter === 'in_progress' ? inProgressProjects
     : projects
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE)
+  const paginatedProjects = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
 
   return (
     <>
@@ -403,7 +400,7 @@ export default function Portfolio() {
           {/* Tabs */}
           <div className="flex items-center gap-0 border-b border-white/[0.08] mb-0">
             <button
-              onClick={() => setStatusFilter('completed')}
+              onClick={() => { setStatusFilter('completed'); setCurrentPage(1) }}
               className={`px-5 py-3 text-sm font-semibold transition-all border-b-2 ${
                 statusFilter === 'completed'
                   ? 'text-white border-primary-500'
@@ -413,7 +410,7 @@ export default function Portfolio() {
               Completed jobs ({completedProjects.length})
             </button>
             <button
-              onClick={() => setStatusFilter('in_progress')}
+              onClick={() => { setStatusFilter('in_progress'); setCurrentPage(1) }}
               className={`px-5 py-3 text-sm font-semibold transition-all border-b-2 ${
                 statusFilter === 'in_progress'
                   ? 'text-white border-primary-500'
@@ -442,7 +439,7 @@ export default function Portfolio() {
             </div>
           ) : (
             <motion.div initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : { opacity: 0 }} transition={{ duration: 0.4 }}>
-              {filtered.map(project => (
+              {paginatedProjects.map(project => (
                 <JobRow
                   key={project.id}
                   project={project}
@@ -450,6 +447,39 @@ export default function Portfolio() {
                 />
               ))}
             </motion.div>
+          )}
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 pt-8 pb-4">
+              <button
+                onClick={() => { setCurrentPage(p => Math.max(1, p - 1)); window.scrollTo({ top: 400, behavior: 'smooth' }) }}
+                disabled={currentPage === 1}
+                className="px-3 py-2 rounded-lg border border-white/[0.08] text-sm text-slate-400 hover:text-white hover:border-white/[0.15] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+              >
+                Previous
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                <button
+                  key={page}
+                  onClick={() => { setCurrentPage(page); window.scrollTo({ top: 400, behavior: 'smooth' }) }}
+                  className={`w-9 h-9 rounded-lg text-sm font-medium transition-all ${
+                    page === currentPage
+                      ? 'bg-primary-500/20 border border-primary-500/40 text-primary-400'
+                      : 'border border-white/[0.08] text-slate-500 hover:text-white hover:border-white/[0.15]'
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+              <button
+                onClick={() => { setCurrentPage(p => Math.min(totalPages, p + 1)); window.scrollTo({ top: 400, behavior: 'smooth' }) }}
+                disabled={currentPage === totalPages}
+                className="px-3 py-2 rounded-lg border border-white/[0.08] text-sm text-slate-400 hover:text-white hover:border-white/[0.15] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+              >
+                Next
+              </button>
+            </div>
           )}
 
           {/* View on Upwork CTA */}
