@@ -192,7 +192,7 @@ const emptyProject = {
   summary: '', description: '', tech: [], highlights: [], impact: [], tags: [],
   featured: false, order: 0, client_name: '', rating: '', review: '',
   project_value: '', hours_worked: '', price_type: '', start_date: '', completion_date: '',
-  job_description: '', deliverables: '', live_url: '', upwork_url: '', images: [],
+  job_description: '', deliverables: '', live_url: '', upwork_url: '', video_url: '', images: [],
 }
 
 function ProjectFormModal({ project, onClose, onSave }) {
@@ -350,7 +350,7 @@ function ProjectFormModal({ project, onClose, onSave }) {
           </div>
 
           {/* URLs */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className={labelCls}>Live Project URL</label>
               <input value={form.live_url} onChange={e => setForm(f => ({ ...f, live_url: e.target.value }))} className={inputCls} placeholder="https://..." />
@@ -358,6 +358,10 @@ function ProjectFormModal({ project, onClose, onSave }) {
             <div>
               <label className={labelCls}>Upwork Job URL</label>
               <input value={form.upwork_url} onChange={e => setForm(f => ({ ...f, upwork_url: e.target.value }))} className={inputCls} placeholder="https://www.upwork.com/..." />
+            </div>
+            <div>
+              <label className={labelCls}>Demo Video (YouTube/Loom)</label>
+              <input value={form.video_url} onChange={e => setForm(f => ({ ...f, video_url: e.target.value }))} className={inputCls} placeholder="https://youtu.be/... or https://loom.com/..." />
             </div>
           </div>
 

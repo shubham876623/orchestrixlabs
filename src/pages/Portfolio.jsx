@@ -23,6 +23,18 @@ const insightBadges = [
   { label: 'Professional', count: 5 },
 ]
 
+// ─── Video Embed Helper ───────────────────────────────────────────────────────
+function getEmbedUrl(url) {
+  if (!url) return null
+  // YouTube
+  const ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([a-zA-Z0-9_-]{11})/)
+  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}`
+  // Loom
+  const loomMatch = url.match(/loom\.com\/share\/([a-zA-Z0-9]+)/)
+  if (loomMatch) return `https://www.loom.com/embed/${loomMatch[1]}`
+  return null
+}
+
 // ─── Star Rating ──────────────────────────────────────────────────────────────
 function StarRating({ rating, size = 14 }) {
   if (!rating) return null
@@ -188,6 +200,22 @@ function ProjectDetailModal({ project, onClose }) {
                       {t}
                     </span>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* Demo Video */}
+            {getEmbedUrl(project.video_url) && (
+              <div>
+                <h3 className="text-white font-semibold text-sm mb-3 uppercase tracking-wider">Demo Video</h3>
+                <div className="aspect-video rounded-xl overflow-hidden border border-white/[0.08]">
+                  <iframe
+                    src={getEmbedUrl(project.video_url)}
+                    title={`${project.title} demo`}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
                 </div>
               </div>
             )}
