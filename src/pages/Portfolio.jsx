@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import {
   FiX, FiCheck, FiArrowRight, FiStar, FiClock,
-  FiGlobe, FiImage,
+  FiGlobe, FiImage, FiSearch,
 } from 'react-icons/fi'
 import { SiUpwork } from 'react-icons/si'
 import { Link } from 'react-router-dom'
@@ -320,8 +320,19 @@ function JobRow({ project, onClick }) {
 // ─── Main Page ────────────────────────────────────────────────────────────────
 const ITEMS_PER_PAGE = 15
 
+const CATEGORIES = [
+  'All',
+  'Voice AI & Chatbots',
+  'Machine Learning & AI',
+  'Web Scraping & Automation',
+  'Full-Stack Development',
+  'Workflow Automation',
+]
+
 export default function Portfolio() {
   const [statusFilter, setStatusFilter] = useState('completed')
+  const [categoryFilter, setCategoryFilter] = useState('All')
+  const [searchQuery, setSearchQuery] = useState('')
   const [selectedProject, setSelectedProject] = useState(null)
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
@@ -341,9 +352,15 @@ export default function Portfolio() {
   const completedProjects = projects.filter(p => (p.status || 'completed') === 'completed')
   const inProgressProjects = projects.filter(p => p.status === 'in_progress')
 
-  const filtered = statusFilter === 'completed' ? completedProjects
+  const statusFiltered = statusFilter === 'completed' ? completedProjects
     : statusFilter === 'in_progress' ? inProgressProjects
     : projects
+
+  const filtered = statusFiltered.filter(p => {
+    const matchesCategory = categoryFilter === 'All' || p.category === categoryFilter
+    const matchesSearch = !searchQuery || p.title.toLowerCase().includes(searchQuery.toLowerCase())
+    return matchesCategory && matchesSearch
+  })
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE)
   const paginatedProjects = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
@@ -419,6 +436,42 @@ export default function Portfolio() {
             >
               In progress ({inProgressProjects.length})
             </button>
+          </div>
+
+          {/* Category Filter + Search */}
+          <div className="py-4 space-y-3 border-b border-white/[0.06]">
+            {/* Search */}
+            <div className="relative">
+              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={14} />
+              <input
+                type="text"
+                placeholder="Search projects..."
+                value={searchQuery}
+                onChange={e => { setSearchQuery(e.target.value); setCurrentPage(1) }}
+                className="w-full bg-white/[0.03] border border-white/[0.08] rounded-lg pl-9 pr-4 py-2 text-white text-sm outline-none focus:border-primary-500/50 placeholder:text-slate-600 transition-colors"
+              />
+            </div>
+            {/* Category pills */}
+            <div className="flex items-center gap-2 flex-wrap">
+              {CATEGORIES.map(cat => {
+                const count = cat === 'All'
+                  ? statusFiltered.length
+                  : statusFiltered.filter(p => p.category === cat).length
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => { setCategoryFilter(cat); setCurrentPage(1) }}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                      categoryFilter === cat
+                        ? 'bg-primary-500/15 border border-primary-500/40 text-primary-400'
+                        : 'bg-white/[0.03] border border-white/[0.08] text-slate-400 hover:text-white hover:border-white/[0.15]'
+                    }`}
+                  >
+                    {cat} <span className="ml-1 opacity-60">{count}</span>
+                  </button>
+                )
+              })}
+            </div>
           </div>
 
           {/* Job List */}
