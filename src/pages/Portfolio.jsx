@@ -280,55 +280,24 @@ function ProjectDetailModal({ project, onClose }) {
               </div>
             )}
 
-            {/* Project Quick Facts — always show available basic data */}
+            {/* Attractive CTA — when no rich content yet */}
             {!hasRichContent && !project.summary && !project.review && (
-              <div className="space-y-4">
-                {/* Quick facts grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {project.client_name && (
-                    <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-3">
-                      <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Client</p>
-                      <p className="text-white text-sm font-medium">{project.client_name}</p>
-                    </div>
-                  )}
-                  {project.price_type && (
-                    <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-3">
-                      <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Contract Type</p>
-                      <p className="text-white text-sm font-medium">{project.price_type}</p>
-                    </div>
-                  )}
-                  {project.project_value && (
-                    <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-3">
-                      <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Project Value</p>
-                      <p className="text-emerald-400 text-sm font-medium">{project.project_value}</p>
-                    </div>
-                  )}
-                  {project.hours_worked && (
-                    <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-3">
-                      <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Hours Worked</p>
-                      <p className="text-white text-sm font-medium">{project.hours_worked}h</p>
-                    </div>
-                  )}
-                  {project.category && (
-                    <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-3">
-                      <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Category</p>
-                      <p className="text-primary-400 text-sm font-medium">{project.category}</p>
-                    </div>
-                  )}
-                  {project.status && (
-                    <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-3">
-                      <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Status</p>
-                      <p className={`text-sm font-medium ${project.status === 'completed' ? 'text-emerald-400' : 'text-amber-400'}`}>
-                        {project.status === 'completed' ? 'Completed' : 'In Progress'}
-                      </p>
-                    </div>
-                  )}
+              <div className="text-center py-6">
+                <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary-500/20 to-emerald-500/20 border border-white/[0.08] flex items-center justify-center">
+                  <FiCheck className="text-emerald-400" size={24} />
                 </div>
-
-                {/* Subtle note about detailed case study */}
-                <p className="text-slate-600 text-xs text-center pt-2">
-                  Detailed case study coming soon — view the full project on Upwork for more details.
+                <h3 className="text-white font-semibold text-lg mb-2">Successfully Delivered</h3>
+                <p className="text-slate-400 text-sm max-w-md mx-auto leading-relaxed mb-5">
+                  This {project.category || 'project'} was completed to the client's satisfaction.
+                  Want something similar built for your business?
                 </p>
+                <Link
+                  to="/contact"
+                  onClick={onClose}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-emerald-500 text-white text-sm font-semibold hover:shadow-lg hover:shadow-primary-500/25 transition-all"
+                >
+                  Get a Free Quote <FiArrowRight size={14} />
+                </Link>
               </div>
             )}
           </div>
