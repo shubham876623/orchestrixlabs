@@ -280,15 +280,54 @@ function ProjectDetailModal({ project, onClose }) {
               </div>
             )}
 
-            {/* Empty state — when no rich content yet */}
+            {/* Project Quick Facts — always show available basic data */}
             {!hasRichContent && !project.summary && !project.review && (
-              <div className="text-center py-8">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary-500/10 to-emerald-500/10 border border-white/[0.06] flex items-center justify-center">
-                  <FiStar className="text-primary-400" size={24} />
+              <div className="space-y-4">
+                {/* Quick facts grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {project.client_name && (
+                    <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-3">
+                      <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Client</p>
+                      <p className="text-white text-sm font-medium">{project.client_name}</p>
+                    </div>
+                  )}
+                  {project.price_type && (
+                    <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-3">
+                      <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Contract Type</p>
+                      <p className="text-white text-sm font-medium">{project.price_type}</p>
+                    </div>
+                  )}
+                  {project.project_value && (
+                    <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-3">
+                      <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Project Value</p>
+                      <p className="text-emerald-400 text-sm font-medium">{project.project_value}</p>
+                    </div>
+                  )}
+                  {project.hours_worked && (
+                    <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-3">
+                      <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Hours Worked</p>
+                      <p className="text-white text-sm font-medium">{project.hours_worked}h</p>
+                    </div>
+                  )}
+                  {project.category && (
+                    <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-3">
+                      <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Category</p>
+                      <p className="text-primary-400 text-sm font-medium">{project.category}</p>
+                    </div>
+                  )}
+                  {project.status && (
+                    <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-3">
+                      <p className="text-slate-500 text-xs uppercase tracking-wider mb-1">Status</p>
+                      <p className={`text-sm font-medium ${project.status === 'completed' ? 'text-emerald-400' : 'text-amber-400'}`}>
+                        {project.status === 'completed' ? 'Completed' : 'In Progress'}
+                      </p>
+                    </div>
+                  )}
                 </div>
-                <h3 className="text-white font-semibold mb-2">Project details coming soon</h3>
-                <p className="text-slate-500 text-sm max-w-sm mx-auto leading-relaxed">
-                  We're adding detailed case studies, tech stacks, and client testimonials for every project. Check back soon or view the full project on Upwork.
+
+                {/* Subtle note about detailed case study */}
+                <p className="text-slate-600 text-xs text-center pt-2">
+                  Detailed case study coming soon — view the full project on Upwork for more details.
                 </p>
               </div>
             )}
