@@ -77,9 +77,13 @@ export default function Reviews() {
   return (
     <>
       <SEOHead
-        title="Client Reviews — Orchestrix Labs"
+        title="Client Reviews"
         description={`${siteStats.total_jobs}+ verified Upwork reviews. ${siteStats.jss_score}% Job Success Score. Top Rated. See what clients say about working with Orchestrix Labs.`}
         path="/reviews"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Reviews', path: '/reviews' },
+        ]}
       />
 
       {/* Hero */}

@@ -71,6 +71,10 @@ export default function About() {
         title="About"
         description="Orchestrix Labs is a top-rated AI development agency with 6+ years experience and 200+ projects delivered. We specialize in voice AI, automation, web development, and machine learning solutions."
         path="/about"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'About', path: '/about' },
+        ]}
       />
 
       {/* Hero */}

@@ -1,0 +1,63 @@
+# Orchestrix Labs
+# https://orchestrixlabs.com
+
+> Orchestrix Labs is a top-rated AI development agency specializing in voice AI agents, intelligent automation, machine learning, and full-stack web applications. 200+ projects delivered worldwide with 100% Job Success Score on Upwork.
+
+## About
+
+- **Company**: Orchestrix Labs
+- **Website**: https://orchestrixlabs.com
+- **Email**: contact@orchestrixlabs.com
+- **Location**: Mohali, Punjab, India (serving clients worldwide)
+- **Founded by**: Shubham Saini, Founder & CEO
+- **Experience**: 6+ years in Python, AI, and automation
+- **Track record**: 200+ projects, 4,800+ engineering hours, $100K+ revenue generated for clients
+
+## Services
+
+1. **Voice AI & Conversational Agents** — Twilio, Retell.ai, SynthFlow, GPT-4 powered voice bots for restaurants, healthcare, and customer support
+2. **Machine Learning & AI** — RAG systems, LangChain, computer vision, multi-agent orchestration, custom ML models
+3. **Full-Stack Development** — Django, FastAPI, React, PostgreSQL, REST APIs, real-time systems
+4. **Web Scraping & Data Automation** — Selenium, Playwright, Scrapy, ETL pipelines, CAPTCHA handling
+5. **Workflow Automation** — n8n, Zapier, custom Python automation, form filling, business process automation
+
+## Tech Stack
+
+Python, Django, FastAPI, Flask, React, Vite, Tailwind CSS, OpenAI GPT-4, LangChain, Twilio, AWS, Docker, PostgreSQL, MySQL, Selenium, Playwright
+
+## Why Hire Orchestrix Labs
+
+- Top Rated agency on Upwork with 100% Job Success Score
+- 133+ verified client reviews
+- Production-first delivery — not demos, real deployed systems
+- 24-hour response time on all inquiries
+- Transparent communication with weekly updates and clear milestones
+- Post-launch support included on every project
+
+## Pages
+
+- Home: https://orchestrixlabs.com/
+- Services: https://orchestrixlabs.com/services
+- Portfolio / Work History: https://orchestrixlabs.com/portfolio
+- Client Reviews: https://orchestrixlabs.com/reviews
+- About: https://orchestrixlabs.com/about
+- Contact: https://orchestrixlabs.com/contact
+
+## Social & Profiles
+
+- LinkedIn: https://linkedin.com/company/orchestrix-labs
+- GitHub: https://github.com/orchestrixlabs
+- Upwork Agency: https://www.upwork.com/agencies/1464061503601672192/
+- Instagram: https://www.instagram.com/orchestrix_labs__ai_dev_agency
+
+## Contact
+
+For project inquiries, free consultations, or hiring:
+- Email: contact@orchestrixlabs.com
+- Contact form: https://orchestrixlabs.com/contact
+- Business hours: Mon–Fri, 9:00 AM – 6:00 PM IST
+- Response time: Within 24 hours
+
+## Keywords
+
+AI development agency, voice AI agent, Python development company, Django developer, React development, FastAPI, web automation, machine learning, full stack development, web scraping service, workflow automation, chatbot development, AI consulting, software development company, custom software, RAG systems, LangChain, automation agency, hire AI developers, Upwork top rated agency

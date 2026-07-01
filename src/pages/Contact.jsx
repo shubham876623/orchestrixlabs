@@ -1,10 +1,14 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { FiMail, FiSend, FiCheckCircle, FiLinkedin, FiGithub } from 'react-icons/fi'
+import {
+  FiMail, FiSend, FiCheckCircle, FiLinkedin, FiGithub,
+  FiInstagram, FiMapPin, FiClock, FiGlobe,
+} from 'react-icons/fi'
 import { SiUpwork } from 'react-icons/si'
 import api from '../lib/axios'
 import SEOHead from '../components/SEOHead'
+import { SITE, SOCIAL } from '../lib/site'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -32,17 +36,21 @@ const services = [
 ]
 
 const contactInfo = [
-  { icon: FiMail, label: 'Email', value: 'contact@orchestrixlabs.com', href: 'mailto:contact@orchestrixlabs.com' },
-  { icon: FiLinkedin, label: 'LinkedIn', value: 'linkedin.com/company/orchestrix-labs', href: 'https://linkedin.com/company/orchestrix-labs' },
-  { icon: SiUpwork, label: 'Upwork', value: 'upwork.com/agencies/orchestrixlabs', href: 'https://www.upwork.com/agencies/1464061503601672192/' },
-  { icon: FiGithub, label: 'GitHub', value: 'github.com/orchestrixlabs', href: 'https://github.com/orchestrixlabs' },
+  { icon: FiMail, label: 'Email', value: SITE.email, href: `mailto:${SITE.email}` },
+  { icon: FiMapPin, label: 'Office', value: SITE.address.formatted, href: `https://maps.google.com/?q=${encodeURIComponent(SITE.address.formatted)}` },
+  { icon: FiClock, label: 'Business Hours', value: `${SITE.businessHours} (${SITE.timezone})`, href: null },
+  { icon: FiGlobe, label: 'Serving', value: 'Clients worldwide — remote-first agency', href: null },
+  { icon: FiLinkedin, label: 'LinkedIn', value: 'linkedin.com/company/orchestrix-labs', href: SOCIAL.linkedin },
+  { icon: SiUpwork, label: 'Upwork', value: 'Top Rated Agency — 133+ reviews', href: SOCIAL.upwork },
+  { icon: FiGithub, label: 'GitHub', value: 'github.com/orchestrixlabs', href: SOCIAL.github },
+  { icon: FiInstagram, label: 'Instagram', value: '@orchestrix_labs__ai_dev_agency', href: SOCIAL.instagram },
 ]
 
 const initialForm = { name: '', email: '', service: '', budget: '', message: '' }
 
 export default function Contact() {
   const [form, setForm] = useState(initialForm)
-  const [status, setStatus] = useState('idle') // idle | loading | success | error
+  const [status, setStatus] = useState('idle')
   const [errors, setErrors] = useState({})
 
   const validate = () => {
@@ -50,7 +58,6 @@ export default function Contact() {
     if (!form.name.trim()) e.name = 'Name is required'
     if (!form.email.trim()) e.email = 'Email is required'
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Enter a valid email'
-    // message is optional
     return e
   }
 
@@ -82,13 +89,16 @@ export default function Contact() {
     <>
       <SEOHead
         title="Contact"
-        description="Get a free consultation from Orchestrix Labs. Hire expert AI developers for voice AI, automation, web scraping, Django, React & full-stack projects. 24-hour response guaranteed."
+        description={`Get a free consultation from Orchestrix Labs. Hire expert AI developers for voice AI, automation, web scraping, Django, React & full-stack projects. Email ${SITE.email} — 24-hour response guaranteed.`}
         path="/contact"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Contact', path: '/contact' },
+        ]}
       />
 
-      {/* Hero */}
       <section className="relative pt-36 pb-16 text-center overflow-hidden">
-        <div className="absolute inset-0 hero-gradient grid-pattern" />
+        <div className="absolute inset-0 hero-gradient grid-pattern noise" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-dark-950" />
         <div className="container relative z-10">
           <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="section-tag mb-5 inline-flex">
@@ -98,17 +108,15 @@ export default function Contact() {
             Let's build something<br /><span className="gradient-text">great together</span>
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="section-sub mx-auto">
-            Tell us about your project. We'll reply within 24 hours with honest feedback and a clear plan.
+            Tell us about your project. We'll reply within {SITE.responseTime} with honest feedback and a clear plan.
           </motion.p>
         </div>
       </section>
 
-      {/* Main */}
       <Section className="py-16">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
 
-            {/* Form */}
             <div className="lg:col-span-3">
               <motion.div variants={fadeUp} custom={0} className="card p-8">
                 {status === 'success' ? (
@@ -118,32 +126,33 @@ export default function Contact() {
                     </div>
                     <h3 className="text-white font-bold text-xl mb-2">Message sent!</h3>
                     <p className="text-slate-400 text-sm">
-                      Thanks for reaching out. We'll get back to you within 24 hours.
+                      Thanks for reaching out. We'll get back to you within {SITE.responseTime}.
                     </p>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} action="#" noValidate className="space-y-5">
                     <h2 className="text-white font-bold text-xl mb-6">Send us a message</h2>
 
-                    {/* Name + Email */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="text-slate-400 text-xs font-medium mb-1.5 block">
+                        <label htmlFor="contact-name" className="text-slate-400 text-xs font-medium mb-1.5 block">
                           Your Name <span className="text-red-400">*</span>
                         </label>
                         <input
-                          type="text" name="name" placeholder=""
+                          id="contact-name"
+                          type="text" name="name" autoComplete="name"
                           value={form.name} onChange={handleChange}
                           className={inputClass('name')}
                         />
                         {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
                       </div>
                       <div>
-                        <label className="text-slate-400 text-xs font-medium mb-1.5 block">
+                        <label htmlFor="contact-email" className="text-slate-400 text-xs font-medium mb-1.5 block">
                           Email Address <span className="text-red-400">*</span>
                         </label>
                         <input
-                          type="email" name="email" placeholder=""
+                          id="contact-email"
+                          type="email" name="email" autoComplete="email"
                           value={form.email} onChange={handleChange}
                           className={inputClass('email')}
                         />
@@ -151,10 +160,10 @@ export default function Contact() {
                       </div>
                     </div>
 
-                    {/* Service */}
                     <div>
-                      <label className="text-slate-400 text-xs font-medium mb-1.5 block">Service Needed</label>
+                      <label htmlFor="contact-service" className="text-slate-400 text-xs font-medium mb-1.5 block">Service Needed</label>
                       <select
+                        id="contact-service"
                         name="service" value={form.service} onChange={handleChange}
                         className={`${inputClass('service')} appearance-none cursor-pointer`}
                       >
@@ -165,10 +174,10 @@ export default function Contact() {
                       </select>
                     </div>
 
-                    {/* Budget */}
                     <div>
-                      <label className="text-slate-400 text-xs font-medium mb-1.5 block">Estimated Budget</label>
+                      <label htmlFor="contact-budget" className="text-slate-400 text-xs font-medium mb-1.5 block">Estimated Budget</label>
                       <select
+                        id="contact-budget"
                         name="budget" value={form.budget} onChange={handleChange}
                         className={`${inputClass('budget')} appearance-none cursor-pointer`}
                       >
@@ -179,23 +188,22 @@ export default function Contact() {
                       </select>
                     </div>
 
-                    {/* Message */}
                     <div>
-                      <label className="text-slate-400 text-xs font-medium mb-1.5 block">
+                      <label htmlFor="contact-message" className="text-slate-400 text-xs font-medium mb-1.5 block">
                         Tell us about your project
                       </label>
                       <textarea
+                        id="contact-message"
                         name="message" rows={5}
-                        placeholder=""
                         value={form.message} onChange={handleChange}
                         className={`${inputClass('message')} resize-none`}
                       />
-                      {errors.message && <p className="text-red-400 text-xs mt-1">{errors.message}</p>}
                     </div>
 
                     {status === 'error' && (
                       <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3">
-                        Something went wrong. Please email us directly at contact@orchestrixlabs.com
+                        Something went wrong. Please email us directly at{' '}
+                        <a href={`mailto:${SITE.email}`} className="underline">{SITE.email}</a>
                       </p>
                     )}
 
@@ -213,55 +221,60 @@ export default function Contact() {
                         <><FiSend /> Send Message</>
                       )}
                     </button>
+
+                    <p className="text-slate-600 text-xs text-center">
+                      Your data is encrypted in transit. We never share your information with third parties.
+                    </p>
                   </form>
                 )}
               </motion.div>
             </div>
 
-            {/* Sidebar */}
             <div className="lg:col-span-2 space-y-5">
-              {/* Contact Info */}
               <motion.div variants={fadeUp} custom={1} className="card p-6">
-                <h3 className="text-white font-bold text-base mb-5">Other ways to reach us</h3>
+                <h3 className="text-white font-bold text-base mb-5">Get in touch</h3>
                 <div className="space-y-4">
-                  {contactInfo.map(({ icon: Icon, label, value, href }) => (
-                    <a
-                      key={label}
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 group"
-                    >
-                      <div className="w-9 h-9 rounded-lg bg-primary-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary-500/20 transition-colors">
-                        <Icon className="text-primary-400" size={16} />
+                  {contactInfo.map(({ icon: Icon, label, value, href }) => {
+                    const inner = (
+                      <>
+                        <div className="w-9 h-9 rounded-lg bg-primary-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary-500/20 transition-colors">
+                          <Icon className="text-primary-400" size={16} />
+                        </div>
+                        <div>
+                          <p className="text-slate-500 text-xs">{label}</p>
+                          <p className="text-slate-300 text-sm group-hover:text-white transition-colors leading-snug">{value}</p>
+                        </div>
+                      </>
+                    )
+                    return href ? (
+                      <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="flex items-start gap-3 group">
+                        {inner}
+                      </a>
+                    ) : (
+                      <div key={label} className="flex items-start gap-3">
+                        {inner}
                       </div>
-                      <div>
-                        <p className="text-slate-500 text-xs">{label}</p>
-                        <p className="text-slate-300 text-sm group-hover:text-white transition-colors">{value}</p>
-                      </div>
-                    </a>
-                  ))}
+                    )
+                  })}
                 </div>
               </motion.div>
 
-              {/* Response time */}
               <motion.div variants={fadeUp} custom={2} className="card p-6 bg-gradient-to-br from-primary-500/10 to-dark-900 border-primary-500/20">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   <span className="text-emerald-400 text-xs font-semibold">Quick Response</span>
                 </div>
-                <p className="text-white font-semibold text-base mb-1">24-hour response guaranteed</p>
+                <p className="text-white font-semibold text-base mb-1">{SITE.responseTime} response guaranteed</p>
                 <p className="text-slate-400 text-sm leading-relaxed">
                   We review every message personally and always respond with a clear, honest assessment — no auto-replies.
                 </p>
               </motion.div>
 
-              {/* What to expect */}
               <motion.div variants={fadeUp} custom={3} className="card p-6">
                 <h3 className="text-white font-bold text-sm mb-4">What happens next?</h3>
                 <ol className="space-y-3">
                   {[
-                    'We review your message within 24 hours',
+                    `We review your message within ${SITE.responseTime}`,
                     'We schedule a 30-min discovery call',
                     'You receive a detailed project proposal',
                     'We start building',

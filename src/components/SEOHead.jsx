@@ -1,59 +1,80 @@
 import { Helmet } from 'react-helmet-async'
+import { SITE } from '../lib/site'
+import {
+  organizationSchema,
+  professionalServiceSchema,
+  websiteSchema,
+  faqSchema,
+  breadcrumbSchema,
+} from '../lib/seoSchemas'
 
-const SITE = 'https://orchestrixlabs.com'
-const DEFAULT_IMAGE = `${SITE}/og-image.png`
+const DEFAULT_TITLE = 'Orchestrix Labs — AI Development Agency | Voice AI, Automation & Full-Stack Software'
+const DEFAULT_DESC =
+  'Top-rated AI development agency. Voice AI agents, intelligent automation, full-stack web apps & ML solutions. 200+ projects, 100% job success. Python, Django, React experts.'
 
-const orgSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: 'Orchestrix Labs',
-  url: SITE,
-  logo: `${SITE}/favicon.svg`,
-  description:
-    'Orchestrix Labs is a top-rated AI development agency specializing in voice AI agents, intelligent automation, machine learning, and full-stack web applications. 200+ projects delivered worldwide.',
-  contactPoint: {
-    '@type': 'ContactPoint',
-    contactType: 'customer service',
-    email: 'contact@orchestrixlabs.com',
-  },
-  sameAs: [
-    'https://linkedin.com/company/orchestrix-labs',
-    'https://github.com/orchestrixlabs',
-    'https://www.instagram.com/orchestrix_labs__ai_dev_agency',
-    'https://www.upwork.com/agencies/1464061503601672192/',
-  ],
-}
+export default function SEOHead({
+  title,
+  description = DEFAULT_DESC,
+  path = '',
+  image = SITE.ogImage,
+  noindex = false,
+  faq,
+  breadcrumbs,
+  extraSchemas = [],
+}) {
+  const fullTitle = title ? `${title} — Orchestrix Labs | AI Development Agency` : DEFAULT_TITLE
+  const fullUrl = `${SITE.url}${path}`
 
-export default function SEOHead({ title, description, path = '', image = DEFAULT_IMAGE, schema }) {
-  const fullTitle = title
-    ? `${title} — Orchestrix Labs | AI Development Agency`
-    : 'Orchestrix Labs — AI Development Agency | Voice AI, Automation & Full-Stack Software'
-  const fullUrl = `${SITE}${path}`
+  const schemas = [
+    organizationSchema(),
+    professionalServiceSchema(),
+    websiteSchema(),
+    ...(faq ? [faqSchema(faq)] : []),
+    ...(breadcrumbs ? [breadcrumbSchema(breadcrumbs)] : []),
+    ...extraSchemas,
+  ]
 
   return (
     <Helmet>
+      <html lang="en" />
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
+      <meta name="author" content={SITE.name} />
+      <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
       <link rel="canonical" href={fullUrl} />
+
+      {/* Geo & business */}
+      <meta name="geo.region" content="IN-PB" />
+      <meta name="geo.placename" content="Mohali, Punjab, India" />
 
       {/* Open Graph */}
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={fullUrl} />
       <meta property="og:image" content={image} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content="Orchestrix Labs — AI Development Agency" />
       <meta property="og:type" content="website" />
+      <meta property="og:site_name" content={SITE.name} />
+      <meta property="og:locale" content="en_US" />
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={image} />
+      <meta name="twitter:image:alt" content="Orchestrix Labs — AI Development Agency" />
 
-      {/* JSON-LD */}
-      <script type="application/ld+json">{JSON.stringify(orgSchema)}</script>
-      {schema && (
-        <script type="application/ld+json">{JSON.stringify(schema)}</script>
-      )}
+      {/* AI discovery */}
+      <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-readable site summary" />
+
+      {/* JSON-LD structured data */}
+      {schemas.map((schema, i) => (
+        <script key={i} type="application/ld+json">
+          {JSON.stringify(schema)}
+        </script>
+      ))}
     </Helmet>
   )
 }

@@ -25,8 +25,11 @@ function AppInner() {
   return (
     <>
       <ScrollToTop />
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
       {!isDashboard && <Navbar />}
-      <main>
+      <main id="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/services" element={<Services />} />

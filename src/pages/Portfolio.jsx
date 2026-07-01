@@ -469,6 +469,10 @@ export default function Portfolio() {
         title="Work History"
         description={`${completedProjects.length}+ completed jobs and ${inProgressProjects.length} in-progress projects. See our full work history with real client ratings, reviews, and verified results from Upwork.`}
         path="/portfolio"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Portfolio', path: '/portfolio' },
+        ]}
       />
 
       {/* Hero */}

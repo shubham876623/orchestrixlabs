@@ -64,6 +64,10 @@ export default function Services() {
         title="Services"
         description="Expert AI development services: Voice AI agents, machine learning, full-stack web development, web scraping, and workflow automation. Hire top-rated Python & AI developers at Orchestrix Labs."
         path="/services"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Services', path: '/services' },
+        ]}
       />
 
       {/* Hero */}

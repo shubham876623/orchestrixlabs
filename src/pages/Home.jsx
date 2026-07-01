@@ -10,7 +10,10 @@ import { SiPython, SiDjango, SiFastapi, SiReact, SiOpenai,
 import { useState, useEffect } from 'react'
 import api from '../lib/axios'
 import SEOHead from '../components/SEOHead'
+import TrustBar from '../components/TrustBar'
+import FAQSection from '../components/FAQSection'
 import { services } from '../data/services'
+import { FAQ } from '../lib/site'
 
 // ─── Animation helpers ────────────────────────────────────────────────────────
 const fadeUp = {
@@ -620,13 +623,16 @@ export default function Home() {
       <SEOHead
         description="Orchestrix Labs is a top-rated AI development agency. We build voice AI agents, automation pipelines, full-stack web apps & ML solutions. 200+ projects delivered worldwide with 100% job success."
         path="/"
+        faq={FAQ}
       />
       <Hero />
+      <TrustBar />
       <ServicesPreview />
       <FeaturedWork />
       <TechStackSection />
       <ProcessSection />
       <Testimonials />
+      <FAQSection />
       <CTABanner />
     </>
   )
