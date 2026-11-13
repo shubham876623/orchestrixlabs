@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node scripts/build-production.mjs",
     "build:review": "vite build",
     "build:production": "node scripts/build-production.mjs",
     "preview": "vite preview",
