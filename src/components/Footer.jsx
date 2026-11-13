@@ -1,13 +1,14 @@
 import { Link } from 'react-router-dom'
 import { FiGithub, FiLinkedin, FiMail, FiInstagram, FiMapPin } from 'react-icons/fi'
 import { SiUpwork } from 'react-icons/si'
-import { SITE, SOCIAL, STATS } from '../lib/site'
+import { SITE, SOCIAL } from '../lib/site'
 
 const footerLinks = {
   Company: [
     { name: 'About Us', path: '/about' },
     { name: 'Our Services', path: '/services' },
-    { name: 'Work History', path: '/portfolio' },
+    { name: 'Portfolio', path: '/portfolio' },
+    { name: 'Work History', path: '/work-history' },
     { name: 'Client Reviews', path: '/reviews' },
     { name: 'Contact', path: '/contact' },
   ],
@@ -43,14 +44,14 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
-              Top-rated AI development agency building voice AI agents, intelligent
-              automation, and full-stack software. {STATS.projects} projects delivered worldwide.
+              {SITE.positioning} Voice AI, automation, custom software, and integrations—
+              delivered with production discipline.
             </p>
             <div className="mt-4 space-y-2">
               <a href={`mailto:${SITE.email}`} className="text-slate-400 hover:text-white text-sm transition-colors block">
                 {SITE.email}
               </a>
-              <p className="flex items-start gap-2 text-slate-500 text-xs leading-relaxed max-w-sm">
+              <p className="flex items-start gap-2 text-slate-400 text-xs leading-relaxed max-w-sm">
                 <FiMapPin className="flex-shrink-0 mt-0.5" size={12} />
                 {SITE.address.formatted}
               </p>
@@ -92,18 +93,18 @@ export default function Footer() {
 
         <div className="mt-14 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-center sm:text-left">
-            <p className="text-slate-500 text-sm">
+            <p className="text-slate-400 text-sm">
               &copy; {new Date().getFullYear()} {SITE.legalName}. All rights reserved.
             </p>
-            <p className="text-slate-600 text-xs mt-1">{SITE.jurisdiction}</p>
+            <p className="text-slate-400 text-xs mt-1">{SITE.jurisdiction}</p>
           </div>
           <div className="flex items-center gap-6">
-            <span className="flex items-center gap-2 text-xs text-slate-500">
+            <span className="flex items-center gap-2 text-xs text-slate-400">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               Available for new projects
             </span>
             <Link to="/contact" className="text-xs text-primary-400 hover:text-white transition-colors font-medium">
-              Get a Quote &rarr;
+              Request Consultation →
             </Link>
           </div>
         </div>

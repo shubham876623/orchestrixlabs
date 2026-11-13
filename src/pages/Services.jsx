@@ -62,7 +62,7 @@ export default function Services() {
     <>
       <SEOHead
         title="Services"
-        description="Expert AI development services: Voice AI agents, machine learning, full-stack web development, web scraping, and workflow automation. Hire top-rated Python & AI developers at Orchestrix Labs."
+        description="AI engineering for real-world operations: voice AI, machine learning, full-stack platforms, data automation, and workflow integrations. Orchestrix Labs — Engineering Intelligence. Automating Growth."
         path="/services"
         breadcrumbs={[
           { name: 'Home', path: '/' },
@@ -85,15 +85,15 @@ export default function Services() {
             initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.1 }}
             className="section-heading mb-5"
           >
-            Everything you need to build<br />
-            <span className="gradient-text">an intelligent business</span>
+            Capabilities that turn operations into<br />
+            <span className="gradient-text">dependable software systems</span>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
             className="section-sub mx-auto"
           >
-            From AI voice agents to end-to-end web platforms — we cover the full spectrum
-            of modern software development with a specialisation in AI integration.
+            Voice AI, automation, custom platforms, and integrations—scoped for real business
+            constraints, delivered with clear milestones and production-minded engineering.
           </motion.p>
         </div>
       </section>
@@ -208,13 +208,14 @@ export default function Services() {
         <div className="container text-center">
           <motion.div variants={fadeUp} custom={0} className="glass p-12 rounded-3xl max-w-2xl mx-auto">
             <h2 className="text-3xl font-black text-white mb-4">
-              Not sure which service fits?
+              Not sure where to start?
             </h2>
             <p className="text-slate-400 mb-8">
-              Tell us your problem. We'll figure out the right solution together — no commitment required.
+              Describe the workflow you want to improve. We will recommend a practical path—
+              no inflated scope, no commitment required to start the conversation.
             </p>
             <Link to="/contact" className="btn-primary">
-              Book a Free Discovery Call <FiArrowRight />
+              Request Consultation <FiArrowRight />
             </Link>
           </motion.div>
         </div>

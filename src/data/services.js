@@ -3,16 +3,16 @@ export const services = [
     id: 'voice-ai',
     icon: 'voice',
     title: 'Voice AI & Chatbots',
-    tagline: 'Intelligent agents that talk, listen, and act',
+    tagline: 'Conversational systems that qualify, route, and follow through',
     description:
-      'We design and deploy production-grade voice AI systems and intelligent chatbots that handle real conversations — from lead qualification to customer support — using the latest LLMs, telephony APIs, and real-time infrastructure.',
+      'We design voice AI agents and chatbots that handle real business conversations—from inbound qualification to support handoff—using telephony APIs, LLMs, and reliable orchestration rather than demo scripts.',
     features: [
       'AI voice agents via Twilio, Retell.ai & SynthFlow',
       'GPT-4 powered conversational flows with function calling',
       'Calendar booking, CRM logging and SMS follow-ups',
       'Multi-language and bilingual support',
       'Human handoff and voicemail fallback',
-      '24/7 production-ready deployment',
+      'Production-minded deployment and handoff',
     ],
     tools: ['Twilio', 'Retell.ai', 'SynthFlow', 'OpenAI GPT-4', 'FastAPI', 'Supabase'],
     color: 'from-violet-500 to-purple-600',
@@ -22,9 +22,9 @@ export const services = [
     id: 'ml-ai',
     icon: 'brain',
     title: 'Machine Learning & AI',
-    tagline: 'Custom AI solutions trained on your data',
+    tagline: 'Applied AI grounded in your workflows and data',
     description:
-      'From RAG-powered document assistants to computer vision pipelines, we build and deploy custom ML models and AI integrations that solve real business problems — not generic demos.',
+      'From RAG document assistants to computer-vision pipelines, we build AI systems tied to concrete operational outcomes—with clear boundaries between shipped capability and exploration.',
     features: [
       'RAG (Retrieval-Augmented Generation) systems with FAISS & LangChain',
       'Custom model training and fine-tuning',
@@ -41,9 +41,9 @@ export const services = [
     id: 'fullstack',
     icon: 'code',
     title: 'Full-Stack Development',
-    tagline: 'Scalable web applications built to last',
+    tagline: 'Durable platforms with clean architecture',
     description:
-      'End-to-end web development with Python backends and modern React frontends. We architect, build, and deploy production-grade applications — from SaaS platforms to enterprise tools.',
+      'End-to-end web products with Python backends and modern React frontends—architected for maintainability, clear APIs, and deployment practices suited to long-lived business software.',
     features: [
       'Django, FastAPI & Flask backends',
       'React + Vite frontend with Tailwind CSS',
@@ -60,9 +60,9 @@ export const services = [
     id: 'scraping',
     icon: 'globe',
     title: 'Web Scraping & Automation',
-    tagline: 'Turn any website into structured data',
+    tagline: 'Reliable extraction into structured business data',
     description:
-      'We build reliable, production-grade scrapers and browser automation bots that extract, transform, and deliver the data you need — at scale, with anti-bot bypass and smart retry logic.',
+      'We build scrapers and browser automation that extract, transform, and deliver structured data with retry logic, rate discipline, and outputs your systems can trust.',
     features: [
       'Scrapy, Selenium & Playwright scrapers',
       'CAPTCHA and anti-bot bypass techniques',
@@ -79,9 +79,9 @@ export const services = [
     id: 'automation',
     icon: 'workflow',
     title: 'Workflow Automation & Integration',
-    tagline: 'Connect your tools. Automate your operations.',
+    tagline: 'Connect tools. Remove operational drag.',
     description:
-      'We integrate your existing software stack and automate repetitive workflows using n8n, Zapier, custom APIs and Python — saving your team dozens of hours every week.',
+      'We integrate CRMs, inboxes, calendars, and internal APIs—then automate the repetitive paths with n8n, Zapier, or custom Python—so your team spends time on decisions, not copy-paste.',
     features: [
       'n8n and Zapier workflow design and deployment',
       'CRM, email and calendar automations',

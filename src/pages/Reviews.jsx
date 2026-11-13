@@ -30,12 +30,17 @@ function Section({ children, className = '' }) {
 }
 
 function useSiteStats() {
-  const defaults = { total_earnings: '$100K+', total_hours: 4828, total_jobs: 143, years_experience: 6, jss_score: 100 }
+  const defaults = { years_experience: 6, jss_score: 100 }
   const [s, setS] = useState(defaults)
   useEffect(() => {
     api.get('/api/site-stats/').then(r => {
-      if (r.data && typeof r.data === 'object' && !Array.isArray(r.data))
-        setS(prev => ({ ...prev, ...r.data }))
+      if (r.data && typeof r.data === 'object' && !Array.isArray(r.data)) {
+        setS((prev) => ({
+          ...prev,
+          years_experience: r.data.years_experience ?? prev.years_experience,
+          jss_score: r.data.jss_score ?? prev.jss_score,
+        }))
+      }
     }).catch(() => {})
   }, [])
   return s
@@ -78,7 +83,7 @@ export default function Reviews() {
     <>
       <SEOHead
         title="Client Reviews"
-        description={`${siteStats.total_jobs}+ verified Upwork reviews. ${siteStats.jss_score}% Job Success Score. Top Rated. See what clients say about working with Orchestrix Labs.`}
+        description={`Top Rated on Upwork with ${siteStats.jss_score}% Job Success Score. See verified client feedback about working with Orchestrix Labs.`}
         path="/reviews"
         breadcrumbs={[
           { name: 'Home', path: '/' },
@@ -117,7 +122,7 @@ export default function Reviews() {
             transition={{ duration: 0.55, delay: 0.2 }}
             className="section-sub mx-auto mb-10"
           >
-            {siteStats.total_jobs}+ projects delivered. {siteStats.jss_score}% Job Success Score. Top Rated on Upwork.
+            {siteStats.jss_score}% Job Success Score. Top Rated on Upwork — verified client feedback.
           </motion.p>
 
           {/* Stats bar */}
@@ -138,13 +143,7 @@ export default function Reviews() {
               <span className="text-white font-bold text-sm">100% Job Success</span>
             </div>
             <div className="px-5 py-3 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
-              <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.total_jobs}</span> Projects Delivered</span>
-            </div>
-            <div className="px-5 py-3 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
-              <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.total_hours.toLocaleString()}</span> Engineering Hours</span>
-            </div>
-            <div className="px-5 py-3 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
-              <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.total_earnings}</span> Revenue Generated</span>
+              <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.years_experience}+</span> Years Experience</span>
             </div>
           </motion.div>
 
@@ -222,7 +221,7 @@ export default function Reviews() {
                 className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-[#14a800]/10 border border-[#14a800]/30 text-[#14a800] font-semibold text-sm hover:bg-[#14a800]/20 transition-all duration-200"
               >
                 <SiUpwork size={16} />
-                View all {siteStats.total_jobs} reviews on Upwork
+                View client reviews on Upwork
               </a>
               <Link to="/contact" className="btn-primary text-sm px-6 py-3">
                 Start a Project <FiArrowRight />

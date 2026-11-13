@@ -1,0 +1,761 @@
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useInView } from 'react-intersection-observer'
+import {
+  FiX, FiCheck, FiArrowRight, FiStar, FiClock,
+  FiGlobe, FiImage, FiSearch,
+} from 'react-icons/fi'
+import { SiUpwork } from 'react-icons/si'
+import { Link } from 'react-router-dom'
+import api from '../lib/axios'
+import SEOHead from '../components/SEOHead'
+import { SOCIAL, SITE } from '../lib/site'
+import { projects as localProjects } from '../data/projects'
+
+const UPWORK_PROFILE = SOCIAL.upwork
+
+const fallbackBadges = [
+  { label: 'Collaborative', count: 28 },
+  { label: 'Clear Communicator', count: 24 },
+  { label: 'Committed to Quality', count: 23 },
+  { label: 'Reliable', count: 18 },
+  { label: 'Solution Oriented', count: 15 },
+  { label: 'Accountable for Outcomes', count: 8 },
+  { label: 'Professional', count: 5 },
+]
+
+// ΓöÇΓöÇΓöÇ Video Embed Helper ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+function getEmbedUrl(url) {
+  if (!url) return null
+  // YouTube
+  const ytMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([a-zA-Z0-9_-]{11})/)
+  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}`
+  // Loom
+  const loomMatch = url.match(/loom\.com\/share\/([a-zA-Z0-9]+)/)
+  if (loomMatch) return `https://www.loom.com/embed/${loomMatch[1]}`
+  return null
+}
+
+// ΓöÇΓöÇΓöÇ Star Rating ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+function StarRating({ rating, size = 14 }) {
+  if (!rating) return null
+  const r = Number(rating)
+  return (
+    <div className="flex items-center gap-1">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <FiStar
+          key={i}
+          size={size}
+          className={i < Math.round(r) ? 'text-amber-400' : 'text-slate-700'}
+          style={i < Math.round(r) ? { fill: 'currentColor' } : {}}
+        />
+      ))}
+      <span className="text-slate-300 text-sm font-semibold ml-1">{r.toFixed(1)}</span>
+    </div>
+  )
+}
+
+// ΓöÇΓöÇΓöÇ Project Detail Modal ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+function ProjectDetailModal({ project, onClose }) {
+  if (!project) return null
+
+  const dateRange = project.start_date && project.completion_date
+    ? `${new Date(project.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} – ${new Date(project.completion_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
+    : project.start_date
+    ? `Started ${new Date(project.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
+    : ''
+
+  const hasRichContent = project.job_description || project.deliverables || project.description ||
+    (project.highlights && project.highlights.length > 0) ||
+    (project.impact && project.impact.length > 0) ||
+    (project.tech && project.tech.length > 0) ||
+    getEmbedUrl(project.video_url) ||
+    (project.images && project.images.length > 0)
+
+  // Calculate project duration in months
+  const durationText = (() => {
+    if (!project.start_date) return null
+    const start = new Date(project.start_date)
+    const end = project.completion_date ? new Date(project.completion_date) : new Date()
+    const months = Math.max(1, Math.round((end - start) / (1000 * 60 * 60 * 24 * 30)))
+    return months === 1 ? '1 month' : `${months} months`
+  })()
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-start justify-center p-4 overflow-y-auto"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.3 }}
+          className="bg-dark-900 border border-white/[0.08] rounded-2xl max-w-3xl w-full my-8"
+          onClick={e => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="p-6 sm:p-8 border-b border-white/[0.06]">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex-1">
+                <h2 className="text-white font-bold text-xl sm:text-2xl leading-tight mb-3">{project.title}</h2>
+                <div className="flex items-center gap-3 flex-wrap">
+                  {project.rating && <StarRating rating={project.rating} />}
+                  {project.category && (
+                    <span className="px-2.5 py-0.5 rounded-full bg-primary-500/10 border border-primary-500/25 text-primary-400 text-xs font-medium">
+                      {project.category}
+                    </span>
+                  )}
+                  {project.status === 'completed' && (
+                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-medium flex items-center gap-1">
+                      <FiCheck size={10} /> Completed
+                    </span>
+                  )}
+                  {project.status === 'in_progress' && (
+                    <span className="px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-400 text-xs font-medium flex items-center gap-1">
+                      <FiClock size={10} /> In Progress
+                    </span>
+                  )}
+                </div>
+              </div>
+              <button onClick={onClose} className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors flex-shrink-0 ml-4">
+                <FiX size={20} />
+              </button>
+            </div>
+
+            {/* Date + Duration info bar */}
+            {(dateRange || durationText) && (
+              <div className="flex items-center gap-4 mt-2 text-sm text-slate-500">
+                {dateRange && <span>{dateRange}</span>}
+                {durationText && (
+                  <>
+                    <span className="text-slate-700">·</span>
+                    <span>{durationText}</span>
+                  </>
+                )}
+              </div>
+            )}
+
+            {/* Client review */}
+            {project.review && (
+              <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-4 mt-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500/20 to-emerald-500/20 border border-white/[0.08] flex items-center justify-center text-xs font-bold text-primary-400">
+                    V
+                  </div>
+                  <div>
+                    <p className="text-white text-sm font-medium">Verified Upwork Client</p>
+                    {project.rating && <StarRating rating={project.rating} size={11} />}
+                  </div>
+                </div>
+                <p className="text-slate-300 text-sm leading-relaxed italic">"{project.review}"</p>
+              </div>
+            )}
+
+            {/* Tags */}
+            {project.tags && project.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-4">
+                {project.tags.map(tag => (
+                  <span key={tag} className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Body */}
+          <div className="p-6 sm:p-8 space-y-6">
+            {/* Summary */}
+            {project.summary && (
+              <div>
+                <p className="text-slate-300 text-sm leading-relaxed">{project.summary}</p>
+              </div>
+            )}
+
+            {/* Job Description (what client posted) */}
+            {project.job_description && (
+              <div>
+                <h3 className="text-white font-semibold text-sm mb-2 uppercase tracking-wider flex items-center gap-2">
+                  <span className="w-1 h-4 bg-primary-500 rounded-full" />
+                  What the Client Needed
+                </h3>
+                <p className="text-slate-400 text-sm leading-relaxed whitespace-pre-line">{project.job_description}</p>
+              </div>
+            )}
+
+            {/* What we delivered */}
+            {project.deliverables && (
+              <div>
+                <h3 className="text-white font-semibold text-sm mb-2 uppercase tracking-wider flex items-center gap-2">
+                  <span className="w-1 h-4 bg-emerald-500 rounded-full" />
+                  What We Delivered
+                </h3>
+                <p className="text-slate-400 text-sm leading-relaxed whitespace-pre-line">{project.deliverables}</p>
+              </div>
+            )}
+
+            {/* Description fallback */}
+            {!project.job_description && !project.deliverables && project.description && (
+              <div>
+                <h3 className="text-white font-semibold text-sm mb-2 uppercase tracking-wider">About This Project</h3>
+                <p className="text-slate-400 text-sm leading-relaxed">{project.description}</p>
+              </div>
+            )}
+
+            {/* Highlights */}
+            {project.highlights && project.highlights.length > 0 && (
+              <div>
+                <h3 className="text-white font-semibold text-sm mb-3 uppercase tracking-wider">Key Deliverables</h3>
+                <ul className="space-y-2">
+                  {project.highlights.map(h => (
+                    <li key={h} className="flex items-start gap-2.5 text-slate-300 text-sm">
+                      <FiCheck className="text-emerald-400 mt-0.5 flex-shrink-0" size={14} />
+                      {h}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Impact */}
+            {project.impact && project.impact.length > 0 && (
+              <div>
+                <h3 className="text-white font-semibold text-sm mb-3 uppercase tracking-wider">Impact</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {project.impact.map(imp => (
+                    <div key={imp} className="flex items-center gap-2 bg-emerald-500/5 border border-emerald-500/15 rounded-lg px-3 py-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
+                      <span className="text-emerald-300 text-xs">{imp}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Tech Stack */}
+            {project.tech && project.tech.length > 0 && (
+              <div>
+                <h3 className="text-white font-semibold text-sm mb-3 uppercase tracking-wider">Tech Stack</h3>
+                <div className="flex flex-wrap gap-2">
+                  {project.tech.map(t => (
+                    <span key={t} className="px-3 py-1 bg-white/[0.04] border border-white/[0.08] rounded-lg text-slate-300 text-xs">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Demo Video */}
+            {getEmbedUrl(project.video_url) && (
+              <div>
+                <h3 className="text-white font-semibold text-sm mb-3 uppercase tracking-wider">Demo Video</h3>
+                <div className="aspect-video rounded-xl overflow-hidden border border-white/[0.08]">
+                  <iframe
+                    src={getEmbedUrl(project.video_url)}
+                    title={`${project.title} demo`}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Project Images */}
+            {project.images && project.images.length > 0 && (
+              <div>
+                <h3 className="text-white font-semibold text-sm mb-3 uppercase tracking-wider flex items-center gap-2">
+                  <FiImage size={14} /> Project Screenshots
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {project.images.map((url, i) => (
+                    <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="block rounded-xl overflow-hidden border border-white/[0.08] hover:border-primary-500/40 transition-colors">
+                      <img src={url} alt={`${project.title} screenshot ${i + 1}`} className="w-full h-auto" loading="lazy" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Attractive CTA ΓÇö when no rich content yet */}
+            {!hasRichContent && !project.summary && !project.review && (
+              <div className="text-center py-6">
+                <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary-500/20 to-emerald-500/20 border border-white/[0.08] flex items-center justify-center">
+                  <FiCheck className="text-emerald-400" size={24} />
+                </div>
+                <h3 className="text-white font-semibold text-lg mb-2">Successfully Delivered</h3>
+                <p className="text-slate-400 text-sm max-w-md mx-auto leading-relaxed mb-5">
+                  This {project.category || 'project'} was completed to the client's satisfaction.
+                  Want something similar built for your business?
+                </p>
+                <Link
+                  to="/contact"
+                  onClick={onClose}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-emerald-500 text-white text-sm font-semibold hover:shadow-lg hover:shadow-primary-500/25 transition-all"
+                >
+                  Get a Free Quote <FiArrowRight size={14} />
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* Footer buttons */}
+          <div className="p-6 sm:p-8 border-t border-white/[0.06] flex flex-col sm:flex-row gap-3">
+            {project.live_url && (
+              <a href={project.live_url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-white/[0.1] text-slate-300 hover:text-white hover:border-white/[0.2] text-sm font-medium transition-all">
+                <FiGlobe size={14} /> View Live Project
+              </a>
+            )}
+            <a href={project.upwork_url || UPWORK_PROFILE} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-[#14a800]/40 text-[#14a800] hover:bg-[#14a800]/10 text-sm font-medium transition-all">
+              <SiUpwork size={14} /> View on Upwork
+            </a>
+            <Link to="/contact" onClick={onClose} className="btn-primary justify-center flex-1 sm:flex-none">
+              Build Something Similar <FiArrowRight size={14} />
+            </Link>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  )
+}
+
+// ΓöÇΓöÇΓöÇ Single Job Row (Upwork style) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+function JobRow({ project, onClick }) {
+  const dateRange = project.start_date && project.completion_date
+    ? `${new Date(project.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} - ${new Date(project.completion_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
+    : project.start_date
+    ? `Started ${new Date(project.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
+    : ''
+
+  return (
+    <div className="border-b border-white/[0.06] hover:bg-white/[0.015] transition-colors">
+      <div className="p-5 sm:p-6">
+        {/* Title */}
+        <h3
+          className="text-primary-400 font-semibold text-base sm:text-lg cursor-pointer hover:text-primary-300 transition-colors mb-2 leading-snug"
+          onClick={() => onClick(project)}
+        >
+          {project.title}
+        </h3>
+
+        {/* Rating + Date row */}
+        <div className="flex items-center gap-3 flex-wrap mb-3">
+          {project.rating && <StarRating rating={project.rating} size={13} />}
+          {dateRange && (
+            <>
+              <span className="text-slate-600">|</span>
+              <span className="text-slate-500 text-sm">{dateRange}</span>
+            </>
+          )}
+          {project.status === 'in_progress' && (
+            <span className="px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 text-xs font-medium flex items-center gap-1">
+              <FiClock size={9} /> In Progress
+            </span>
+          )}
+        </div>
+
+        {/* Summary or review preview */}
+        {project.review ? (
+          <p className="text-slate-400 text-sm leading-relaxed mb-3 italic line-clamp-3">
+            "{project.review}"
+          </p>
+        ) : project.summary ? (
+          <p className="text-slate-400 text-sm leading-relaxed mb-3 line-clamp-3">
+            {project.summary}
+          </p>
+        ) : null}
+
+        {project.category && (
+          <span className="inline-block mb-3 px-2.5 py-0.5 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs font-medium">
+            {project.category}
+          </span>
+        )}
+
+        {/* Tags */}
+        {project.tags && project.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-3">
+            {project.tags.map(tag => (
+              <span key={tag} className="px-2.5 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-400 text-xs font-medium">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Action buttons */}
+        <div className="flex items-center gap-3 mt-4">
+          {project.upwork_url ? (
+            <a
+              href={project.upwork_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-[#14a800]/30 text-[#14a800] hover:bg-[#14a800]/10 hover:border-[#14a800]/50 text-xs font-medium transition-all"
+            >
+              <SiUpwork size={12} /> View on Upwork
+            </a>
+          ) : (
+            <a
+              href={UPWORK_PROFILE}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-[#14a800]/30 text-[#14a800] hover:bg-[#14a800]/10 hover:border-[#14a800]/50 text-xs font-medium transition-all"
+            >
+              <SiUpwork size={12} /> View on Upwork
+            </a>
+          )}
+          <Link
+            to="/contact"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary-500/10 border border-primary-500/25 text-primary-400 hover:bg-primary-500/20 text-xs font-medium transition-all"
+          >
+            <FiArrowRight size={12} /> Build Something Similar
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ΓöÇΓöÇΓöÇ Main Page ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+const ITEMS_PER_PAGE = 15
+
+const CATEGORIES = [
+  'All',
+  'Voice AI & Chatbots',
+  'Machine Learning & AI',
+  'Web Scraping & Automation',
+  'Full-Stack Development',
+  'Workflow Automation',
+]
+
+function normalizeProjects(list) {
+  if (!Array.isArray(list)) return []
+  const seen = new Set()
+  const out = []
+  for (const p of list) {
+    const key = p?.id ?? p?.title
+    if (key == null || seen.has(key)) continue
+    seen.add(key)
+    // Public Work History: never surface financials or raw client identities
+    const {
+      project_value: _pv,
+      hours_worked: _hw,
+      price_type: _pt,
+      client_name: _cn,
+      ...safe
+    } = p
+    out.push({
+      ...safe,
+      status: p.status || 'completed',
+      client_name: '',
+      displayClientLabel: 'Verified Upwork Client',
+    })
+  }
+  return out
+}
+
+export default function PortfolioWorkHistory() {
+  const [statusFilter, setStatusFilter] = useState('completed')
+  const [categoryFilter, setCategoryFilter] = useState('All')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedProject, setSelectedProject] = useState(null)
+  // Seed with local fallback so filter counts never flash "0" before API returns.
+  const [projects, setProjects] = useState(() => normalizeProjects(localProjects))
+  const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [insightBadges, setInsightBadges] = useState(fallbackBadges)
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.05 })
+
+  useEffect(() => {
+    api.get('/api/badges/', { timeout: 15000 }).then(r => {
+      if (Array.isArray(r.data) && r.data.length > 0) setInsightBadges(r.data)
+    }).catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    let cancelled = false
+    api.get('/api/projects/', { timeout: 20000 })
+      .then(res => {
+        if (cancelled) return
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          setProjects(normalizeProjects(res.data))
+          setLoadError(null)
+        } else {
+          setProjects(normalizeProjects(localProjects))
+          setLoadError('empty_api')
+        }
+      })
+      .catch((err) => {
+        if (cancelled) return
+        setProjects(normalizeProjects(localProjects))
+        setLoadError(err?.code === 'ECONNABORTED' ? 'timeout' : 'network')
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => { cancelled = true }
+  }, [])
+
+  const completedProjects = projects.filter(p => p.status === 'completed')
+  const inProgressProjects = projects.filter(p => p.status === 'in_progress')
+
+  const statusFiltered = statusFilter === 'completed' ? completedProjects
+    : statusFilter === 'in_progress' ? inProgressProjects
+    : projects
+
+  const filtered = statusFiltered.filter(p => {
+    const matchesCategory = categoryFilter === 'All' || p.category === categoryFilter
+    const q = searchQuery.trim().toLowerCase()
+    const matchesSearch = !q
+      || p.title?.toLowerCase().includes(q)
+      || p.summary?.toLowerCase().includes(q)
+      || p.category?.toLowerCase().includes(q)
+    return matchesCategory && matchesSearch
+  })
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE)
+  const paginatedProjects = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
+
+  return (
+    <>
+      <SEOHead
+        title="Work History"
+        description={`Delivery archive of real software and AI engagements with verified Upwork feedback. Separate from premium Portfolio case studies. Founder Top Rated credentials — ${SITE.slogan}.`}
+        path="/work-history"
+        breadcrumbs={[
+          { name: 'Home', path: '/' },
+          { name: 'Portfolio', path: '/portfolio' },
+          { name: 'Work History', path: '/work-history' },
+        ]}
+      />
+
+      {/* Hero */}
+      <section className="relative pt-36 pb-16 text-center overflow-hidden">
+        <div className="absolute inset-0 hero-gradient grid-pattern" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-dark-950" />
+        <div className="container relative z-10">
+          <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="section-tag mb-5 inline-flex">
+            Work History Archive
+          </motion.span>
+          <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="section-heading mb-5">
+            Real delivery history.<br />
+            <span className="gradient-text">Verified client feedback.</span>
+          </motion.h1>
+          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="section-sub mx-auto">
+            An archive of completed and in-progress engagements with ratings and reviews.
+            Premium narrative case studies live on Portfolio. Counts below reflect this archive only—
+            not a claim that every historical Upwork job is listed.
+          </motion.p>
+        </div>
+      </section>
+
+      {/* Insight Badges Bar */}
+      <section className="py-6 border-b border-white/[0.05]">
+        <div className="container">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="text-center mb-4">
+            <p className="text-slate-500 text-xs uppercase tracking-wider font-medium">Insights from completed jobs</p>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
+            {insightBadges.map(badge => (
+              <span
+                key={badge.label}
+                className="px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08] text-slate-300 text-xs sm:text-sm font-medium hover:border-primary-500/30 hover:bg-primary-500/5 transition-all cursor-default"
+              >
+                {badge.label} <span className="text-primary-400 font-bold ml-1">{badge.count}</span>
+              </span>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Work History Section */}
+      <section className="py-12" ref={ref}>
+        <div className="container max-w-4xl">
+          {/* Tabs */}
+          <div className="flex items-center gap-0 border-b border-white/[0.08] mb-0">
+            <button
+              onClick={() => { setStatusFilter('completed'); setCurrentPage(1) }}
+              className={`px-5 py-3 text-sm font-semibold transition-all border-b-2 ${
+                statusFilter === 'completed'
+                  ? 'text-white border-primary-500'
+                  : 'text-slate-500 border-transparent hover:text-white'
+              }`}
+            >
+              Completed jobs ({loading ? '…' : completedProjects.length})
+            </button>
+            <button
+              onClick={() => { setStatusFilter('in_progress'); setCurrentPage(1) }}
+              className={`px-5 py-3 text-sm font-semibold transition-all border-b-2 ${
+                statusFilter === 'in_progress'
+                  ? 'text-white border-primary-500'
+                  : 'text-slate-500 border-transparent hover:text-white'
+              }`}
+            >
+              In progress ({loading ? '…' : inProgressProjects.length})
+            </button>
+          </div>
+          {loadError && (
+            <p className="text-xs text-amber-500/90 mt-2">
+              Showing curated fallback while live work-history data refreshes.
+            </p>
+          )}
+
+          {/* Category Filter + Search */}
+          <div className="py-4 space-y-3 border-b border-white/[0.06]">
+            {/* Search */}
+            <div className="relative">
+              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={14} />
+              <input
+                type="text"
+                placeholder="Search projects..."
+                value={searchQuery}
+                onChange={e => { setSearchQuery(e.target.value); setCurrentPage(1) }}
+                className="w-full bg-white/[0.03] border border-white/[0.08] rounded-lg pl-9 pr-4 py-2 text-white text-sm outline-none focus:border-primary-500/50 placeholder:text-slate-600 transition-colors"
+              />
+            </div>
+            {/* Category pills */}
+            <div className="flex items-center gap-2 flex-wrap">
+              {CATEGORIES.map(cat => {
+                const count = cat === 'All'
+                  ? statusFiltered.length
+                  : statusFiltered.filter(p => p.category === cat).length
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => { setCategoryFilter(cat); setCurrentPage(1) }}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                      categoryFilter === cat
+                        ? 'bg-primary-500/15 border border-primary-500/40 text-primary-400'
+                        : 'bg-white/[0.03] border border-white/[0.08] text-slate-400 hover:text-white hover:border-white/[0.15]'
+                    }`}
+                  >
+                    {cat} <span className="ml-1 opacity-60">{loading ? '…' : count}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Job List */}
+          {loading ? (
+            <div className="space-y-0">
+              {[1, 2, 3, 4, 5].map(i => (
+                <div key={i} className="border-b border-white/[0.06] p-6 animate-pulse">
+                  <div className="h-5 bg-white/[0.06] rounded w-2/3 mb-3" />
+                  <div className="h-4 bg-white/[0.04] rounded w-1/3 mb-3" />
+                  <div className="h-4 bg-white/[0.04] rounded w-full mb-2" />
+                  <div className="h-4 bg-white/[0.04] rounded w-1/4" />
+                </div>
+              ))}
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="text-center py-20 text-slate-500">
+              <p className="text-sm">No {statusFilter === 'in_progress' ? 'in-progress' : 'completed'} projects to show yet.</p>
+            </div>
+          ) : (
+            <motion.div initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : { opacity: 0 }} transition={{ duration: 0.4 }}>
+              {paginatedProjects.map(project => (
+                <JobRow
+                  key={project.id}
+                  project={project}
+                  onClick={setSelectedProject}
+                />
+              ))}
+            </motion.div>
+          )}
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 pt-8 pb-4">
+              <button
+                onClick={() => { setCurrentPage(p => Math.max(1, p - 1)); window.scrollTo({ top: 400, behavior: 'smooth' }) }}
+                disabled={currentPage === 1}
+                className="px-3 py-2 rounded-lg border border-white/[0.08] text-sm text-slate-400 hover:text-white hover:border-white/[0.15] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+              >
+                Previous
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                <button
+                  key={page}
+                  onClick={() => { setCurrentPage(page); window.scrollTo({ top: 400, behavior: 'smooth' }) }}
+                  className={`w-9 h-9 rounded-lg text-sm font-medium transition-all ${
+                    page === currentPage
+                      ? 'bg-primary-500/20 border border-primary-500/40 text-primary-400'
+                      : 'border border-white/[0.08] text-slate-500 hover:text-white hover:border-white/[0.15]'
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+              <button
+                onClick={() => { setCurrentPage(p => Math.min(totalPages, p + 1)); window.scrollTo({ top: 400, behavior: 'smooth' }) }}
+                disabled={currentPage === totalPages}
+                className="px-3 py-2 rounded-lg border border-white/[0.08] text-sm text-slate-400 hover:text-white hover:border-white/[0.15] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+              >
+                Next
+              </button>
+            </div>
+          )}
+
+          {/* View on Upwork CTA */}
+          <div className="text-center py-10">
+            <a
+              href={UPWORK_PROFILE}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-[#14a800]/40 text-[#14a800] hover:bg-[#14a800]/10 hover:border-[#14a800]/70 text-sm font-semibold transition-all"
+            >
+              <SiUpwork size={16} /> View full profile on Upwork
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Verified Upwork credentials (founder/agency) — not inventing archive totals */}
+      <section className="py-16 bg-dark-900/40 border-y border-white/[0.05]">
+        <div className="container">
+          <p className="text-center text-slate-500 text-xs uppercase tracking-wider font-medium mb-8">
+            Founder Upwork credentials (separate from archive list counts)
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center max-w-3xl mx-auto">
+            {[
+              { v: 'Top Rated', l: 'Upwork Agency Badge' },
+              { v: '100%', l: 'Job Success Score' },
+              { v: `${SITE.founderExperienceYears}+ yrs`, l: 'Founder Engineering Experience' },
+            ].map(({ v, l }) => (
+              <div key={l}>
+                <div className="text-3xl font-black gradient-text mb-1">{v}</div>
+                <p className="text-slate-500 text-sm">{l}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-20 text-center">
+        <div className="container">
+          <h2 className="section-heading mb-4">Ready to start your project?</h2>
+          <p className="section-sub mx-auto mb-8">
+            Tell us what you need to ship. We respond with an honest plan—no inflated promises.
+          </p>
+          <div className="flex items-center justify-center gap-4 flex-wrap">
+            <Link to="/contact" className="btn-primary text-base px-8 py-3.5">
+              Request Consultation <FiArrowRight />
+            </Link>
+            <Link to="/portfolio" className="btn-outline text-base px-8 py-3.5">
+              Explore Our Work
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Detail Modal */}
+      {selectedProject && <ProjectDetailModal project={selectedProject} onClose={() => setSelectedProject(null)} />}
+    </>
+  )
+}

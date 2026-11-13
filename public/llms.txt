@@ -1,7 +1,7 @@
 # Orchestrix Labs
 # https://orchestrixlabs.com
 
-> Orchestrix Labs is a top-rated AI development agency specializing in voice AI agents, intelligent automation, machine learning, and full-stack web applications. 200+ projects delivered worldwide with 100% Job Success Score on Upwork.
+> Orchestrix Labs is a top-rated AI development agency specializing in voice AI agents, intelligent automation, machine learning, and full-stack web applications. 100% Job Success Score on Upwork.
 
 ## About
 
@@ -11,7 +11,7 @@
 - **Location**: Mohali, Punjab, India (serving clients worldwide)
 - **Founded by**: Shubham Saini, Founder & CEO
 - **Experience**: 6+ years in Python, AI, and automation
-- **Track record**: 200+ projects, 4,800+ engineering hours, $100K+ revenue generated for clients
+- **Track record**: Top Rated on Upwork with 100% Job Success Score; production AI and software delivery worldwide
 
 ## Services
 
@@ -28,7 +28,7 @@ Python, Django, FastAPI, Flask, React, Vite, Tailwind CSS, OpenAI GPT-4, LangCha
 ## Why Hire Orchestrix Labs
 
 - Top Rated agency on Upwork with 100% Job Success Score
-- 133+ verified client reviews
+- Verified client feedback on Upwork
 - Production-first delivery — not demos, real deployed systems
 - 24-hour response time on all inquiries
 - Transparent communication with weekly updates and clear milestones
@@ -38,7 +38,8 @@ Python, Django, FastAPI, Flask, React, Vite, Tailwind CSS, OpenAI GPT-4, LangCha
 
 - Home: https://orchestrixlabs.com/
 - Services: https://orchestrixlabs.com/services
-- Portfolio / Work History: https://orchestrixlabs.com/portfolio
+- Portfolio: https://orchestrixlabs.com/portfolio
+- Flagship case study: https://orchestrixlabs.com/portfolio/ai-estimating-field-ops
 - Client Reviews: https://orchestrixlabs.com/reviews
 - About: https://orchestrixlabs.com/about
 - Contact: https://orchestrixlabs.com/contact

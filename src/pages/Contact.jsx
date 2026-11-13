@@ -41,12 +41,12 @@ const contactInfo = [
   { icon: FiClock, label: 'Business Hours', value: `${SITE.businessHours} (${SITE.timezone})`, href: null },
   { icon: FiGlobe, label: 'Serving', value: 'Clients worldwide — remote-first agency', href: null },
   { icon: FiLinkedin, label: 'LinkedIn', value: 'linkedin.com/company/orchestrix-labs', href: SOCIAL.linkedin },
-  { icon: SiUpwork, label: 'Upwork', value: 'Top Rated Agency — 133+ reviews', href: SOCIAL.upwork },
+  { icon: SiUpwork, label: 'Upwork', value: 'Top Rated Agency — 100% Job Success', href: SOCIAL.upwork },
   { icon: FiGithub, label: 'GitHub', value: 'github.com/orchestrixlabs', href: SOCIAL.github },
   { icon: FiInstagram, label: 'Instagram', value: '@orchestrix_labs__ai_dev_agency', href: SOCIAL.instagram },
 ]
 
-const initialForm = { name: '', email: '', service: '', budget: '', message: '' }
+const initialForm = { name: '', email: '', service: '', budget: '', message: '', website: '' }
 
 export default function Contact() {
   const [form, setForm] = useState(initialForm)
@@ -58,6 +58,10 @@ export default function Contact() {
     if (!form.name.trim()) e.name = 'Name is required'
     if (!form.email.trim()) e.email = 'Email is required'
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Enter a valid email'
+    if (!form.service.trim()) e.service = 'Please select a service'
+    if (!form.message.trim() || form.message.trim().length < 20) {
+      e.message = 'Please describe your project (at least a short paragraph)'
+    }
     return e
   }
 
@@ -78,6 +82,14 @@ export default function Contact() {
       setForm(initialForm)
     } catch (err) {
       console.error('Contact form error:', err)
+      const apiErrors = err?.response?.data
+      if (apiErrors && typeof apiErrors === 'object' && !apiErrors.detail) {
+        const mapped = {}
+        for (const [key, val] of Object.entries(apiErrors)) {
+          mapped[key] = Array.isArray(val) ? val[0] : String(val)
+        }
+        setErrors(mapped)
+      }
       setStatus('error')
     }
   }
@@ -88,8 +100,8 @@ export default function Contact() {
   return (
     <>
       <SEOHead
-        title="Contact"
-        description={`Get a free consultation from Orchestrix Labs. Hire expert AI developers for voice AI, automation, web scraping, Django, React & full-stack projects. Email ${SITE.email} — 24-hour response guaranteed.`}
+        title="Request Consultation"
+        description={`Book a technical consultation with Orchestrix Labs. Voice AI, automation, custom software, and integrations. Email ${SITE.email} — we aim to reply within ${SITE.responseTime}.`}
         path="/contact"
         breadcrumbs={[
           { name: 'Home', path: '/' },
@@ -102,13 +114,13 @@ export default function Contact() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-dark-950" />
         <div className="container relative z-10">
           <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="section-tag mb-5 inline-flex">
-            Contact
+            Consultation
           </motion.span>
           <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="section-heading mb-4">
-            Let's build something<br /><span className="gradient-text">great together</span>
+            Tell us what you need to<br /><span className="gradient-text">ship next</span>
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="section-sub mx-auto">
-            Tell us about your project. We'll reply within {SITE.responseTime} with honest feedback and a clear plan.
+            Share a short brief. We reply within {SITE.responseTime} with an honest assessment and a practical next step.
           </motion.p>
         </div>
       </section>
@@ -120,18 +132,32 @@ export default function Contact() {
             <div className="lg:col-span-3">
               <motion.div variants={fadeUp} custom={0} className="card p-8">
                 {status === 'success' ? (
-                  <div className="text-center py-12">
+                  <div className="text-center py-12 px-2">
                     <div className="w-16 h-16 rounded-full bg-emerald-500/15 flex items-center justify-center mx-auto mb-4">
                       <FiCheckCircle className="text-emerald-400" size={32} />
                     </div>
-                    <h3 className="text-white font-bold text-xl mb-2">Message sent!</h3>
-                    <p className="text-slate-400 text-sm">
-                      Thanks for reaching out. We'll get back to you within {SITE.responseTime}.
+                    <h3 className="text-white font-bold text-xl mb-2">Consultation request received</h3>
+                    <p className="text-slate-400 text-sm max-w-md mx-auto mb-6 leading-relaxed">
+                      Thank you. Your brief is with the Orchestrix Labs team. We aim to respond within{' '}
+                      {SITE.responseTime} with clear next steps.
                     </p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                      <a href={`mailto:${SITE.email}`} className="btn-outline text-sm px-5 py-2.5">
+                        Email {SITE.email}
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => setStatus('idle')}
+                        className="text-slate-400 text-sm underline-offset-2 hover:text-white hover:underline"
+                      >
+                        Send another message
+                      </button>
+                    </div>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} action="#" noValidate className="space-y-5">
-                    <h2 className="text-white font-bold text-xl mb-6">Send us a message</h2>
+                  <form onSubmit={handleSubmit} action="#" noValidate className="space-y-5 relative">
+                    <h2 className="text-white font-bold text-xl mb-2">Request Consultation</h2>
+                    <p className="text-slate-500 text-sm mb-6">Required fields take about two minutes.</p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
@@ -161,17 +187,21 @@ export default function Contact() {
                     </div>
 
                     <div>
-                      <label htmlFor="contact-service" className="text-slate-400 text-xs font-medium mb-1.5 block">Service Needed</label>
+                      <label htmlFor="contact-service" className="text-slate-400 text-xs font-medium mb-1.5 block">
+                        Service Needed <span className="text-red-400">*</span>
+                      </label>
                       <select
                         id="contact-service"
                         name="service" value={form.service} onChange={handleChange}
                         className={`${inputClass('service')} appearance-none cursor-pointer`}
+                        required
                       >
                         <option value="" className="bg-dark-900">Select a service...</option>
                         {services.map(s => (
                           <option key={s} value={s} className="bg-dark-900">{s}</option>
                         ))}
                       </select>
+                      {errors.service && <p className="text-red-400 text-xs mt-1">{errors.service}</p>}
                     </div>
 
                     <div>
@@ -190,13 +220,30 @@ export default function Contact() {
 
                     <div>
                       <label htmlFor="contact-message" className="text-slate-400 text-xs font-medium mb-1.5 block">
-                        Tell us about your project
+                        Tell us about your project <span className="text-red-400">*</span>
                       </label>
                       <textarea
                         id="contact-message"
                         name="message" rows={5}
                         value={form.message} onChange={handleChange}
                         className={`${inputClass('message')} resize-none`}
+                        required
+                        minLength={20}
+                      />
+                      {errors.message && <p className="text-red-400 text-xs mt-1">{errors.message}</p>}
+                    </div>
+
+                    {/* Honeypot — hidden from users; bots that fill it are rejected */}
+                    <div className="absolute -left-[9999px] opacity-0 h-0 overflow-hidden" aria-hidden="true">
+                      <label htmlFor="contact-website">Website</label>
+                      <input
+                        id="contact-website"
+                        type="text"
+                        name="website"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={form.website}
+                        onChange={handleChange}
                       />
                     </div>
 
@@ -215,15 +262,16 @@ export default function Contact() {
                       {status === 'loading' ? (
                         <>
                           <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                          Sending...
+                          Submitting…
                         </>
                       ) : (
-                        <><FiSend /> Send Message</>
+                        <><FiSend /> Request Consultation</>
                       )}
                     </button>
 
                     <p className="text-slate-600 text-xs text-center">
-                      Your data is encrypted in transit. We never share your information with third parties.
+                      Encrypted in transit. We do not sell your information. Prefer email?{' '}
+                      <a href={`mailto:${SITE.email}`} className="text-slate-400 underline-offset-2 hover:underline">{SITE.email}</a>
                     </p>
                   </form>
                 )}

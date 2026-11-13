@@ -1,15 +1,27 @@
-import { Routes, Route, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
+import { useEffect, lazy, Suspense } from 'react'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-import Home from './pages/Home'
-import Services from './pages/Services'
-import Portfolio from './pages/Portfolio'
-import About from './pages/About'
-import Contact from './pages/Contact'
-import Reviews from './pages/Reviews'
-import Dashboard from './pages/Dashboard'
 import usePageTracking from './hooks/usePageTracking'
+
+const Home = lazy(() => import('./pages/Home'))
+const Services = lazy(() => import('./pages/Services'))
+const Portfolio = lazy(() => import('./pages/Portfolio'))
+const PortfolioCaseStudy = lazy(() => import('./pages/PortfolioCaseStudy'))
+const PortfolioWorkHistory = lazy(() => import('./pages/PortfolioWorkHistory'))
+const About = lazy(() => import('./pages/About'))
+const Contact = lazy(() => import('./pages/Contact'))
+const Reviews = lazy(() => import('./pages/Reviews'))
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+
+function RouteFallback() {
+  return (
+    <div className="min-h-[50vh] flex items-center justify-center" role="status" aria-live="polite">
+      <div className="w-8 h-8 rounded-full border-2 border-primary-500/30 border-t-primary-400 animate-spin" />
+      <span className="sr-only">Loading page</span>
+    </div>
+  )
+}
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -30,15 +42,20 @@ function AppInner() {
       </a>
       {!isDashboard && <Navbar />}
       <main id="main-content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/portfolio" element={<Portfolio />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/reviews" element={<Reviews />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
+        <Suspense fallback={<RouteFallback />}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/portfolio/:slug" element={<PortfolioCaseStudy />} />
+            <Route path="/work-history" element={<PortfolioWorkHistory />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/reviews" element={<Reviews />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </main>
       {!isDashboard && <Footer />}
     </>

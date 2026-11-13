@@ -2,10 +2,15 @@ export const SITE = {
   name: 'Orchestrix Labs',
   legalName: 'Orchestrix Labs',
   tagline: 'AI-Powered Software Development',
+  /** Primary brand slogan — locked 2026-11-13 */
+  slogan: 'Engineering Intelligence. Automating Growth.',
+  /** Supporting positioning — use sparingly; do not stack with slogan everywhere */
+  positioning: 'AI Engineering. Built for Real-World Operations.',
   url: 'https://orchestrixlabs.com',
   email: 'contact@orchestrixlabs.com',
   founder: 'Shubham Saini',
   founderTitle: 'Founder & CEO',
+  founderExperienceYears: 6,
   timezone: 'Asia/Kolkata (IST)',
   businessHours: 'Mon–Fri, 9:00 AM – 6:00 PM IST',
   responseTime: '24 hours',
@@ -20,7 +25,7 @@ export const SITE = {
   },
   jurisdiction: 'Mohali (S.A.S. Nagar), Punjab, India',
   founded: '2019',
-  ogImage: 'https://orchestrixlabs.com/og-image.svg',
+  ogImage: 'https://orchestrixlabs.com/og-image.jpg',
   logo: 'https://orchestrixlabs.com/favicon.svg',
 }
 
@@ -31,13 +36,16 @@ export const SOCIAL = {
   instagram: 'https://www.instagram.com/orchestrix_labs__ai_dev_agency',
 }
 
+/**
+ * Public stats policy (2026-11-12):
+ * - Do not publish unverified project/review headcounts (200+ / 143 / 133+ conflict).
+ * - Prefer qualitative Upwork claims until founder verifies a single live figure.
+ * - CMS `/api/site-stats/` may still store numbers for dashboard; marketing UI must not invent counts.
+ */
 export const STATS = {
-  projects: '200+',
-  hours: '4,800+',
-  earnings: '$100K+',
   jss: '100%',
   years: '6+',
-  reviews: '133+',
+  response: '24h',
 }
 
 export const SERVICES_SEO = [
@@ -59,7 +67,7 @@ export const FAQ = [
   },
   {
     q: 'Is Orchestrix Labs a top-rated agency on Upwork?',
-    a: 'Yes. Orchestrix Labs is Top Rated on Upwork with a 100% Job Success Score, 200+ projects delivered, and 133+ verified client reviews.',
+    a: 'Yes. Orchestrix Labs is Top Rated on Upwork with a 100% Job Success Score and verified client feedback on our Upwork agency profile.',
   },
   {
     q: 'What technologies does Orchestrix Labs use?',
@@ -67,7 +75,7 @@ export const FAQ = [
   },
   {
     q: 'How do I hire Orchestrix Labs for my project?',
-    a: 'Contact us at contact@orchestrixlabs.com or fill out the form at orchestrixlabs.com/contact. We respond within 24 hours with an honest assessment and a clear project plan.',
+    a: 'Use Request Consultation at orchestrixlabs.com/contact or email contact@orchestrixlabs.com. We aim to respond within 24 hours with an honest assessment and a clear next step.',
   },
   {
     q: 'Does Orchestrix Labs provide post-launch support?',
@@ -79,6 +87,7 @@ export const ROUTES = [
   { path: '/', title: 'Home', changefreq: 'weekly', priority: '1.0' },
   { path: '/services', title: 'Services', changefreq: 'monthly', priority: '0.9' },
   { path: '/portfolio', title: 'Portfolio', changefreq: 'weekly', priority: '0.9' },
+  { path: '/work-history', title: 'Work History', changefreq: 'weekly', priority: '0.8' },
   { path: '/about', title: 'About', changefreq: 'monthly', priority: '0.8' },
   { path: '/reviews', title: 'Reviews', changefreq: 'monthly', priority: '0.8' },
   { path: '/contact', title: 'Contact', changefreq: 'monthly', priority: '0.9' },

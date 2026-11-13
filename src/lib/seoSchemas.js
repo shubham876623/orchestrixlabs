@@ -11,7 +11,7 @@ export function organizationSchema() {
     logo: SITE.logo,
     image: SITE.ogImage,
     description:
-      'Top-rated AI development agency specializing in voice AI agents, intelligent automation, machine learning, and full-stack web applications. 200+ projects delivered worldwide with 100% job success.',
+      'Top-rated AI development agency specializing in voice AI agents, intelligent automation, machine learning, and full-stack web applications. 100% Job Success on Upwork.',
     foundingDate: SITE.founded,
     email: SITE.email,
     address: {

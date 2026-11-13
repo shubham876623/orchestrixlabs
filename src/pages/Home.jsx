@@ -13,7 +13,8 @@ import SEOHead from '../components/SEOHead'
 import TrustBar from '../components/TrustBar'
 import FAQSection from '../components/FAQSection'
 import { services } from '../data/services'
-import { FAQ } from '../lib/site'
+import { FAQ, SITE, SOCIAL } from '../lib/site'
+import { getFeaturedPublishedProjects, isDraftPortfolioMode } from '../data/publishedProjects'
 
 // ─── Animation helpers ────────────────────────────────────────────────────────
 const fadeUp = {
@@ -68,12 +69,19 @@ const techStack = [
 ]
 
 function useSiteStats() {
-  const defaults = { total_earnings: '$100K+', total_hours: 4828, total_jobs: 200, years_experience: 6, jss_score: 100 }
+  // Unverified headcounts are not shown. Years reflect founder engineering experience.
+  const defaults = { years_experience: SITE.founderExperienceYears, jss_score: 100 }
   const [s, setS] = useState(defaults)
   useEffect(() => {
     api.get('/api/site-stats/').then(r => {
-      if (r.data && typeof r.data === 'object' && !Array.isArray(r.data))
-        setS(prev => ({ ...prev, ...r.data }))
+      if (r.data && typeof r.data === 'object' && !Array.isArray(r.data)) {
+        setS((prev) => ({
+          ...prev,
+          // Prefer founder-attributed years from site config; CMS may lag
+          years_experience: SITE.founderExperienceYears,
+          jss_score: r.data.jss_score ?? prev.jss_score,
+        }))
+      }
     }).catch(() => {})
   }, [])
   return s
@@ -120,23 +128,35 @@ function Hero() {
         >
           <span className="section-tag">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            Available for new projects
+            {SITE.positioning}
           </span>
         </motion.div>
 
-        {/* Headline */}
+        {/* Brand mark + primary slogan as hero brand signal */}
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.05 }}
+          className="font-display text-sm sm:text-base font-semibold tracking-[0.2em] uppercase text-slate-300 mb-4"
+        >
+          Orchestrix Labs
+        </motion.p>
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-4xl sm:text-5xl lg:text-7xl font-black tracking-tight leading-[1.08] text-white mb-6"
+          className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.12] text-white mb-4 max-w-4xl mx-auto"
         >
-          Build Smarter.{' '}
-          <br className="hidden sm:block" />
-          Scale Faster.{' '}
-          <br className="hidden sm:block" />
-          <span className="gradient-text">With AI.</span>
+          <span className="gradient-text">{SITE.slogan}</span>
         </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.15 }}
+          className="text-white text-xl sm:text-2xl font-semibold tracking-tight mb-6 max-w-3xl mx-auto"
+        >
+          Systems that ship for real-world operations
+        </motion.p>
 
         {/* Sub */}
         <motion.p
@@ -145,23 +165,24 @@ function Hero() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-slate-400 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed mb-10"
         >
-          Orchestrix Labs builds production-ready AI systems, voice bots,
-          automation pipelines, and full-stack applications — delivered by
-          a specialized team with 6+ years of Python & AI expertise.
+          Voice AI, business automation, custom software, and enterprise integrations—
+          delivered with production discipline. Led by founder {SITE.founder} with{' '}
+          {SITE.founderExperienceYears}+ years of professional software engineering experience
+          (founder experience, not company age).
         </motion.p>
 
-        {/* CTAs */}
+        {/* CTAs — consultation primary for lead gen */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
         >
-          <Link to="/portfolio" className="btn-primary text-base px-8 py-3.5">
-            See Our Work <FiArrowRight />
+          <Link to="/contact" className="btn-primary text-base px-8 py-3.5">
+            Request Consultation <FiArrowRight />
           </Link>
-          <Link to="/contact" className="btn-outline text-base px-8 py-3.5">
-            Start a Project
+          <Link to="/portfolio" className="btn-outline text-base px-8 py-3.5">
+            Explore Our Work
           </Link>
         </motion.div>
 
@@ -182,16 +203,14 @@ function Hero() {
             <FiCheckCircle className="text-primary-400" size={13} />
             <span className="text-white font-bold text-xs">100% Job Success</span>
           </div>
-          {[
-            { v: `${siteStats.total_jobs}+`, l: 'Projects Delivered' },
-            { v: siteStats.total_hours.toLocaleString(), l: 'Engineering Hours' },
-            { v: siteStats.total_earnings, l: 'Revenue Generated' },
-          ].map(({ v, l }) => (
-            <div key={l} className="px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.07]">
-              <span className="text-white font-bold text-xs">{v}</span>
-              <span className="text-slate-500 text-xs ml-1.5">{l}</span>
-            </div>
-          ))}
+          <div className="px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.07]">
+            <span className="text-white font-bold text-xs">{siteStats.years_experience}+</span>
+            <span className="text-slate-500 text-xs ml-1.5">Years Founder Experience</span>
+          </div>
+          <div className="px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.07]">
+            <span className="text-white font-bold text-xs">Worldwide</span>
+            <span className="text-slate-500 text-xs ml-1.5">Client Delivery</span>
+          </div>
         </motion.div>
 
         {/* Floating tech badges */}
@@ -245,7 +264,7 @@ function ServicesPreview() {
           </motion.h2>
           <motion.p variants={fadeUp} custom={2} className="section-sub mx-auto">
             From intelligent voice agents to web automation pipelines — we build
-            the systems that give your business an unfair advantage.
+            systems designed for reliability, clarity, and commercial impact.
           </motion.p>
         </div>
 
@@ -288,13 +307,9 @@ function ServicesPreview() {
 }
 
 function FeaturedWork() {
-  const [featuredProjects, setFeaturedProjects] = useState([])
-
-  useEffect(() => {
-    api.get('/api/projects/?featured=true').then(res => {
-      if (Array.isArray(res.data)) setFeaturedProjects(res.data)
-    }).catch(() => {})
-  }, [])
+  // Marketing portfolio reads the controlled published bundle only (not /api/projects/).
+  // Production shows publication-approved featured rows (All Cleared first); drafts only in content_review.
+  const featuredProjects = getFeaturedPublishedProjects().slice(0, 6)
 
   return (
     <Section className="py-24 bg-dark-900/30">
@@ -304,65 +319,79 @@ function FeaturedWork() {
             Featured Work
           </motion.span>
           <motion.h2 variants={fadeUp} custom={1} className="section-heading mb-4">
-            Projects that ship to{' '}
-            <span className="gradient-text">production</span>
+            What we build for{' '}
+            <span className="gradient-text">operators worldwide</span>
           </motion.h2>
           <motion.p variants={fadeUp} custom={2} className="section-sub mx-auto">
-            Real systems, real impact. Every project is built production-ready —
-            deployed, monitored, and delivering value.
+            Publication-approved case studies only. Full delivery archive lives in Work History.
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {featuredProjects.map((project, i) => (
-            <motion.div
-              key={project.id}
-              custom={i}
-              variants={fadeUp}
-              className="group card hover:-translate-y-1 transition-all duration-300 flex flex-col"
-            >
-              {/* Header */}
-              <div className="flex items-start justify-between gap-3 mb-3">
-                <span className="px-2.5 py-1 rounded-md bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs font-medium">
-                  {project.category}
-                </span>
-              </div>
-
-              <h3 className="text-white font-bold text-lg mb-2 group-hover:text-primary-300 transition-colors">
-                {project.title}
-              </h3>
-              <p className="text-slate-400 text-sm leading-relaxed mb-4 flex-1">
-                {project.summary}
-              </p>
-
-              {/* Impact */}
-              <div className="mb-4 space-y-1.5">
-                {project.impact.slice(0, 2).map(imp => (
-                  <div key={imp} className="flex items-center gap-2 text-xs text-emerald-400">
-                    <FiCheckCircle size={12} />
-                    {imp}
-                  </div>
-                ))}
-              </div>
-
-              {/* Tech */}
-              <div className="flex flex-wrap gap-1.5 pt-4 border-t border-white/[0.05]">
-                {project.tech.slice(0, 5).map(t => (
-                  <span key={t} className="px-2 py-0.5 bg-white/[0.04] border border-white/[0.06] rounded text-slate-500 text-xs">
-                    {t}
+        {featuredProjects.length === 0 ? (
+          <div className="mx-auto max-w-xl rounded-2xl border border-white/[0.08] bg-dark-900/50 px-6 py-12 text-center">
+            <p className="font-display text-xl text-white">Featured case studies coming soon</p>
+            <p className="mt-3 text-sm leading-relaxed text-slate-400">
+              We are preparing publication-approved portfolio work. Meanwhile, reach out about the system you want built.
+            </p>
+            <Link to="/contact" className="btn-primary mt-8 inline-flex">
+              Request Consultation <FiArrowRight />
+            </Link>
+          </div>
+        ) : (
+          <div className={`grid grid-cols-1 gap-6 ${featuredProjects.length === 1 ? 'md:grid-cols-1 max-w-2xl mx-auto' : 'md:grid-cols-2'}`}>
+            {featuredProjects.map((project, i) => (
+              <motion.div
+                key={project.id}
+                custom={i}
+                variants={fadeUp}
+                className="group card hover:-translate-y-1 transition-all duration-300 flex flex-col"
+              >
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <span className="px-2.5 py-1 rounded-md bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs font-medium">
+                    {project.primaryCategory}
                   </span>
-                ))}
-                {project.tech.length > 5 && (
-                  <span className="px-2 py-0.5 text-slate-600 text-xs">+{project.tech.length - 5}</span>
-                )}
-              </div>
-            </motion.div>
-          ))}
-        </div>
+                  {project.flagshipRank === 1 && (
+                    <span className="text-[11px] uppercase tracking-wider text-emerald-400/90">Flagship</span>
+                  )}
+                  {isDraftPortfolioMode() && project.publicationApproved !== true && (
+                    <span className="text-[11px] uppercase tracking-wider text-slate-500">Draft preview</span>
+                  )}
+                </div>
 
-        <motion.div variants={fadeUp} custom={8} className="text-center mt-10">
+                <h3 className="text-white font-bold text-lg mb-2 group-hover:text-primary-300 transition-colors">
+                  <Link to={`/portfolio/${project.slug}`} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400">
+                    {project.title}
+                  </Link>
+                </h3>
+                <p className="text-slate-400 text-sm leading-relaxed mb-4 flex-1 line-clamp-3">
+                  {project.summary}
+                </p>
+
+                <div className="flex flex-wrap gap-1.5 pt-4 border-t border-white/[0.05]">
+                  {(project.techCandidates || []).slice(0, 5).map(t => (
+                    <span key={t} className="px-2 py-0.5 bg-white/[0.04] border border-white/[0.06] rounded text-slate-500 text-xs">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+
+                <Link
+                  to={`/portfolio/${project.slug}`}
+                  className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-cyan-300 hover:text-cyan-200"
+                >
+                  View case study <FiArrowRight />
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        )}
+
+        <motion.div variants={fadeUp} custom={8} className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
           <Link to="/portfolio" className="btn-primary">
-            View All Projects <FiArrowRight />
+            Explore Our Work <FiArrowRight />
+          </Link>
+          <Link to="/work-history" className="btn-outline">
+            Browse Work History
           </Link>
         </motion.div>
       </div>
@@ -465,7 +494,7 @@ function Testimonials() {
             Trusted by clients <span className="gradient-text">worldwide</span>
           </motion.h2>
           <motion.p variants={fadeUp} custom={2} className="section-sub mx-auto">
-            {siteStats.total_jobs}+ projects delivered. {siteStats.jss_score}% Job Success Score. Top Rated on Upwork.
+            Founder Upwork credentials: {siteStats.jss_score}% Job Success · Top Rated — verified client feedback (separate from company age).
           </motion.p>
         </div>
 
@@ -486,17 +515,8 @@ function Testimonials() {
             <FiCheckCircle className="text-primary-400" size={16} />
             <span className="text-white font-bold text-sm">100% Job Success</span>
           </div>
-          {/* Jobs */}
           <div className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
-            <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.total_jobs}</span> Projects Delivered</span>
-          </div>
-          {/* Hours */}
-          <div className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
-            <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.total_hours.toLocaleString()}</span> Engineering Hours</span>
-          </div>
-          {/* Earnings */}
-          <div className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
-            <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.total_earnings}</span> Revenue Generated</span>
+            <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.years_experience}+</span> years founder experience</span>
           </div>
         </motion.div>
 
@@ -561,7 +581,7 @@ function Testimonials() {
         {/* ── Layer 4: Upwork CTA ── */}
         <motion.div variants={fadeUp} custom={9} className="text-center">
           <a
-            href="https://www.upwork.com/agencies/1464061503601672192/"
+            href={SOCIAL.upwork}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-[#14a800]/10 border border-[#14a800]/30 text-[#14a800] font-semibold text-sm hover:bg-[#14a800]/20 transition-all duration-200"
@@ -569,7 +589,7 @@ function Testimonials() {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
               <path d="M18.561 13.158c-1.102 0-2.135-.467-3.074-1.227l.228-1.076.008-.042c.207-1.143.849-3.06 2.839-3.06 1.492 0 2.703 1.212 2.703 2.703-.001 1.489-1.212 2.702-2.704 2.702zm0-8.14c-2.539 0-4.51 1.649-5.31 4.366-1.22-1.834-2.148-4.036-2.687-5.892H7.828v7.112c-.002 1.406-1.141 2.546-2.547 2.546-1.405 0-2.543-1.14-2.545-2.546V3.492H0v7.112c0 2.914 2.37 5.303 5.281 5.303 2.913 0 5.283-2.389 5.283-5.303v-1.19c.529 1.107 1.182 2.229 1.974 3.221l-1.673 7.873h2.797l1.213-5.71c1.063.679 2.285 1.109 3.686 1.109 3 0 5.439-2.452 5.439-5.45 0-3-2.439-5.439-5.439-5.439z"/>
             </svg>
-            View all {siteStats.total_jobs} reviews on Upwork
+            View client reviews on Upwork
           </a>
         </motion.div>
 
@@ -593,20 +613,20 @@ function CTABanner() {
           </div>
 
           <div className="relative z-10">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4">
-              Ready to build something{' '}
-              <span className="gradient-text">exceptional?</span>
+            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-4">
+              Ready to automate growth with{' '}
+              <span className="gradient-text">reliable systems?</span>
             </h2>
             <p className="text-slate-400 text-lg max-w-xl mx-auto mb-10">
-              Tell us about your project. We'll respond within 24 hours with a
-              clear plan and honest assessment.
+              Share your constraints. We respond within {SITE.responseTime} with an
+              honest assessment and a clear next step—no inflated promises.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link to="/contact" className="btn-primary text-base px-8 py-3.5">
-                Start Your Project <FiArrowRight />
+                Request Consultation <FiArrowRight />
               </Link>
               <Link to="/portfolio" className="btn-outline text-base px-8 py-3.5">
-                See Our Work
+                Explore Our Work
               </Link>
             </div>
           </div>
@@ -621,7 +641,7 @@ export default function Home() {
   return (
     <>
       <SEOHead
-        description="Orchestrix Labs is a top-rated AI development agency. We build voice AI agents, automation pipelines, full-stack web apps & ML solutions. 200+ projects delivered worldwide with 100% job success."
+        description={`${SITE.slogan} ${SITE.positioning} Voice agents, business automation, custom software, and integrations—led by ${SITE.founderExperienceYears}+ years of founder engineering experience. Top Rated on Upwork.`}
         path="/"
         faq={FAQ}
       />

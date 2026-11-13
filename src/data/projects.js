@@ -1,3 +1,11 @@
+/**
+ * LEGACY marketing dataset.
+ *
+ * Portfolio and Home featured work now use `publishedProjects.js` (controlled publish bundle).
+ * Keep this file for reference / migration only. Do not wire new UI to it.
+ * Dashboard continues to use authenticated `/api/dashboard/projects/`.
+ * Public `/api/projects/` remains available for backward compatibility but is not the portfolio source of truth.
+ */
 export const categories = ['All', 'Voice AI & Chatbots', 'Machine Learning & AI', 'Web Scraping & Automation', 'Full-Stack Development', 'Workflow Automation']
 
 export const projects = [
@@ -195,10 +203,10 @@ export const projects = [
   },
   {
     id: 13,
-    title: 'TPC America — Django E-commerce & Data Pipeline',
+    title: 'Django E-commerce & Supplier Data Pipeline',
     category: 'Full-Stack Development',
     summary: 'Large-scale Django e-commerce upgrade with scraped product ingestion, ETL pipeline, PostgreSQL schema design, and REST APIs.',
-    description: 'Upgraded and expanded a Django-based e-commerce site for TPC America, building scraping pipelines to ingest thousands of products from supplier websites, designing the PostgreSQL schema, and exposing REST APIs for frontend consumption.',
+    description: 'Upgraded and expanded a Django-based e-commerce site for an anonymized retail client, building scraping pipelines to ingest supplier product data, designing the PostgreSQL schema, and exposing REST APIs for frontend consumption.',
     tech: ['Python', 'Django', 'PostgreSQL', 'Scrapy', 'BeautifulSoup', 'Django REST Framework', 'Celery'],
     highlights: [
       'Custom PostgreSQL schema for complex product categories and variants',
@@ -334,7 +342,7 @@ export const projects = [
       'Deduplication and data normalization at scale',
       'Automated scheduling and incremental update support',
     ],
-    impact: ['$4,133 engagement over 207 hours', '5.0 Upwork rating', 'Thousands of verified B2B leads delivered', 'Ongoing long-term client relationship'],
+    impact: ['Long-running Upwork engagement', '5.0 Upwork rating', 'Verified B2B lead lists delivered', 'Ongoing long-term client relationship'],
     featured: false,
   },
   {

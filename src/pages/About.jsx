@@ -31,7 +31,7 @@ function Section({ children, className = '' }) {
 const values = [
   { icon: FiCheck, title: 'Production-First', desc: 'We don\'t ship demos. Every project is built with scalability, error handling, and real-world edge cases in mind.' },
   { icon: FiCheck, title: 'Transparent Communication', desc: 'Weekly updates, clear milestones, and honest assessments. You always know where your project stands.' },
-  { icon: FiCheck, title: 'Deep Specialization', desc: 'Six-plus years focused on Python, AI, and automation — not a generalist agency. We go deep in our domains.' },
+  { icon: FiCheck, title: 'Deep Specialization', desc: 'Founder experience of 6+ years focused on Python, AI, and automation — deep specialization, not a generalist agency.' },
   { icon: FiCheck, title: 'Results-Driven', desc: 'We measure success by your outcomes: hours saved, errors reduced, revenue generated. Not lines of code written.' },
 ]
 
@@ -69,7 +69,7 @@ export default function About() {
     <>
       <SEOHead
         title="About"
-        description="Orchestrix Labs is a top-rated AI development agency with 6+ years experience and 200+ projects delivered. We specialize in voice AI, automation, web development, and machine learning solutions."
+        description="Orchestrix Labs is a premium AI engineering company. Founder experience of 6+ years in software engineering, with 100% Job Success on Upwork. Voice AI, automation, full-stack development, and machine learning."
         path="/about"
         breadcrumbs={[
           { name: 'Home', path: '/' },
@@ -122,7 +122,7 @@ export default function About() {
                 <motion.p variants={fadeUp} custom={2}>
                   Orchestrix Labs was founded with a single mission: make enterprise-grade AI
                   accessible to ambitious businesses of every size. We combine deep Python & AI
-                  expertise — honed across 200+ production projects — with the structured delivery
+                  expertise — honed across production AI and software engagements — with the structured delivery
                   process that serious engagements demand.
                 </motion.p>
                 <motion.p variants={fadeUp} custom={3}>
@@ -142,10 +142,10 @@ export default function About() {
             {/* Stats card */}
             <motion.div variants={fadeUp} custom={2} className="grid grid-cols-2 gap-4">
               {[
-                { v: '100%',   l: 'Job Success Score' },
-                { v: '200+',   l: 'Projects Delivered' },
-                { v: '$100K+', l: 'Revenue Generated' },
-                { v: '4,824',  l: 'Engineering Hours' },
+                { v: '100%', l: 'Job Success Score' },
+                { v: '6+', l: 'Founder Experience' },
+                { v: 'Top Rated', l: 'Upwork Agency' },
+                { v: '24h', l: 'Response Target' },
               ].map(({ v, l }) => (
                 <div key={l} className="card text-center py-8">
                   <div className="text-4xl font-black gradient-text mb-2">{v}</div>
@@ -252,7 +252,7 @@ export default function About() {
               Get in Touch <FiArrowRight />
             </Link>
             <Link to="/portfolio" className="btn-outline text-base px-8 py-3.5">
-              See Our Work
+              Explore Our Work
             </Link>
           </motion.div>
         </div>

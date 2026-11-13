@@ -8,9 +8,9 @@ import {
   breadcrumbSchema,
 } from '../lib/seoSchemas'
 
-const DEFAULT_TITLE = 'Orchestrix Labs — AI Development Agency | Voice AI, Automation & Full-Stack Software'
+const DEFAULT_TITLE = `Orchestrix Labs — ${SITE.slogan || 'Engineering Intelligence. Automating Growth.'}`
 const DEFAULT_DESC =
-  'Top-rated AI development agency. Voice AI agents, intelligent automation, full-stack web apps & ML solutions. 200+ projects, 100% job success. Python, Django, React experts.'
+  'Engineering Intelligence. Automating Growth. AI engineering built for real-world operations—voice agents, automation, custom software, and integrations. Top Rated on Upwork with 100% Job Success.'
 
 export default function SEOHead({
   title,
@@ -22,7 +22,9 @@ export default function SEOHead({
   breadcrumbs,
   extraSchemas = [],
 }) {
-  const fullTitle = title ? `${title} — Orchestrix Labs | AI Development Agency` : DEFAULT_TITLE
+  const fullTitle = title
+    ? (title.includes('Orchestrix Labs') ? title : `${title} — Orchestrix Labs`)
+    : DEFAULT_TITLE
   const fullUrl = `${SITE.url}${path}`
 
   const schemas = [

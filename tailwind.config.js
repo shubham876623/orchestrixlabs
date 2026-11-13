@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -28,7 +29,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['"Source Sans 3"', 'system-ui', 'sans-serif'],
+        display: ['"Syne"', '"Source Sans 3"', 'system-ui', 'sans-serif'],
       },
       animation: {
         'fade-up': 'fadeUp 0.6s ease forwards',
