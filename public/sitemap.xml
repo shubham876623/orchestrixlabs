@@ -26,6 +26,51 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://orchestrixlabs.com/portfolio/restaurant-voice-ordering</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://orchestrixlabs.com/portfolio/hubspot-voice-lead-qualification</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://orchestrixlabs.com/portfolio/twilio-outbound-call-center</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://orchestrixlabs.com/portfolio/bilingual-hr-ai-assistant</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://orchestrixlabs.com/portfolio/django-ecommerce-data-pipeline</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://orchestrixlabs.com/portfolio/legacy-desktop-to-flask</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://orchestrixlabs.com/portfolio/ml-background-removal</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://orchestrixlabs.com/portfolio/healthcare-ops-sales-demo</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://orchestrixlabs.com/portfolio/retail-flooring-automation-suite</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://orchestrixlabs.com/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

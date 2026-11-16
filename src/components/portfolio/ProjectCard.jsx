@@ -2,28 +2,38 @@ import { Link } from 'react-router-dom'
 import { FiArrowUpRight } from 'react-icons/fi'
 import AbstractCover from './AbstractCover'
 
-export default function ProjectCard({ project }) {
-  const techPreview = (project.techCandidates || []).slice(0, 4)
+export default function ProjectCard({ project, variant = 'grid' }) {
+  const techPreview = (project.techCandidates || project.tech || []).slice(0, 5)
+  const hasCaseStudy = project.hasCaseStudy !== false && Boolean(project.slug)
+  const detailTo = hasCaseStudy ? `/portfolio/${project.slug}` : '/contact'
+  const detailLabel = hasCaseStudy ? 'View case study' : 'Request Consultation'
+  const isDemo = project.demoOnly || /interactive sales demo/i.test(project.title || '')
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-cyan-600/30 hover:shadow-lg dark:border-white/[0.08] dark:bg-dark-900/70 dark:shadow-none dark:hover:border-cyan-400/25 dark:hover:shadow-[0_20px_50px_-30px_rgba(34,211,238,0.45)]">
+    <article
+      className={`group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-cyan-600/30 hover:shadow-lg dark:border-white/[0.08] dark:bg-dark-900/70 dark:shadow-none dark:hover:border-cyan-400/25 dark:hover:shadow-[0_20px_50px_-30px_rgba(34,211,238,0.45)] ${
+        variant === 'featured' ? 'md:flex-row md:items-stretch' : ''
+      }`}
+    >
       <Link
-        to={`/portfolio/${project.slug}`}
-        className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cyan-500"
-        aria-label={`View case study: ${project.title}`}
+        to={detailTo}
+        className={`block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cyan-500 ${
+          variant === 'featured' ? 'md:w-[42%] md:shrink-0' : ''
+        }`}
+        aria-label={`${detailLabel}: ${project.title}`}
       >
         {project.images?.[0] ? (
           <img
             src={project.images[0]}
             alt=""
-            className="h-44 w-full object-cover sm:h-48"
+            className={`w-full object-cover ${variant === 'featured' ? 'h-52 md:h-full' : 'h-44 sm:h-48'}`}
             loading="lazy"
           />
         ) : (
           <AbstractCover
             tone={project.coverTone}
             title={project.title}
-            className="h-44 sm:h-48"
+            className={variant === 'featured' ? 'h-52 md:h-full min-h-[12rem]' : 'h-44 sm:h-48'}
           />
         )}
       </Link>
@@ -33,19 +43,21 @@ export default function ProjectCard({ project }) {
           <span className="rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-slate-700 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-300">
             {project.primaryCategory}
           </span>
-          {project.conditional && (
-            <span className="rounded-md border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-amber-800 dark:text-amber-200">
-              Conditional
+          {isDemo && (
+            <span className="rounded-md border border-sky-500/30 bg-sky-500/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-sky-800 dark:text-sky-200">
+              Interactive demo
             </span>
           )}
-          <span className="rounded-md border border-slate-200 px-2.5 py-1 text-[11px] text-slate-500 dark:border-white/10">
-            Draft preview
-          </span>
+          {project.flagshipRank === 1 && (
+            <span className="rounded-md border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-cyan-800 dark:text-cyan-200">
+              Flagship
+            </span>
+          )}
         </div>
 
         <h3 className="font-display text-xl font-semibold leading-snug text-slate-900 dark:text-white">
           <Link
-            to={`/portfolio/${project.slug}`}
+            to={detailTo}
             className="transition-colors hover:text-cyan-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:hover:text-cyan-200"
           >
             {project.title}
@@ -56,7 +68,9 @@ export default function ProjectCard({ project }) {
           {project.summary}
         </p>
 
-        <p className="mt-3 text-xs text-slate-500">{project.engagementLabel}</p>
+        {project.deliveryStatus && (
+          <p className="mt-3 text-xs text-slate-500 line-clamp-2">{project.deliveryStatus}</p>
+        )}
 
         {techPreview.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-1.5">
@@ -64,27 +78,19 @@ export default function ProjectCard({ project }) {
               <span
                 key={t}
                 className="rounded border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] text-slate-600 dark:border-white/[0.06] dark:bg-white/[0.03] dark:text-slate-400"
-                title={project.techPendingVerification ? 'Pending verification' : undefined}
               >
                 {t}
               </span>
             ))}
-            {project.techPendingVerification && (
-              <span className="px-1 text-[11px] text-slate-500">pending verify</span>
-            )}
           </div>
-        )}
-
-        {project.techConflictNote && (
-          <p className="mt-3 text-xs leading-relaxed text-amber-800 dark:text-amber-200/80">{project.techConflictNote}</p>
         )}
 
         <div className="mt-5 border-t border-slate-200 pt-4 dark:border-white/[0.06]">
           <Link
-            to={`/portfolio/${project.slug}`}
+            to={detailTo}
             className="inline-flex min-h-[44px] items-center gap-2 text-sm font-semibold text-cyan-700 transition-colors hover:text-cyan-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:text-cyan-300 dark:hover:text-cyan-200"
           >
-            View case study <FiArrowUpRight size={16} aria-hidden="true" />
+            {detailLabel} <FiArrowUpRight size={16} aria-hidden="true" />
           </Link>
         </div>
       </div>

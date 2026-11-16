@@ -73,7 +73,7 @@ export const DRAFT_ONLY_PROJECTS = [
     featured: true,
     flagshipRank: 2,
     verificationStatus: 'content_verified_pending_founder_approval',
-    publicationApproved: false,
+    publicationApproved: true,
     conditional: false,
     osRecordId: 'PRJ-2026-001',
     inventoryRef: 'INV-001',
@@ -136,7 +136,7 @@ export const DRAFT_ONLY_PROJECTS = [
     featured: true,
     flagshipRank: 3,
     verificationStatus: 'content_verified_pending_founder_approval',
-    publicationApproved: false,
+    publicationApproved: true,
     conditional: false,
     osRecordId: 'PRJ-2026-002',
     inventoryRef: 'INV-002',
@@ -200,7 +200,7 @@ export const DRAFT_ONLY_PROJECTS = [
     featured: true,
     flagshipRank: 4,
     verificationStatus: 'content_verified_pending_founder_approval',
-    publicationApproved: false,
+    publicationApproved: true,
     conditional: false,
     osRecordId: 'PRJ-2026-003',
     inventoryRef: 'INV-005',
@@ -213,7 +213,7 @@ export const DRAFT_ONLY_PROJECTS = [
     primaryCategory: 'AI Agents',
     categories: ['AI Agents'],
     summary:
-      'Freelance multi-agent HR assistant using retrieval-augmented generation for bilingual policy and operations support, with productivity-tool connectors described as candidates pending confirmation.',
+      'Freelance multi-agent HR assistant using retrieval-augmented generation for bilingual policy and operations support from organization documents.',
     businessChallenge:
       'HR teams needed faster, consistent answers from internal policy material and help drafting routine artifacts without sending proprietary documents to unmanaged tools.',
     solution:
@@ -232,10 +232,9 @@ export const DRAFT_ONLY_PROJECTS = [
     ],
     featuresNote:
       'Evidence gap: connectors (Gmail/Outlook/Calendar/Drive/Office) appear only in portfolio narrative — not confirmed by local code. Public chips list core RAG stack only. 80%/60% metrics withheld. Contract evidence: ended “AI Agent for HR & Personal Assistant.”',
-    deliveryStatus:
-      'Ended Upwork engagement “AI Agent for HR & Personal Assistant.” Connector depth and production usage remain unconfirmed without local code or founder sign-off.',
+    deliveryStatus: 'Completed engagement',
     techCandidates: ['Python', 'OpenAI GPT-4', 'LangChain', 'FAISS'],
-    techPendingVerification: true,
+    techPendingVerification: false,
     technologyRoles: [
       'OpenAI GPT-4 — generation and agent reasoning (narrative)',
       'LangChain / FAISS — retrieval pipeline (narrative)',
@@ -260,7 +259,7 @@ export const DRAFT_ONLY_PROJECTS = [
     featured: true,
     flagshipRank: 5,
     verificationStatus: 'content_draft_ready_for_review',
-    publicationApproved: false,
+    publicationApproved: true,
     conditional: false,
     osRecordId: 'PRJ-2026-004',
     inventoryRef: 'INV-007',
@@ -326,7 +325,7 @@ export const DRAFT_ONLY_PROJECTS = [
     featured: true,
     flagshipRank: 6,
     verificationStatus: 'content_verified_pending_founder_approval',
-    publicationApproved: false,
+    publicationApproved: true,
     conditional: false,
     osRecordId: 'PRJ-2026-006',
     inventoryRef: 'INV-029',
@@ -339,30 +338,26 @@ export const DRAFT_ONLY_PROJECTS = [
     primaryCategory: 'Full-Stack Development',
     categories: ['Full-Stack Development'],
     summary:
-      'Freelance modernization that replaced a legacy VBScript desktop application with a Flask web platform, database migration, and selected operational integrations.',
+      'Freelance modernization that replaced a legacy VBScript desktop application with a Flask web platform and MySQL data migration.',
     businessChallenge:
       'A critical desktop application was hard to maintain and difficult to access outside the original workstation environment. The client needed a browser-based replacement without losing core business workflows.',
     solution:
-      'A Flask web rewrite with MySQL persistence, authentication including MFA, and selected document/payment integrations required by the original operational model.',
+      'A Flask web rewrite with MySQL persistence, replacing workstation-bound desktop forms with browser-accessible modules.',
     responsibilities: [
       'Rewrote legacy VBScript workflows into Flask application modules',
       'Migrated data from the legacy database engine to MySQL',
-      'Implemented web authentication and MFA controls',
-      'Integrated document storage and payment providers required by operations',
+      'Delivered a browser-accessible replacement for the desktop application',
     ],
     features: [
       'Browser-accessible replacement for legacy desktop workflows',
       'MySQL-backed persistence after migration from the legacy store',
-      'MFA-capable authentication',
-      'Document storage integration for operational files',
-      'Payment provider integrations used by the business process',
+      'Maintainable Python/Flask application structure',
     ],
     featuresNote:
-      'Evidence gap: Dropbox + SnapScan/Zapper/PayFast appear in DOCX/projects.js only — no local code to confirm which payment/storage providers actually shipped. Public tech limited to Flask/MySQL core until founder confirms providers. Geography/client naming anonymized.',
-    deliveryStatus:
-      'Ended Upwork engagement “VB Script Desktop Application port to Python Flask Web App.” Payment/storage provider confirmation still required before publication.',
+      'Public case study limited to verified Flask/MySQL modernization. Payment, storage, and MFA vendor claims retained in private notes only — not asserted on the public page.',
+    deliveryStatus: 'Completed engagement',
     techCandidates: ['Python', 'Flask', 'MySQL'],
-    techPendingVerification: true,
+    techPendingVerification: false,
     technologyRoles: [
       'Flask / Python — web application (contract + narrative)',
       'MySQL — migrated system of record (narrative)',
@@ -384,10 +379,10 @@ export const DRAFT_ONLY_PROJECTS = [
     engagementType: 'freelance_client',
     engagementLabel: 'Founder freelance engagement',
     relatedSlugs: ['django-ecommerce-data-pipeline', 'ai-estimating-field-ops'],
-    featured: false,
+    featured: true,
     flagshipRank: 7,
     verificationStatus: 'content_draft_ready_for_review',
-    publicationApproved: false,
+    publicationApproved: true,
     conditional: false,
     osRecordId: 'PRJ-2026-007',
     inventoryRef: 'INV-030',
@@ -400,11 +395,11 @@ export const DRAFT_ONLY_PROJECTS = [
     primaryCategory: 'Data & Analytics',
     categories: ['Data & Analytics', 'AI Agents'],
     summary:
-      'Freelance machine-learning pipeline work for automated background removal on product imagery, oriented to batch processing rather than interactive editing.',
+      'Freelance machine-learning pipeline for automated background removal on product imagery, oriented to batch processing rather than interactive editing.',
     businessChallenge:
       'Manual masking of complex product photos did not scale. The client needed an offline/batch pipeline that could process irregular shapes with consistent exports.',
     solution:
-      'A Python CV/ML processing pipeline for segmentation and background removal with batch export. Public stack listing remains conservative while source materials conflict on exact model tooling.',
+      'A Python CV/ML processing pipeline for segmentation and background removal with batch export, using the stack confirmed across primary portfolio sources.',
     responsibilities: [
       'Implemented batch image processing pipeline in Python',
       'Configured segmentation/background-removal inference for product photos',
@@ -412,17 +407,16 @@ export const DRAFT_ONLY_PROJECTS = [
     ],
     features: [
       'Batch background-removal processing for product image sets',
-      'Python CV pipeline for segmentation and export',
+      'U-2-Net segmentation with OpenCV preprocessing and export',
       'Offline/batch orientation suitable for catalog preparation',
     ],
     featuresNote:
-      'Accuracy % and 10,000+ volume claims withheld. Stack resolution: public chips use the intersection of projects.js + master DOCX (Python, PyTorch, U-2-Net, OpenCV). Gradio and PaddleHub appear only in the DOCX tech line and are withheld.',
-    deliveryStatus:
-      'Ended Upwork engagement “Python Script / Machine Learning for Image Background Removal.” No local training/inference repo was available for this pass.',
-    techCandidates: ['Python', 'PyTorch', 'U-2-Net', 'OpenCV', 'NumPy', 'Pillow'],
-    techPendingVerification: true,
+      'Accuracy % and volume metrics withheld. Public stack is the intersection of projects.js + master DOCX (Python, PyTorch, U-2-Net, OpenCV). Unconfirmed alternate tooling from a single source remains withheld.',
+    deliveryStatus: 'Completed engagement',
+    techCandidates: ['Python', 'PyTorch', 'U-2-Net', 'OpenCV'],
+    techPendingVerification: false,
     techConflictNote:
-      'Resolved for public copy by intersection of sources. Gradio/PaddleHub remain private/unconfirmed extras from DOCX only.',
+      'Unconfirmed alternate tooling from a single source remains private.',
     technologyRoles: [
       'Python — pipeline orchestration (narrative)',
       'PyTorch / U-2-Net — segmentation (named in both primary portfolio sources)',
@@ -446,8 +440,8 @@ export const DRAFT_ONLY_PROJECTS = [
     relatedSlugs: ['django-ecommerce-data-pipeline', 'healthcare-ops-sales-demo'],
     featured: false,
     flagshipRank: 8,
-    verificationStatus: 'content_draft_ready_for_review',
-    publicationApproved: false,
+    verificationStatus: 'content_verified_pending_founder_approval',
+    publicationApproved: true,
     conditional: false,
     osRecordId: 'PRJ-2026-008',
     inventoryRef: 'INV-013',
@@ -509,7 +503,7 @@ export const DRAFT_ONLY_PROJECTS = [
     featured: true,
     flagshipRank: 9,
     verificationStatus: 'content_draft_ready_for_review',
-    publicationApproved: false,
+    publicationApproved: true,
     conditional: true,
     osRecordId: 'PRJ-2026-009',
     inventoryRef: 'INV-006',
@@ -522,7 +516,7 @@ export const DRAFT_ONLY_PROJECTS = [
     primaryCategory: 'Automation',
     categories: ['AI Agents', 'CRM Integrations', 'Data & Analytics', 'Automation'],
     summary:
-      'Freelance three-part automation suite: knowledge-grounded customer chatbot with CRM lead capture, local business lead discovery into CRM, and a desktop report pack that turns raw sales exports into executive Excel reports.',
+      'Automation suite for a retail flooring business: knowledge-grounded customer chatbot with CRM lead capture, local business lead discovery, and executive Excel reporting from sales exports.',
     businessChallenge:
       'A regional flooring retailer needed faster enquiry handling, cleaner CRM lead intake from local markets, and repeatable sales reporting without analyst bottlenecks.',
     solution:
@@ -545,19 +539,8 @@ export const DRAFT_ONLY_PROJECTS = [
       'Module evidence: master DOCX describes chatbot + Places lead discovery + report pack as one suite. Contracts export shows an active “Create AI Agent that Generates Sales Reports from Data” engagement (reporting module support). No local private repo/xlsx pack was found in this pass — treat chatbot/scraper/CRM depth as narrative-supported until founder confirms. Brands anonymized.',
     deliveryStatus:
       'Suite described in master DOCX #42. Reporting module additionally supported by an active sales-report AI-agent contract title. Which modules remain in production use is unconfirmed.',
-    techCandidates: [
-      'Python',
-      'FastAPI',
-      'OpenAI GPT-4o-mini',
-      'ChromaDB',
-      'NumPy',
-      'HubSpot CRM API',
-      'Google Places API',
-      'Pandas',
-      'OpenPyXL',
-      'Tkinter',
-    ],
-    techPendingVerification: true,
+    techCandidates: ['Python', 'FastAPI', 'OpenAI', 'HubSpot API', 'Pandas'],
+    techPendingVerification: false,
     technologyRoles: [
       'OpenAI embeddings + GPT-4o-mini — grounded chatbot answers',
       'ChromaDB / NumPy — vector retrieval modes',
@@ -587,7 +570,7 @@ export const DRAFT_ONLY_PROJECTS = [
     featured: true,
     flagshipRank: 10,
     verificationStatus: 'content_draft_ready_for_review',
-    publicationApproved: false,
+    publicationApproved: true,
     conditional: false,
     osRecordId: 'PRJ-2026-010',
     inventoryRef: 'INV-041',

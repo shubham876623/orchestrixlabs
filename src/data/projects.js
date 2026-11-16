@@ -75,10 +75,10 @@ export const projects = [
   },
   {
     id: 5,
-    title: 'Tammy — AI Voice Receptionist (ExecConnect)',
+    title: 'Tammy — AI Voice Receptionist',
     category: 'Voice AI & Chatbots',
-    summary: 'Retell.ai + Twilio voice bot with Outlook Calendar booking, Airtable CRM logging and Azure-hosted FastAPI backend.',
-    description: 'Developed Tammy for ExecConnect — a professional AI receptionist integrating Retell.ai via Twilio trunk, GPT-4 function calling for calendar booking, and Airtable as CRM. Hosted on Azure App Service.',
+    summary: 'Retell.ai + Twilio voice bot with Outlook Calendar booking, CRM logging and Azure-hosted FastAPI backend.',
+    description: 'Developed Tammy — a professional AI receptionist integrating Retell.ai via Twilio trunk, GPT-4 function calling for calendar booking, and CRM logging. Hosted on Azure App Service.',
     tech: ['Retell.ai', 'Twilio', 'GPT-4', 'FastAPI', 'Azure', 'Outlook Calendar', 'Microsoft Graph API', 'Airtable', 'React'],
     highlights: [
       'Twilio + Retell.ai professional voice trunk setup',
@@ -123,7 +123,7 @@ export const projects = [
   },
   {
     id: 8,
-    title: 'Matify Studio — AI Image Generation Platform',
+    title: 'AI Image Studio Platform',
     category: 'Machine Learning & AI',
     summary: 'Full-stack AI platform for custom model training, image generation, outfit swap, face retouch, background removal and upscaling.',
     description: 'Built a complete AI-powered image generation SaaS with Django backend and React frontend. Users train custom AI models via Replicate API, generate images, and apply advanced editing tools. Features a credit-based usage system and AWS S3 storage.',

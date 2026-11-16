@@ -1,33 +1,30 @@
 /**
- * Builds (or scans existing) approved_public dist and asserts draft case-study
- * content is not present in JS bundles — hidden-by-UI is not enough.
+ * Builds approved_public dist and asserts unpublished/internal content is absent,
+ * while the 34 approved projects are present. Excludes factory.
  */
 import { readFileSync, readdirSync, existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { spawnSync } from 'node:child_process'
+import { APPROVED_PUBLIC_PROJECTS } from '../src/data/portfolioApprovedProjects.js'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const distAssets = join(root, 'dist', 'assets')
 
-const DRAFT_MARKERS = [
-  'restaurant-voice-ordering',
-  'hubspot-voice-lead-qualification',
-  'twilio-outbound-call-center',
-  'bilingual-hr-ai-assistant',
-  'django-ecommerce-data-pipeline',
-  'legacy-desktop-to-flask',
-  'ml-background-removal',
-  'healthcare-ops-sales-demo',
-  'retail-flooring-automation-suite',
-  'Multi-Tenant Restaurant Voice Ordering Platform',
-  'illustrative demo data',
+const MUST_EXCLUDE = [
+  'Factory Operations Automation Suite',
   'portfolioDraftCatalog',
   'DRAFT_ONLY_PROJECTS',
-  'prj-2026-001',
-  'prj-2026-009',
-  'prj-2026-010',
+  'portfolioExpandedCards',
+  'EXPANDED_PORTFOLIO_CARDS',
+  'Hunter Jonasen',
+  'All Cleared Pty',
+  'FieldForge Partners',
+  'Choices Flooring',
+  'Matify Studio',
+  'ExecConnect',
   'Code-evidenced freelance delivery',
+  'card-inv-017',
 ]
 
 console.log('Building approved_public production bundle…')
@@ -52,25 +49,27 @@ for (const f of jsFiles) {
   blob += readFileSync(join(distAssets, f), 'utf8')
 }
 
-const results = []
-for (const marker of DRAFT_MARKERS) {
+let failed = 0
+for (const marker of MUST_EXCLUDE) {
   const hit = blob.includes(marker)
-  results.push({ marker, hit })
+  if (hit) failed += 1
   console.log(`${hit ? 'FAIL' : 'PASS'}  production bundle excludes: ${marker}`)
 }
 
-// Approved public content may remain
-const mustKeep = ['ai-estimating-field-ops', 'AI-Powered Estimating']
-for (const marker of mustKeep) {
-  const ok = blob.includes(marker)
-  results.push({ marker, hit: !ok })
-  console.log(`${ok ? 'PASS' : 'FAIL'}  production bundle keeps: ${marker}`)
+console.log(`Approved module source count: ${APPROVED_PUBLIC_PROJECTS.length}`)
+for (const p of APPROVED_PUBLIC_PROJECTS) {
+  const ok = blob.includes(p.slug)
+  if (!ok) failed += 1
+  console.log(`${ok ? 'PASS' : 'FAIL'}  production bundle keeps: ${p.slug}`)
 }
 
-const failed = results.filter((r) => r.hit).length
 console.log('---')
 if (failed) {
-  console.error(`VERDICT: ${failed} privacy/bundle check(s) failed — draft content leaked into production bundle`)
+  console.error(`VERDICT: ${failed} privacy/bundle check(s) failed`)
   process.exit(1)
 }
-console.log('VERDICT: approved_public production bundle does not contain draft case-study module content')
+if (APPROVED_PUBLIC_PROJECTS.length !== 34) {
+  console.error('VERDICT: approved module is not exactly 34')
+  process.exit(1)
+}
+console.log('VERDICT: production bundle contains exactly 34 approved projects and excludes factory/internal draft modules')
