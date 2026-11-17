@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { FiGithub, FiLinkedin, FiMail, FiInstagram, FiMapPin } from 'react-icons/fi'
 import { SiUpwork } from 'react-icons/si'
 import { SITE, SOCIAL } from '../lib/site'
+import BrandLogo from './BrandLogo'
 
 const footerLinks = {
   Company: [
@@ -35,14 +36,7 @@ export default function Footer() {
       <div className="container py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="md:col-span-2">
-            <Link to="/" className="flex items-center gap-2.5 mb-4">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
-                <span className="text-white font-black text-sm">OL</span>
-              </div>
-              <span className="text-white font-bold text-lg tracking-tight">
-                Orchestrix<span className="gradient-text"> Labs</span>
-              </span>
-            </Link>
+            <BrandLogo variant="nav" className="mb-4" imgClassName="h-9" />
             <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
               {SITE.positioning} Voice AI, automation, custom software, and integrations—
               delivered with production discipline.

@@ -15,18 +15,20 @@ export const SITE = {
   businessHours: 'Mon–Fri, 9:00 AM – 6:00 PM IST',
   responseTime: '24 hours',
   address: {
-    street: 'Phase-8, Industrial Area, Sector 73',
-    city: 'Sahibzada Ajit Singh Nagar',
+    street: 'C157, Phase 7, Industrial Area',
+    city: 'Mohali',
     region: 'Punjab',
-    postalCode: '160071',
+    postalCode: '',
     country: 'IN',
     countryName: 'India',
-    formatted: 'Phase-8, Industrial Area, Sector 73, Sahibzada Ajit Singh Nagar, Punjab 160071, India',
+    formatted: 'C157, Phase 7, Industrial Area, Mohali, Punjab, India',
   },
-  jurisdiction: 'Mohali (S.A.S. Nagar), Punjab, India',
+  jurisdiction: 'Mohali, Punjab, India',
   founded: '2019',
   ogImage: 'https://orchestrixlabs.com/og-image.jpg',
-  logo: 'https://orchestrixlabs.com/favicon.svg',
+  /** Official dark mark — Organization schema / SEO */
+  logo: 'https://orchestrixlabs.com/brand/logo-mark-dark.png',
+  logoWordmark: 'https://orchestrixlabs.com/brand/logo-wordmark-dark.png',
 }
 
 export const SOCIAL = {

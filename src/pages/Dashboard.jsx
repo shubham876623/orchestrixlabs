@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import api from '../lib/axios'
+import BrandLogo from '../components/BrandLogo'
 import {
   FiMail, FiEye, FiTrendingUp, FiCheck,
   FiRefreshCw, FiLogOut, FiEdit2, FiSave, FiX,
@@ -639,8 +640,8 @@ function LoginScreen({ onLogin }) {
     <div className="min-h-screen bg-dark-950 flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-black text-sm">OL</span>
+          <div className="flex justify-center mb-4">
+            <BrandLogo variant="mark" link={false} imgClassName="h-12 w-12" />
           </div>
           <h1 className="text-white font-bold text-xl">Dashboard</h1>
           <p className="text-slate-500 text-sm mt-1">Orchestrix Labs — Admin</p>
@@ -1494,9 +1495,7 @@ export default function Dashboard() {
       <aside className="hidden lg:flex flex-col w-60 border-r border-white/[0.06] bg-dark-900/50 fixed inset-y-0 left-0 z-40">
         <div className="p-5 border-b border-white/[0.06]">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
-              <span className="text-white font-black text-xs">OL</span>
-            </div>
+            <BrandLogo variant="mark" link={false} imgClassName="h-8 w-8" />
             <div>
               <p className="text-white font-semibold text-sm">Orchestrix Labs</p>
               <p className="text-slate-500 text-xs">Admin Dashboard</p>
@@ -1536,9 +1535,7 @@ export default function Dashboard() {
           <aside className="absolute left-0 inset-y-0 w-60 bg-dark-900 border-r border-white/[0.06] flex flex-col" onClick={e => e.stopPropagation()}>
             <div className="p-5 border-b border-white/[0.06]">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
-                  <span className="text-white font-black text-xs">OL</span>
-                </div>
+                <BrandLogo variant="mark" link={false} imgClassName="h-8 w-8" />
                 <p className="text-white font-semibold text-sm">Dashboard</p>
               </div>
             </div>

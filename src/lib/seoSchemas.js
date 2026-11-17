@@ -19,7 +19,7 @@ export function organizationSchema() {
       streetAddress: SITE.address.street,
       addressLocality: SITE.address.city,
       addressRegion: SITE.address.region,
-      postalCode: SITE.address.postalCode,
+      ...(SITE.address.postalCode ? { postalCode: SITE.address.postalCode } : {}),
       addressCountry: SITE.address.country,
     },
     contactPoint: [
@@ -63,7 +63,7 @@ export function professionalServiceSchema() {
       streetAddress: SITE.address.street,
       addressLocality: SITE.address.city,
       addressRegion: SITE.address.region,
-      postalCode: SITE.address.postalCode,
+      ...(SITE.address.postalCode ? { postalCode: SITE.address.postalCode } : {}),
       addressCountry: SITE.address.country,
     },
     email: SITE.email,

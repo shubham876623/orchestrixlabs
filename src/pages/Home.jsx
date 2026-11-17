@@ -133,14 +133,21 @@ function Hero() {
         </motion.div>
 
         {/* Brand mark + primary slogan as hero brand signal */}
-        <motion.p
+        <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.05 }}
-          className="font-display text-sm sm:text-base font-semibold tracking-[0.2em] uppercase text-slate-300 mb-4"
+          className="flex justify-center mb-6"
         >
-          Orchestrix Labs
-        </motion.p>
+          <img
+            src="/brand/logo-wordmark-dark.svg"
+            alt="Orchestrix Labs"
+            width={280}
+            height={128}
+            className="h-14 w-[12.75rem] sm:h-16 sm:w-[14.5rem] object-contain drop-shadow-[0_0_28px_rgba(0,239,253,0.22)]"
+            decoding="async"
+          />
+        </motion.div>
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}

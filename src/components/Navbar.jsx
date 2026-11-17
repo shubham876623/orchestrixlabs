@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { HiMenuAlt3, HiX } from 'react-icons/hi'
 import { SiUpwork } from 'react-icons/si'
 import { FiArrowRight, FiMoon, FiSun } from 'react-icons/fi'
+import BrandLogo from './BrandLogo'
 
 const navLinks = [
   { name: 'Home', path: '/' },
@@ -63,15 +64,7 @@ export default function Navbar() {
       }`}
     >
       <div className="container flex items-center justify-between">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center shadow-lg shadow-primary-500/30">
-            <span className="text-white font-black text-sm tracking-tight">OL</span>
-          </div>
-          <span className="text-white font-bold text-lg tracking-tight">
-            Orchestrix<span className="gradient-text"> Labs</span>
-          </span>
-        </Link>
+        <BrandLogo variant="nav" imgClassName="drop-shadow-[0_0_18px_rgba(0,239,253,0.18)]" />
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-1">
