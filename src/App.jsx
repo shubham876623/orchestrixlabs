@@ -12,6 +12,7 @@ const PortfolioWorkHistory = lazy(() => import('./pages/PortfolioWorkHistory'))
 const About = lazy(() => import('./pages/About'))
 const Contact = lazy(() => import('./pages/Contact'))
 const Reviews = lazy(() => import('./pages/Reviews'))
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 
 function RouteFallback() {
@@ -52,6 +53,7 @@ function AppInner() {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/reviews" element={<Reviews />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

@@ -9,6 +9,8 @@
 - **Website**: https://orchestrixlabs.com
 - **Email**: contact@orchestrixlabs.com
 - **Location**: C157, Phase 7, Industrial Area, Mohali, Punjab, India (serving clients worldwide)
+- **Privacy Policy**: https://orchestrixlabs.com/privacy-policy
+- **Privacy contact**: shubham@orchestrixlabs.com
 - **Founded by**: Shubham Saini, Founder & CEO
 - **Experience**: 6+ years in Python, AI, and automation
 - **Track record**: Top Rated on Upwork with 100% Job Success Score; production AI and software delivery worldwide

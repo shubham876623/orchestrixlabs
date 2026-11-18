@@ -12,6 +12,7 @@ const footerLinks = {
     { name: 'Work History', path: '/work-history' },
     { name: 'Client Reviews', path: '/reviews' },
     { name: 'Contact', path: '/contact' },
+    { name: 'Privacy Policy', path: '/privacy-policy' },
   ],
   Services: [
     { name: 'Voice AI & Chatbots', path: '/services#voice-ai' },
@@ -92,7 +93,10 @@ export default function Footer() {
             </p>
             <p className="text-slate-400 text-xs mt-1">{SITE.jurisdiction}</p>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+            <Link to="/privacy-policy" className="text-xs text-slate-400 hover:text-white transition-colors font-medium">
+              Privacy Policy
+            </Link>
             <span className="flex items-center gap-2 text-xs text-slate-400">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               Available for new projects

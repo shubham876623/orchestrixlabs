@@ -8,6 +8,8 @@ export const SITE = {
   positioning: 'AI Engineering. Built for Real-World Operations.',
   url: 'https://orchestrixlabs.com',
   email: 'contact@orchestrixlabs.com',
+  /** Privacy / data-rights requests — founder-designated contact */
+  privacyEmail: 'shubham@orchestrixlabs.com',
   founder: 'Shubham Saini',
   founderTitle: 'Founder & CEO',
   founderExperienceYears: 6,
@@ -93,4 +95,5 @@ export const ROUTES = [
   { path: '/about', title: 'About', changefreq: 'monthly', priority: '0.8' },
   { path: '/reviews', title: 'Reviews', changefreq: 'monthly', priority: '0.8' },
   { path: '/contact', title: 'Contact', changefreq: 'monthly', priority: '0.9' },
+  { path: '/privacy-policy', title: 'Privacy Policy', changefreq: 'yearly', priority: '0.5' },
 ]
