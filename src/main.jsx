@@ -7,7 +7,7 @@ import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <HelmetProvider>
+    <HelmetProvider prioritizeSeoTags>
       <BrowserRouter>
         <App />
       </BrowserRouter>

@@ -9,6 +9,7 @@ import { SiUpwork } from 'react-icons/si'
 import api from '../lib/axios'
 import SEOHead from '../components/SEOHead'
 import { SITE, SOCIAL } from '../lib/site'
+import { getSeoPage } from '../lib/seoPages'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -100,8 +101,8 @@ export default function Contact() {
   return (
     <>
       <SEOHead
-        title="Request Consultation"
-        description={`Book a technical consultation with Orchestrix Labs. Voice AI, automation, custom software, and integrations. Email ${SITE.email} — we aim to reply within ${SITE.responseTime}.`}
+        title={getSeoPage('/contact')?.title}
+        description={getSeoPage('/contact')?.description}
         path="/contact"
         breadcrumbs={[
           { name: 'Home', path: '/' },

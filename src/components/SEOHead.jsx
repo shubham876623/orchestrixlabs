@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 import { SITE } from '../lib/site'
+import { getSeoPage, HOME_META_DESCRIPTION } from '../lib/seoPages'
 import {
   organizationSchema,
   professionalServiceSchema,
@@ -8,13 +9,9 @@ import {
   breadcrumbSchema,
 } from '../lib/seoSchemas'
 
-const DEFAULT_TITLE = `Orchestrix Labs — ${SITE.slogan || 'Engineering Intelligence. Automating Growth.'}`
-const DEFAULT_DESC =
-  'Engineering Intelligence. Automating Growth. AI engineering built for real-world operations—voice agents, automation, custom software, and integrations. Top Rated on Upwork with 100% Job Success.'
-
 export default function SEOHead({
   title,
-  description = DEFAULT_DESC,
+  description,
   path = '',
   image = SITE.ogImage,
   noindex = false,
@@ -22,10 +19,15 @@ export default function SEOHead({
   breadcrumbs,
   extraSchemas = [],
 }) {
-  const fullTitle = title
-    ? (title.includes('Orchestrix Labs') ? title : `${title} — Orchestrix Labs`)
-    : DEFAULT_TITLE
-  const fullUrl = `${SITE.url}${path}`
+  const page = getSeoPage(path)
+  const resolvedDescription = description || page?.description || HOME_META_DESCRIPTION
+  const resolvedTitleBase = title || page?.title
+  const fullTitle = resolvedTitleBase
+    ? (resolvedTitleBase.includes('Orchestrix Labs')
+        ? resolvedTitleBase
+        : `${resolvedTitleBase} — Orchestrix Labs`)
+    : `Orchestrix Labs — ${SITE.slogan}`
+  const fullUrl = `${SITE.url}${path || '/'}`
 
   const schemas = [
     organizationSchema(),
@@ -37,21 +39,26 @@ export default function SEOHead({
   ]
 
   return (
-    <Helmet>
+    <Helmet prioritizeSeoTags>
       <html lang="en" />
       <title>{fullTitle}</title>
-      <meta name="description" content={description} />
+      <meta name="description" content={resolvedDescription} />
       <meta name="author" content={SITE.name} />
-      <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
+      <meta
+        name="robots"
+        content={
+          noindex
+            ? 'noindex, nofollow'
+            : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
+        }
+      />
       <link rel="canonical" href={fullUrl} />
 
-      {/* Geo & business */}
       <meta name="geo.region" content="IN-PB" />
       <meta name="geo.placename" content="Mohali, Punjab, India" />
 
-      {/* Open Graph */}
       <meta property="og:title" content={fullTitle} />
-      <meta property="og:description" content={description} />
+      <meta property="og:description" content={resolvedDescription} />
       <meta property="og:url" content={fullUrl} />
       <meta property="og:image" content={image} />
       <meta property="og:image:width" content="1200" />
@@ -61,17 +68,14 @@ export default function SEOHead({
       <meta property="og:site_name" content={SITE.name} />
       <meta property="og:locale" content="en_US" />
 
-      {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
-      <meta name="twitter:description" content={description} />
+      <meta name="twitter:description" content={resolvedDescription} />
       <meta name="twitter:image" content={image} />
       <meta name="twitter:image:alt" content="Orchestrix Labs — AI Development Agency" />
 
-      {/* AI discovery */}
       <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-readable site summary" />
 
-      {/* JSON-LD structured data */}
       {schemas.map((schema, i) => (
         <script key={i} type="application/ld+json">
           {JSON.stringify(schema)}

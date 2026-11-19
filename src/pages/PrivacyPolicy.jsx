@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import SEOHead from '../components/SEOHead'
 import { SITE } from '../lib/site'
+import { getSeoPage } from '../lib/seoPages'
 
 const EFFECTIVE_DATE = '18 November 2026'
 const LAST_UPDATED = '18 November 2026'
@@ -46,8 +47,8 @@ export default function PrivacyPolicy() {
   return (
     <>
       <SEOHead
-        title="Privacy Policy | Orchestrix Labs"
-        description="Privacy Policy for Orchestrix Labs. How we collect, use, share, and protect personal information from website enquiries, Meta lead forms, and business engagements."
+        title={getSeoPage('/privacy-policy')?.title}
+        description={getSeoPage('/privacy-policy')?.description}
         path="/privacy-policy"
         breadcrumbs={[
           { name: 'Home', path: '/' },

@@ -6,6 +6,7 @@ import { FiArrowRight, FiCheck, FiMic, FiCpu, FiCode, FiGlobe, FiZap } from 'rea
 import SEOHead from '../components/SEOHead'
 import api from '../lib/axios'
 import { services, process } from '../data/services'
+import { getSeoPage } from '../lib/seoPages'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -61,8 +62,8 @@ export default function Services() {
   return (
     <>
       <SEOHead
-        title="Services"
-        description="AI engineering for real-world operations: voice AI, machine learning, full-stack platforms, data automation, and workflow integrations. Orchestrix Labs — Engineering Intelligence. Automating Growth."
+        title={getSeoPage('/services')?.title}
+        description={getSeoPage('/services')?.description}
         path="/services"
         breadcrumbs={[
           { name: 'Home', path: '/' },

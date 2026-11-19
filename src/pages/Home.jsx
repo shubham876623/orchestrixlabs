@@ -14,6 +14,7 @@ import TrustBar from '../components/TrustBar'
 import FAQSection from '../components/FAQSection'
 import { services } from '../data/services'
 import { FAQ, SITE, SOCIAL } from '../lib/site'
+import { getSeoPage } from '../lib/seoPages'
 import { getFeaturedPublishedProjects, isDraftPortfolioMode } from '../data/publishedProjects'
 
 // ─── Animation helpers ────────────────────────────────────────────────────────
@@ -154,16 +155,11 @@ function Hero() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.12] text-white mb-4 max-w-4xl mx-auto"
         >
-          <span className="gradient-text">{SITE.slogan}</span>
+          <span className="gradient-text block">{SITE.slogan}</span>
+          <span className="mt-4 block text-xl font-semibold tracking-tight text-white sm:text-2xl">
+            Orchestrix Labs — AI automation and custom software for real-world operations
+          </span>
         </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.15 }}
-          className="text-white text-xl sm:text-2xl font-semibold tracking-tight mb-6 max-w-3xl mx-auto"
-        >
-          Systems that ship for real-world operations
-        </motion.p>
 
         {/* Sub */}
         <motion.p
@@ -648,7 +644,7 @@ export default function Home() {
   return (
     <>
       <SEOHead
-        description={`${SITE.slogan} ${SITE.positioning} Voice agents, business automation, custom software, and integrations—led by ${SITE.founderExperienceYears}+ years of founder engineering experience. Top Rated on Upwork.`}
+        description={getSeoPage('/')?.description}
         path="/"
         faq={FAQ}
       />

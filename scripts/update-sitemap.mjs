@@ -1,7 +1,17 @@
+/**
+ * Rebuild public/sitemap.xml from static public routes + publication-approved
+ * portfolio pages (aligned with prerender-routes.mjs).
+ */
 import { writeFileSync } from 'node:fs'
 import { APPROVED_PUBLIC_PROJECTS } from '../src/data/portfolioApprovedProjects.js'
 
-const caseStudies = APPROVED_PUBLIC_PROJECTS.filter((p) => p.hasCaseStudy === true)
+const caseStudies = APPROVED_PUBLIC_PROJECTS.filter(
+  (p) => p.publicationApproved === true && p.slug
+).sort(
+  (a, b) =>
+    (a.flagshipRank ?? 99) - (b.flagshipRank ?? 99) || a.title.localeCompare(b.title)
+)
+
 const urls = [
   ['https://orchestrixlabs.com/', 'weekly', '1.0'],
   ['https://orchestrixlabs.com/services', 'monthly', '0.9'],
@@ -11,6 +21,7 @@ const urls = [
   ['https://orchestrixlabs.com/about', 'monthly', '0.8'],
   ['https://orchestrixlabs.com/reviews', 'monthly', '0.8'],
   ['https://orchestrixlabs.com/contact', 'monthly', '0.9'],
+  ['https://orchestrixlabs.com/privacy-policy', 'yearly', '0.4'],
 ]
 
 const body =

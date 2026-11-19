@@ -7,6 +7,7 @@ import DraftPreviewBanner from '../components/portfolio/DraftPreviewBanner'
 import CategoryTabs from '../components/portfolio/CategoryTabs'
 import ProjectCard from '../components/portfolio/ProjectCard'
 import { SITE, SOCIAL, STATS } from '../lib/site'
+import { getSeoPage } from '../lib/seoPages'
 import {
   PORTFOLIO_CATEGORIES,
   getAllProjectCards,
@@ -109,8 +110,8 @@ export default function Portfolio() {
   return (
     <>
       <SEOHead
-        title="Portfolio"
-        description="Selected AI engineering and software engagements from Orchestrix Labs — voice AI, automation, full-stack platforms, and data systems."
+        title={getSeoPage('/portfolio')?.title}
+        description={getSeoPage('/portfolio')?.description}
         path="/portfolio"
         noindex={isDraftPortfolioMode()}
         breadcrumbs={[
@@ -132,7 +133,8 @@ export default function Portfolio() {
             {...fade(0.04)}
             className="max-w-3xl font-display text-[2rem] font-semibold leading-[1.12] text-slate-900 dark:text-white sm:text-5xl lg:text-[3.25rem]"
           >
-            {SITE.slogan}
+            Verified AI engineering and{' '}
+            <span className="gradient-text">software case studies</span>
           </motion.h1>
           <motion.p
             {...fade(0.08)}

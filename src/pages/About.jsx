@@ -11,6 +11,7 @@ import {
   SiMysql, SiSelenium, SiTailwindcss,
 } from 'react-icons/si'
 import SEOHead from '../components/SEOHead'
+import { getSeoPage } from '../lib/seoPages'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -68,8 +69,8 @@ export default function About() {
   return (
     <>
       <SEOHead
-        title="About"
-        description="Orchestrix Labs is a premium AI engineering company. Founder experience of 6+ years in software engineering, with 100% Job Success on Upwork. Voice AI, automation, full-stack development, and machine learning."
+        title={getSeoPage('/about')?.title}
+        description={getSeoPage('/about')?.description}
         path="/about"
         breadcrumbs={[
           { name: 'Home', path: '/' },

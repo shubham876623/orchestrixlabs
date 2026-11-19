@@ -4,6 +4,7 @@ import SEOHead from '../components/SEOHead'
 import DraftPreviewBanner from '../components/portfolio/DraftPreviewBanner'
 import AbstractCover from '../components/portfolio/AbstractCover'
 import ProjectCard from '../components/portfolio/ProjectCard'
+import { caseStudySeoPage } from '../lib/seoPages'
 import {
   getPublishedProjectBySlug,
   getRelatedProjects,
@@ -46,25 +47,26 @@ export default function PortfolioCaseStudy() {
 
   const related = getRelatedProjects(project)
   const tech = project.techCandidates || []
+  const seo = caseStudySeoPage(project)
 
   return (
     <>
       <SEOHead
-        title={project.title}
-        description={project.summary}
-        path={`/portfolio/${project.slug}`}
+        title={seo.title}
+        description={seo.description}
+        path={seo.path}
         noindex={isDraftPortfolioMode()}
         breadcrumbs={[
           { name: 'Home', path: '/' },
           { name: 'Portfolio', path: '/portfolio' },
-          { name: project.title, path: `/portfolio/${project.slug}` },
+          { name: project.title, path: seo.path },
         ]}
         extraSchemas={[
           {
             '@context': 'https://schema.org',
             '@type': 'CreativeWork',
             name: project.title,
-            description: project.summary,
+            description: seo.description,
             creator: { '@type': 'Organization', name: 'Orchestrix Labs' },
             about: project.categories,
           },

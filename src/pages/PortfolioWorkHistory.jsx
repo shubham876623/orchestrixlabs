@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom'
 import api from '../lib/axios'
 import SEOHead from '../components/SEOHead'
 import { SOCIAL, SITE } from '../lib/site'
+import { getSeoPage } from '../lib/seoPages'
 import { projects as localProjects } from '../data/projects'
 
 const UPWORK_PROFILE = SOCIAL.upwork
@@ -523,8 +524,8 @@ export default function PortfolioWorkHistory() {
   return (
     <>
       <SEOHead
-        title="Work History"
-        description={`Delivery archive of real software and AI engagements with verified Upwork feedback. Separate from premium Portfolio case studies. Founder Top Rated credentials — ${SITE.slogan}.`}
+        title={getSeoPage('/work-history')?.title}
+        description={getSeoPage('/work-history')?.description}
         path="/work-history"
         breadcrumbs={[
           { name: 'Home', path: '/' },

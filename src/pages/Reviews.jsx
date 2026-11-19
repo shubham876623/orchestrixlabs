@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react'
 import api from '../lib/axios'
 import { Link } from 'react-router-dom'
 import SEOHead from '../components/SEOHead'
+import { getSeoPage } from '../lib/seoPages'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -82,8 +83,8 @@ export default function Reviews() {
   return (
     <>
       <SEOHead
-        title="Client Reviews"
-        description={`Top Rated on Upwork with ${siteStats.jss_score}% Job Success Score. See verified client feedback about working with Orchestrix Labs.`}
+        title={getSeoPage('/reviews')?.title}
+        description={getSeoPage('/reviews')?.description}
         path="/reviews"
         breadcrumbs={[
           { name: 'Home', path: '/' },
