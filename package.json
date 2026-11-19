@@ -11,7 +11,11 @@
     "preview": "vite preview",
     "test:gates": "node scripts/test-publication-gate.mjs",
     "test:bundle-privacy": "node scripts/test-production-bundle-privacy.mjs",
-    "test:work-history": "node scripts/test-work-history-hotfix.mjs"
+    "test:work-history": "node scripts/test-work-history-hotfix.mjs",
+    "indexnow:dry-run": "node scripts/submit-indexnow.mjs --dry-run",
+    "indexnow:submit": "node scripts/submit-indexnow.mjs",
+    "indexnow:force": "node scripts/submit-indexnow.mjs --force",
+    "postdeploy:indexnow": "node scripts/submit-indexnow.mjs"
   },
   "imports": {
     "#portfolio-draft-loader": "./src/data/portfolioDraftLoader.review.js"
