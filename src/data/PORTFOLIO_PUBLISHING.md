@@ -30,7 +30,7 @@
 | `verificationStatus` | Editorial readiness (e.g. `content_approved_not_published`) |
 | `publicationApproved` | Explicit founder authorization to show on the live site |
 
-Production routes, homepage featured, related links, and sitemap slugs must all use `getVisiblePublishedProjects` / `getPublicationApprovedSlugs` (same filter).
+Production listing uses all `publicationApproved` rows (34). **Sitemap and prerender** use only full case studies (`hasCaseStudy === true`) via `getIndexableCaseStudySlugs()` — currently 10 URLs. Card-only approved projects remain on `/portfolio` but are `noindex` if opened at `/portfolio/{slug}`.
 
 ## Rules
 
@@ -39,4 +39,5 @@ Production routes, homepage featured, related links, and sitemap slugs must all 
 3. Empty `features` / `verifiedOutcomes` render as pending blocks — do not invent filler.
 4. Screenshots only when explicitly approved paths are added to `images`.
 5. `content_approved_not_published` must remain private until `publicationApproved: true`.
-6. Sitemap case-study URLs: only `getPublicationApprovedSlugs()` — never add draft or content-only rows.
+6. Sitemap / prerender case-study URLs: only `publicationApproved && hasCaseStudy` — never all 34 listing cards, never drafts, never private contracts.
+7. Never auto-convert the private Upwork contract archive (143) into public portfolio projects.

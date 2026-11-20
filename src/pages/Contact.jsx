@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import {
@@ -10,6 +11,7 @@ import api from '../lib/axios'
 import SEOHead from '../components/SEOHead'
 import { SITE, SOCIAL } from '../lib/site'
 import { getSeoPage } from '../lib/seoPages'
+import { getPublishedProjectBySlug } from '../data/publishedProjects'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -49,10 +51,44 @@ const contactInfo = [
 
 const initialForm = { name: '', email: '', service: '', budget: '', message: '', website: '' }
 
+/** Safe portfolio ?ref= handling — allowlist lookup only; length/charset gated. */
+function resolveSafeRefProject(raw) {
+  if (!raw || typeof raw !== 'string') return null
+  const decoded = (() => {
+    try {
+      return decodeURIComponent(raw.trim())
+    } catch {
+      return ''
+    }
+  })()
+  if (!decoded || decoded.length > 80) return null
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(decoded)) return null
+  const project = getPublishedProjectBySlug(decoded)
+  if (!project || project.publicationApproved !== true) return null
+  return project
+}
+
 export default function Contact() {
+  const [searchParams] = useSearchParams()
+  const refProject = resolveSafeRefProject(searchParams.get('ref') || '')
   const [form, setForm] = useState(initialForm)
   const [status, setStatus] = useState('idle')
   const [errors, setErrors] = useState({})
+
+  useEffect(() => {
+    if (!refProject) return
+    const safeTitle = String(refProject.title || '')
+      .replace(/[<>`]/g, '')
+      .slice(0, 120)
+    if (!safeTitle) return
+    setForm((f) => {
+      if (f.message.trim()) return f
+      return {
+        ...f,
+        message: `I'm interested in a similar engagement to “${safeTitle}”.\n\nContext:\n`,
+      }
+    })
+  }, [refProject])
 
   const validate = () => {
     const e = {}
@@ -123,6 +159,16 @@ export default function Contact() {
           <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="section-sub mx-auto">
             Share a short brief. We reply within {SITE.responseTime} with an honest assessment and a practical next step.
           </motion.p>
+          {refProject && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.28 }}
+              className="mx-auto mt-5 max-w-xl border border-cyan-500/20 bg-cyan-500/10 px-4 py-3 text-sm text-cyan-100"
+            >
+              Context from portfolio: <span className="font-semibold">{refProject.title}</span>
+            </motion.p>
+          )}
         </div>
       </section>
 
@@ -156,7 +202,13 @@ export default function Contact() {
                     </div>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} action="#" noValidate className="space-y-5 relative">
+                  <form
+                    onSubmit={handleSubmit}
+                    action="#"
+                    noValidate
+                    className="space-y-5 relative"
+                    data-clarity-mask="true"
+                  >
                     <h2 className="text-white font-bold text-xl mb-2">Request Consultation</h2>
                     <p className="text-slate-500 text-sm mb-6">Required fields take about two minutes.</p>
 

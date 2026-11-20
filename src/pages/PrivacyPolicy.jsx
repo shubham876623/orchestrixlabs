@@ -4,7 +4,8 @@ import { SITE } from '../lib/site'
 import { getSeoPage } from '../lib/seoPages'
 
 const EFFECTIVE_DATE = '18 November 2026'
-const LAST_UPDATED = '18 November 2026'
+const LAST_UPDATED = '19 November 2026'
+const ANALYTICS_RETENTION_DAYS = 90
 
 const SECTIONS = [
   { id: 'introduction', title: 'Introduction and scope' },
@@ -199,9 +200,12 @@ export default function PrivacyPolicy() {
                     emails, call notes, and follow-up correspondence.
                   </li>
                   <li>
-                    <strong className="text-white font-medium">Technical and usage data</strong> — pages viewed,
-                    referring URL, approximate location derived from IP address (such as country or city), browser
-                    and device type, screen size, language, timezone, and a temporary session identifier.
+                    <strong className="text-white font-medium">Technical and usage data</strong> — when you opt in
+                    to optional analytics: page paths (without query strings or fragments), sanitized referring
+                    URL, coarse browser/device/OS category, screen size, language, and timezone. With the same
+                    opt-in, Microsoft Clarity may also process interaction data on public pages. Separately, when
+                    you submit a contact enquiry we may capture the submitting IP address for security and abuse
+                    prevention (not as optional marketing analytics).
                   </li>
                   <li>
                     <strong className="text-white font-medium">Preference data</strong> — for example a theme
@@ -223,8 +227,8 @@ export default function PrivacyPolicy() {
                   <li>Directly from you (website contact form, email, calls, meetings, messaging apps).</li>
                   <li>Through Meta lead-generation Instant Forms on Facebook or Instagram.</li>
                   <li>From public or business profiles you share with us (for example LinkedIn or Upwork), when relevant to an enquiry or engagement.</li>
-                  <li>Automatically from your device when you browse our website (first-party analytics described below).</li>
-                  <li>From service providers that help us operate hosting, email delivery, or advertising tools, where applicable.</li>
+                  <li>Automatically from your device when you opt in to optional analytics (first-party page views and Microsoft Clarity, described below).</li>
+                  <li>From service providers that help us operate hosting, email delivery, analytics (Microsoft Clarity when opted in), or advertising tools, where applicable.</li>
                 </ul>
               </section>
 
@@ -363,25 +367,54 @@ export default function PrivacyPolicy() {
                   Cookies, analytics, and advertising technologies
                 </SectionHeading>
                 <p>
-                  Our marketing website currently uses limited first-party technologies. In particular, we may store
-                  a theme preference in local browser storage and a temporary session identifier in session storage
-                  to support first-party page-view analytics.
+                  Our marketing website uses limited first-party technologies. In particular, we may store a theme
+                  preference in local browser storage and an analytics consent preference in local storage when you
+                  accept or decline optional analytics. Optional analytics are off by default until you opt in.
                 </p>
                 <p>
-                  Our first-party analytics may record path, referrer, approximate geolocation derived from IP
-                  address, user-agent details, screen size, language, timezone, and session ID. This helps us
-                  understand which pages are used and to operate the site. Dashboard analytics access is restricted
-                  to authorised internal users.
+                  With your explicit opt-in, our first-party page-view analytics may record the page path (without
+                  URL query strings or fragments), a sanitized referrer, coarse device/browser/OS category derived
+                  from the browser user-agent at collection time (the raw user-agent string is not stored), screen
+                  size, language, and timezone. We do not store raw IP addresses or persistent session identifiers
+                  for this optional page-view analytics. Dashboard access to aggregated analytics is restricted to
+                  authorised internal users.
+                </p>
+                <p>
+                  With the same opt-in consent, we may also use <strong className="text-white font-medium">Microsoft Clarity</strong>{' '}
+                  (session analytics and heatmaps; Clarity project configured for this site) on public marketing
+                  pages. Clarity may set cookies or similar technologies and process interaction data such as clicks,
+                  scrolls, and page views. Clarity is not initialised on the private admin dashboard. If you navigate
+                  there after consenting on a public page, collection is stopped for that private route and the
+                  dashboard UI is masked as an additional safeguard. Contact-form fields and other input values are
+                  masked so typed content is not uploaded to Clarity. Complete isolation of an already-running
+                  third-party session-replay agent inside a single-page app cannot be guaranteed solely by client
+                  masking; we also configure URL exclusions in the Clarity console for dashboard paths.
+                </p>
+                <p>
+                  You can accept or decline optional analytics on first visit, and change or withdraw that choice
+                  anytime using the persistent <strong className="text-white font-medium">Cookie Settings</strong>{' '}
+                  control in the site footer. Withdrawing consent persists your denial, signals denied analytics
+                  storage to Clarity, stops collection where supported, clears Clarity cookies we can remove from
+                  this browser, and reloads the page when Clarity was previously active so it cannot re-initialise
+                  without a new opt-in. Declining or withdrawing optional analytics does not affect essential site
+                  operation (for example serving pages, security controls, or processing a contact enquiry you
+                  submit). Separate security and operational logs (such as IP captured with a contact-form submission
+                  for abuse prevention) are not the same as optional analytics and are handled under those purposes.
+                </p>
+                <p>
+                  Optional first-party page-view records are retained for approximately{' '}
+                  {ANALYTICS_RETENTION_DAYS} days, after which they are eligible for automated deletion via our
+                  retention cleanup process. You may also request deletion by emailing {SITE.privacyEmail}.
                 </p>
                 <p>
                   As of the last update of this Policy, we have not identified third-party advertising pixels (such
-                  as Meta Pixel) embedded in the public website codebase. If we add analytics, tag managers, or ad
-                  pixels later, we will update this Policy and, where required, provide appropriate notices or
-                  choices.
+                  as Meta Pixel) embedded in the public website codebase. If we add tag managers or ad pixels later,
+                  we will update this Policy and, where required, provide appropriate notices or choices.
                 </p>
                 <p>
                   Meta may use cookies or similar technologies on Facebook and Instagram when you view or submit
-                  lead ads; those technologies are governed by Meta&apos;s policies.
+                  lead ads; those technologies are governed by Meta&apos;s policies. Microsoft&apos;s processing of
+                  Clarity data is also subject to Microsoft&apos;s applicable terms and privacy documentation.
                 </p>
               </section>
 
@@ -394,6 +427,13 @@ export default function PrivacyPolicy() {
                   <li>
                     <strong className="text-white font-medium">Infrastructure and hosting providers</strong> that
                     host our website frontend, backend APIs, and databases
+                  </li>
+                  <li>
+                    <strong className="text-white font-medium">Microsoft Clarity</strong> (Microsoft Corporation /
+                    Microsoft services), which processes session analytics and heatmap data when you opt in to
+                    optional analytics on public marketing pages. Microsoft may process data in the United States
+                    and other locations where Microsoft operates, subject to Microsoft&apos;s terms and privacy
+                    documentation
                   </li>
                   <li>
                     <strong className="text-white font-medium">Email delivery providers</strong> used to send
@@ -426,9 +466,12 @@ export default function PrivacyPolicy() {
                 <p>
                   We operate from India and may use service providers or collaborate with customers in other
                   countries. Personal information may therefore be processed in India and in other locations where
-                  our providers or collaborators operate. Where a transfer is restricted by applicable law, we will
-                  take steps required by that law (for example contractual or organisational measures). Specific
-                  transfer mechanisms can be confirmed for a given engagement on request.
+                  our providers or collaborators operate — including, when you opt in to Microsoft Clarity,
+                  processing by Microsoft in the United States and other regions where Microsoft operates. Where a
+                  transfer is restricted by applicable law, we will take steps required by that law (for example
+                  contractual or organisational measures). Specific transfer mechanisms can be confirmed for a given
+                  engagement on request. This Policy does not claim worldwide legal certification or adequacy for
+                  every jurisdiction.
                 </p>
               </section>
 
@@ -453,6 +496,13 @@ export default function PrivacyPolicy() {
                   We retain personal information only as long as needed for the purposes described in this Policy,
                   including responding to enquiries, delivering services, maintaining business records, resolving
                   disputes, and meeting legal or accounting requirements. Retention periods vary by record type.
+                </p>
+                <p>
+                  Optional first-party page-view analytics records are configured for approximately{' '}
+                  {ANALYTICS_RETENTION_DAYS}-day retention and are eligible for automated purge after that period.
+                  Contact enquiries, project records, and security-related logs may be retained longer where needed
+                  for business, legal, or abuse-prevention purposes. Microsoft Clarity retention for opted-in
+                  session data is also governed by Microsoft&apos;s product settings and policies.
                 </p>
                 <p>
                   You may request deletion or correction of personal information we hold about you by contacting{' '}

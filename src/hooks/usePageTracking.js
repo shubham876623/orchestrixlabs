@@ -1,32 +1,53 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import api from '../lib/axios'
+import {
+  ANALYTICS_CONSENT_EVENT,
+  getAnalyticsConsent,
+} from '../lib/analyticsConsent'
+import {
+  isPrivateAdminPath,
+  sanitizeAnalyticsPath,
+  sanitizeAnalyticsReferrer,
+} from '../lib/clarity'
 
-// Generate a session ID that persists for the browser tab session
-function getSessionId() {
-  let sid = sessionStorage.getItem('_orch_sid')
-  if (!sid) {
-    sid = Math.random().toString(36).slice(2) + Date.now().toString(36)
-    sessionStorage.setItem('_orch_sid', sid)
-  }
-  return sid
-}
-
+/**
+ * First-party pageview analytics — gated behind the same analytics consent as Clarity.
+ * No session IDs. Paths/referrers are stripped of query strings and fragments.
+ */
 export default function usePageTracking() {
   const location = useLocation()
 
   useEffect(() => {
-    // Skip dashboard/admin routes
-    if (location.pathname.startsWith('/dashboard')) return
+    const send = () => {
+      if (getAnalyticsConsent() !== 'granted') return
+      if (isPrivateAdminPath(location.pathname)) return
 
-    api.post('/api/track/', {
-      path: location.pathname,
-      referrer: document.referrer || '',
-      screen_width: window.screen.width,
-      screen_height: window.screen.height,
-      language: navigator.language || '',
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
-      session_id: getSessionId(),
-    }).catch(() => {}) // silently ignore tracking failures
+      const path = sanitizeAnalyticsPath(location.pathname)
+      if (
+        !path ||
+        path.startsWith('/dashboard') ||
+        path.startsWith('/staff') ||
+        path.startsWith('/admin') ||
+        path.startsWith('/api')
+      ) {
+        return
+      }
+
+      api
+        .post('/api/track/', {
+          path,
+          referrer: sanitizeAnalyticsReferrer(document.referrer || ''),
+          screen_width: window.screen.width,
+          screen_height: window.screen.height,
+          language: navigator.language || '',
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
+        })
+        .catch(() => {})
+    }
+
+    send()
+    window.addEventListener(ANALYTICS_CONSENT_EVENT, send)
+    return () => window.removeEventListener(ANALYTICS_CONSENT_EVENT, send)
   }, [location.pathname])
 }

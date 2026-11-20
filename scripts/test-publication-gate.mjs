@@ -9,11 +9,14 @@ import {
   getPublishedProjectBySlug,
   getFeaturedPublishedProjects,
   getFeaturedCaseStudies,
+  getHomepageFeaturedProjects,
   getAllProjectCards,
   getRelatedProjects,
   getPublicationApprovedSlugs,
+  getIndexableCaseStudySlugs,
   isDraftPortfolioMode,
   DRAFT_LOADER_INCLUDES_CONTENT,
+  HOMEPAGE_FEATURED_SLUGS,
 } from '../src/data/publishedProjects.js'
 import { APPROVED_PUBLIC_PROJECTS } from '../src/data/portfolioApprovedProjects.js'
 import { DRAFT_ONLY_PROJECTS } from '../src/data/portfolioDraftCatalog.js'
@@ -80,9 +83,48 @@ assert(
   featuredProd.some((p) => p.slug === 'healthcare-ops-sales-demo' && p.demoOnly === true)
 )
 
+const homepageFeatured = getHomepageFeaturedProjects({ mode: 'approved_public' })
+assert(
+  'Homepage featured is 4–6 projects',
+  homepageFeatured.length >= 4 && homepageFeatured.length <= 6,
+  `n=${homepageFeatured.length}`
+)
+assert(
+  'Homepage featured matches curated slug order',
+  homepageFeatured.map((p) => p.slug).join(',') === HOMEPAGE_FEATURED_SLUGS.join(',')
+)
+assert(
+  'Homepage featured excludes healthcare demo',
+  !homepageFeatured.some((p) => p.slug === 'healthcare-ops-sales-demo')
+)
+assert(
+  'Homepage featured all have full case studies',
+  homepageFeatured.every((p) => p.hasCaseStudy === true && p.publicationApproved === true)
+)
+{
+  const estimating = getPublishedProjectBySlug('ai-estimating-field-ops', { mode: 'approved_public' })
+  assert(
+    'Estimating relatedSlugs populated',
+    Array.isArray(estimating?.relatedSlugs) && estimating.relatedSlugs.length >= 2
+  )
+}
+
 const slugs = getPublicationApprovedSlugs()
-assert('Sitemap helper has 34 publication-approved slugs', slugs.length === 34, `n=${slugs.length}`)
-assert('Sitemap helper excludes factory', !slugs.includes('factory-automation-suite'))
+assert('Listing helper has 34 publication-approved slugs', slugs.length === 34, `n=${slugs.length}`)
+assert('Listing helper excludes factory', !slugs.includes('factory-automation-suite'))
+
+const indexable = getIndexableCaseStudySlugs({ mode: 'approved_public' })
+assert('Indexable case studies === 10', indexable.length === 10, `n=${indexable.length}`)
+assert('Indexable includes flagship All Cleared', indexable.includes('ai-estimating-field-ops'))
+assert('Indexable excludes card-only emma', !indexable.includes('emma-voice-receptionist'))
+{
+  const sitemap = readFileSync(join(root, 'public/sitemap.xml'), 'utf8')
+  assert('Sitemap includes portfolio index', sitemap.includes('/portfolio</loc>'))
+  assert('Sitemap includes flagship case study', sitemap.includes('/portfolio/ai-estimating-field-ops'))
+  assert('Sitemap excludes card-only emma URL', !sitemap.includes('/portfolio/emma-voice-receptionist'))
+  const portfolioPaths = [...sitemap.matchAll(/\/portfolio\/([^<]+)/g)].map((m) => m[1])
+  assert('Sitemap portfolio slug count === 10', portfolioPaths.length === 10, `n=${portfolioPaths.length}`)
+}
 
 assert(
   'Case-study route resolves for All Cleared in production',

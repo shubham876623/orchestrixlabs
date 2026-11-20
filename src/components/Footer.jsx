@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { FiGithub, FiLinkedin, FiMail, FiInstagram, FiMapPin } from 'react-icons/fi'
 import { SiUpwork } from 'react-icons/si'
 import { SITE, SOCIAL } from '../lib/site'
+import { openPrivacyPreferences } from '../lib/analyticsConsent'
 import BrandLogo from './BrandLogo'
 
 const footerLinks = {
@@ -47,7 +48,7 @@ export default function Footer() {
                 {SITE.email}
               </a>
               <p className="flex items-start gap-2 text-slate-400 text-xs leading-relaxed max-w-sm">
-                <FiMapPin className="flex-shrink-0 mt-0.5" size={12} />
+                <FiMapPin className="flex-shrink-0 mt-0.5" size={12} aria-hidden="true" focusable="false" />
                 {SITE.address.formatted}
               </p>
             </div>
@@ -61,7 +62,7 @@ export default function Footer() {
                   aria-label={label}
                   className="w-9 h-9 rounded-lg bg-white/[0.05] border border-white/[0.08] flex items-center justify-center text-slate-400 hover:text-white hover:border-primary-500/40 hover:bg-primary-500/10 transition-all duration-200"
                 >
-                  <Icon size={15} />
+                  <Icon size={15} aria-hidden="true" focusable="false" />
                 </a>
               ))}
             </div>
@@ -69,7 +70,7 @@ export default function Footer() {
 
           {Object.entries(footerLinks).map(([heading, links]) => (
             <div key={heading}>
-              <h4 className="text-white font-semibold text-sm mb-5">{heading}</h4>
+              <p className="text-white font-semibold text-sm mb-5">{heading}</p>
               <ul className="space-y-3">
                 {links.map(link => (
                   <li key={link.name}>
@@ -97,6 +98,13 @@ export default function Footer() {
             <Link to="/privacy-policy" className="text-xs text-slate-400 hover:text-white transition-colors font-medium">
               Privacy Policy
             </Link>
+            <button
+              type="button"
+              onClick={openPrivacyPreferences}
+              className="text-xs text-slate-400 hover:text-white transition-colors font-medium"
+            >
+              Cookie Settings
+            </button>
             <span className="flex items-center gap-2 text-xs text-slate-400">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               Available for new projects

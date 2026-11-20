@@ -177,9 +177,13 @@ export default function Reviews() {
             {testimonials.map((t, i) => (
               <motion.div key={i} custom={i} variants={fadeUp} className="card flex flex-col">
                 {/* Stars */}
-                <div className="flex gap-0.5 mb-3">
+                <div
+                  className="flex gap-0.5 mb-3"
+                  role="img"
+                  aria-label={`${t.rating || 5} star rating`}
+                >
                   {[...Array(Math.round(Number(t.rating || t.stars || 5)))].map((_, j) => (
-                    <FiStar key={j} className="text-amber-400" style={{ fill: '#FBBF24' }} size={13} />
+                    <FiStar key={j} className="text-amber-400" style={{ fill: '#FBBF24' }} size={13} aria-hidden="true" />
                   ))}
                 </div>
                 {/* Quote */}

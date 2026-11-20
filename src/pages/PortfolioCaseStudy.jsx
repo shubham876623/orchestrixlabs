@@ -1,22 +1,64 @@
 import { Link, useParams } from 'react-router-dom'
-import { FiArrowLeft, FiArrowRight, FiCheckCircle } from 'react-icons/fi'
+import { FiArrowLeft, FiCheckCircle } from 'react-icons/fi'
 import SEOHead from '../components/SEOHead'
 import DraftPreviewBanner from '../components/portfolio/DraftPreviewBanner'
 import AbstractCover from '../components/portfolio/AbstractCover'
 import ProjectCard from '../components/portfolio/ProjectCard'
+import ConsultationCTA from '../components/ConsultationCTA'
 import { caseStudySeoPage } from '../lib/seoPages'
 import {
   getPublishedProjectBySlug,
   getRelatedProjects,
   isDraftPortfolioMode,
+  projectHasFullCaseStudy,
 } from '../data/publishedProjects'
+
+const CASE_NAV = [
+  { id: 'business-challenge', label: 'Challenge' },
+  { id: 'solution-overview', label: 'Solution' },
+  { id: 'technical-architecture', label: 'Architecture' },
+  { id: 'engineering-responsibilities', label: 'Engineering' },
+  { id: 'technologies', label: 'Tech' },
+  { id: 'verified-outcomes', label: 'Outcomes' },
+]
+
+function Section({ title, children, id }) {
+  return (
+    <section
+      id={id}
+      className="border border-slate-200/90 bg-white p-6 dark:border-white/[0.08] dark:bg-dark-900/60 sm:p-8"
+    >
+      <h2 className="font-display text-xl font-semibold tracking-tight text-slate-900 dark:text-white">
+        {title}
+      </h2>
+      <div className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300 sm:text-base">
+        {children}
+      </div>
+    </section>
+  )
+}
 
 function PendingBlock({ title, note }) {
   return (
-    <div className="rounded-xl border border-dashed border-white/10 bg-white/[0.02] p-5">
-      <h2 className="font-display text-lg font-semibold text-white">{title}</h2>
-      <p className="mt-2 text-sm leading-relaxed text-slate-400">{note}</p>
+    <div className="border border-dashed border-slate-300 bg-slate-50 p-5 dark:border-white/10 dark:bg-white/[0.02]">
+      <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">{title}</h2>
+      <p className="mt-2 text-sm leading-relaxed text-slate-500 dark:text-slate-400">{note}</p>
     </div>
+  )
+}
+
+function OutcomeList({ items, tone = 'emerald' }) {
+  const icon =
+    tone === 'cyan' ? 'text-cyan-600 dark:text-cyan-400' : 'text-emerald-600 dark:text-emerald-400'
+  return (
+    <ul className="mt-4 space-y-3">
+      {items.map((item) => (
+        <li key={item} className="flex gap-3 text-sm text-slate-700 dark:text-slate-300">
+          <FiCheckCircle className={`mt-0.5 shrink-0 ${icon}`} aria-hidden="true" />
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
   )
 }
 
@@ -35,8 +77,12 @@ export default function PortfolioCaseStudy() {
         />
         <DraftPreviewBanner />
         <section className="container py-32 text-center">
-          <h1 className="font-display text-3xl font-semibold text-white">Case study not found</h1>
-          <p className="mt-3 text-slate-400">This project is unpublished, removed, or the link is incorrect.</p>
+          <h1 className="font-display text-3xl font-semibold text-slate-900 dark:text-white">
+            Case study not found
+          </h1>
+          <p className="mt-3 text-slate-600 dark:text-slate-400">
+            This project is unpublished, removed, or the link is incorrect.
+          </p>
           <Link to="/portfolio" className="btn-primary mt-8 inline-flex">
             <FiArrowLeft /> Back to portfolio
           </Link>
@@ -45,42 +91,65 @@ export default function PortfolioCaseStudy() {
     )
   }
 
-  const related = getRelatedProjects(project)
+  const fullCaseStudy = projectHasFullCaseStudy(project)
+  const related = getRelatedProjects(project, 3)
   const tech = project.techCandidates || []
   const seo = caseStudySeoPage(project)
+  // Card-only approved projects: visible in listing, not sitemap-indexed as case studies
+  const noindex = isDraftPortfolioMode() || !fullCaseStudy
+
+  const engineeringApproach =
+    project.architectureSummary ||
+    (project.responsibilities?.length
+      ? project.responsibilities.join(' ')
+      : null)
+
+  const verifiedOutcomes =
+    project.verifiedOutcomes?.length > 0
+      ? project.verifiedOutcomes
+      : project.qualitativeOutcomes?.length > 0
+        ? project.qualitativeOutcomes
+        : []
+
+  const outcomesAreVerifiedScores = project.verifiedOutcomes?.length > 0
 
   return (
     <>
       <SEOHead
-        title={seo.title}
+        title={fullCaseStudy ? seo.title : `${project.title} — Portfolio`}
         description={seo.description}
         path={seo.path}
-        noindex={isDraftPortfolioMode()}
+        noindex={noindex}
         breadcrumbs={[
           { name: 'Home', path: '/' },
           { name: 'Portfolio', path: '/portfolio' },
           { name: project.title, path: seo.path },
         ]}
-        extraSchemas={[
-          {
-            '@context': 'https://schema.org',
-            '@type': 'CreativeWork',
-            name: project.title,
-            description: seo.description,
-            creator: { '@type': 'Organization', name: 'Orchestrix Labs' },
-            about: project.categories,
-          },
-        ]}
+        extraSchemas={
+          fullCaseStudy
+            ? [
+                {
+                  '@context': 'https://schema.org',
+                  '@type': 'CreativeWork',
+                  name: project.title,
+                  description: seo.description,
+                  creator: { '@type': 'Organization', name: 'Orchestrix Labs' },
+                  about: project.categories,
+                  keywords: [...(project.categories || []), ...tech.slice(0, 8)].join(', '),
+                },
+              ]
+            : []
+        }
       />
 
       <DraftPreviewBanner />
 
       <article className="pb-20">
-        <section className="border-b border-white/[0.06] pt-28 sm:pt-32">
+        <section className="border-b border-slate-200/80 pt-28 dark:border-white/[0.06] sm:pt-32">
           <div className="container pb-10">
             <Link
               to="/portfolio"
-              className="inline-flex min-h-[44px] items-center gap-2 text-sm text-slate-400 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+              className="inline-flex min-h-[44px] items-center gap-2 text-sm text-slate-500 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 dark:text-slate-400 dark:hover:text-white"
             >
               <FiArrowLeft /> All projects
             </Link>
@@ -91,32 +160,42 @@ export default function PortfolioCaseStudy() {
                   {project.categories.map((c) => (
                     <span
                       key={c}
-                      className="rounded-md border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-slate-300"
+                      className="border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-700 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-300"
                     >
                       {c}
                     </span>
                   ))}
+                  {fullCaseStudy ? (
+                    <span className="border border-emerald-600/25 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-800 dark:border-emerald-400/25 dark:text-emerald-200">
+                      Full case study
+                    </span>
+                  ) : (
+                    <span className="border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600 dark:border-white/10 dark:text-slate-400">
+                      Summary only
+                    </span>
+                  )}
                   {project.conditional && (
-                    <span className="rounded-md border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-amber-200">
+                    <span className="border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-amber-800 dark:text-amber-200">
                       Conditional
                     </span>
                   )}
                 </div>
-                <h1 className="font-display text-3xl font-semibold leading-tight text-white sm:text-4xl lg:text-5xl">
+                <h1 className="font-display text-3xl font-semibold leading-tight text-slate-900 dark:text-white sm:text-4xl lg:text-5xl">
                   {project.title}
                 </h1>
                 {project.subtitle && (
-                  <p className="mt-3 max-w-2xl text-base font-medium leading-relaxed text-slate-300 sm:text-lg">
+                  <p className="mt-3 max-w-2xl text-base font-medium leading-relaxed text-slate-700 dark:text-slate-300 sm:text-lg">
                     {project.subtitle}
                   </p>
                 )}
-                <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg">
+                <p className="mt-4 max-w-2xl text-base leading-relaxed text-slate-600 dark:text-slate-400 sm:text-lg">
                   {project.summary}
                 </p>
                 <p className="mt-4 text-sm text-slate-500">{project.engagementLabel}</p>
                 {project.deliveryStatus && (
                   <p className="mt-2 text-xs leading-relaxed text-slate-500">
-                    <span className="font-semibold text-slate-400">Delivery status:</span> {project.deliveryStatus}
+                    <span className="font-semibold text-slate-600 dark:text-slate-400">Delivery status:</span>{' '}
+                    {project.deliveryStatus}
                   </p>
                 )}
               </div>
@@ -125,211 +204,234 @@ export default function PortfolioCaseStudy() {
                 <img
                   src={project.images[0]}
                   alt={`Visual for ${project.title}`}
-                  className="w-full rounded-2xl border border-white/10 object-cover"
+                  className="w-full border border-slate-200 object-cover dark:border-white/10"
                 />
               ) : (
                 <AbstractCover
                   tone={project.coverTone}
                   title={project.title}
-                  className="min-h-[14rem] rounded-2xl border border-white/10"
+                  className="min-h-[14rem] border border-slate-200 dark:border-white/10"
                 />
               )}
             </div>
           </div>
         </section>
 
-        <section className="container mt-10 grid gap-6 lg:grid-cols-[1fr_0.9fr]">
-          <div className="space-y-6">
-            <section className="rounded-2xl border border-white/[0.08] bg-dark-900/60 p-6 sm:p-8">
-              <h2 className="font-display text-xl font-semibold text-white">Business problem</h2>
-              <p className="mt-3 text-sm leading-relaxed text-slate-300 sm:text-base">
-                {project.businessChallenge || project.summary}
-              </p>
-            </section>
-
-            <section className="rounded-2xl border border-white/[0.08] bg-dark-900/60 p-6 sm:p-8">
-              <h2 className="font-display text-xl font-semibold text-white">Solution approach</h2>
-              <p className="mt-3 text-sm leading-relaxed text-slate-300 sm:text-base">{project.solution}</p>
-            </section>
-
-            {project.responsibilities?.length > 0 && (
-              <section className="rounded-2xl border border-white/[0.08] bg-dark-900/60 p-6 sm:p-8">
-                <h2 className="font-display text-xl font-semibold text-white">Engineering responsibilities</h2>
-                <ul className="mt-4 space-y-3">
-                  {project.responsibilities.map((item) => (
-                    <li key={item} className="flex gap-3 text-sm text-slate-300">
-                      <FiCheckCircle className="mt-0.5 shrink-0 text-cyan-400" aria-hidden="true" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
-
-            {project.modules?.length > 0 && (
-              <section className="rounded-2xl border border-white/[0.08] bg-dark-900/60 p-6 sm:p-8">
-                <h2 className="font-display text-xl font-semibold text-white">Engagement modules</h2>
-                <p className="mt-2 text-sm leading-relaxed text-slate-400">
-                  Six linked workstreams under one engagement — delivery status is explicit for each module.
-                </p>
-                <div className="mt-5 grid gap-3 sm:gap-4">
-                  {project.modules.map((mod) => (
-                    <div
-                      key={mod.id}
-                      className="rounded-xl border border-slate-200/80 bg-slate-50/80 p-4 dark:border-white/[0.06] dark:bg-white/[0.02]"
+        {!fullCaseStudy ? (
+          <section className="container mt-10 max-w-3xl space-y-6">
+            <PendingBlock
+              title="Full case study not published"
+              note="This engagement is listed in the curated portfolio. A long-form case study has not been approved for public indexing. Request a consultation to discuss a similar build."
+            />
+            {tech.length > 0 && (
+              <Section title="Technologies" id="technologies">
+                <div className="flex flex-wrap gap-2">
+                  {tech.map((t) => (
+                    <span
+                      key={t}
+                      className="border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-700 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-300"
                     >
-                      <div className="flex flex-wrap items-center gap-2 gap-y-2">
-                        <span className="font-display text-sm font-semibold text-slate-900 dark:text-white">
-                          {mod.id}. {mod.title}
-                        </span>
-                        <span className="rounded-md border border-cyan-600/25 bg-cyan-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-cyan-800 dark:border-cyan-400/20 dark:text-cyan-200">
-                          {mod.status}
-                        </span>
-                      </div>
-                      <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{mod.summary}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {project.features?.length > 0 ? (
-              <section className="rounded-2xl border border-white/[0.08] bg-dark-900/60 p-6 sm:p-8">
-                <h2 className="font-display text-xl font-semibold text-white">Delivered capabilities</h2>
-                <ul className="mt-4 space-y-3">
-                  {project.features.map((f) => (
-                    <li key={f} className="flex gap-3 text-sm text-slate-300">
-                      <FiCheckCircle className="mt-0.5 shrink-0 text-cyan-400" />
-                      <span>{f}</span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            ) : (
-              <PendingBlock
-                title="Delivered capabilities"
-                note={project.featuresNote || 'Awaiting founder verification of implemented features.'}
-              />
-            )}
-
-            {project.qualitativeOutcomes?.length > 0 ? (
-              <section className="rounded-2xl border border-white/[0.08] bg-dark-900/60 p-6 sm:p-8">
-                <h2 className="font-display text-xl font-semibold text-white">Outcomes</h2>
-                {project.outcomesNote && (
-                  <p className="mt-2 text-xs leading-relaxed text-slate-500">{project.outcomesNote}</p>
-                )}
-                <ul className="mt-4 space-y-3">
-                  {project.qualitativeOutcomes.map((o) => (
-                    <li key={o} className="flex gap-3 text-sm text-slate-300">
-                      <FiCheckCircle className="mt-0.5 shrink-0 text-emerald-400" />
-                      <span>{o}</span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            ) : project.verifiedOutcomes?.length > 0 ? (
-              <section className="rounded-2xl border border-white/[0.08] bg-dark-900/60 p-6 sm:p-8">
-                <h2 className="font-display text-xl font-semibold text-white">Verified outcomes</h2>
-                <ul className="mt-4 space-y-3">
-                  {project.verifiedOutcomes.map((o) => (
-                    <li key={o} className="flex gap-3 text-sm text-slate-300">
-                      <FiCheckCircle className="mt-0.5 shrink-0 text-emerald-400" />
-                      <span>{o}</span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            ) : (
-              <PendingBlock
-                title="Verified outcomes"
-                note="No independently verified outcomes are approved for publication yet. Unverified percentages and financial claims are withheld."
-              />
-            )}
-          </div>
-
-          <aside className="space-y-6">
-            <section className="rounded-2xl border border-white/[0.08] bg-dark-900/60 p-6 sm:p-8">
-              <h2 className="font-display text-xl font-semibold text-white">Architecture</h2>
-              <p className="mt-3 text-sm leading-relaxed text-slate-400">
-                {project.architectureSummary}
-              </p>
-            </section>
-
-            <section className="rounded-2xl border border-white/[0.08] bg-dark-900/60 p-6 sm:p-8">
-              <h2 className="font-display text-xl font-semibold text-white">Technologies</h2>
-              {project.techConflictNote && (
-                <p className="mt-3 text-sm leading-relaxed text-amber-200/90">{project.techConflictNote}</p>
-              )}
-              {tech.length > 0 ? (
-                <>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {tech.map((t) => (
-                      <span
-                        key={t}
-                        className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-xs text-slate-300"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                  {project.technologyRoles?.length > 0 && (
-                    <ul className="mt-4 space-y-2">
-                      {project.technologyRoles.map((role) => (
-                        <li key={role} className="text-xs leading-relaxed text-slate-400">
-                          {role}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  {project.techPendingVerification && (
-                    <p className="mt-3 text-xs text-slate-500">Listed as candidates from source materials — pending verification.</p>
-                  )}
-                </>
-              ) : (
-                <p className="mt-3 text-sm text-slate-400">Technology list withheld until conflicts are resolved.</p>
-              )}
-            </section>
-
-            <section className="rounded-2xl border border-white/[0.08] bg-dark-900/60 p-6 sm:p-8">
-              <h2 className="font-display text-xl font-semibold text-white">Integrations</h2>
-              {project.integrations?.length > 0 ? (
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {project.integrations.map((t) => (
-                    <span key={t} className="rounded-lg border border-white/10 px-3 py-1.5 text-xs text-slate-300">
                       {t}
                     </span>
                   ))}
                 </div>
-              ) : (
-                <p className="mt-3 text-sm text-slate-400">Integrations pending confirmation.</p>
-              )}
-              {project.integrationsNote && (
-                <p className="mt-3 text-xs leading-relaxed text-slate-500">{project.integrationsNote}</p>
-              )}
-            </section>
+              </Section>
+            )}
+            <ConsultationCTA
+              variant="similar"
+              href={`/contact?ref=${project.slug}`}
+            />
+          </section>
+        ) : (
+          <>
+            <nav
+              aria-label="Case study sections"
+              className="container mt-8 flex gap-2 overflow-x-auto pb-1 scrollbar-hide"
+            >
+              {CASE_NAV.map((item) => (
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  className="shrink-0 border border-slate-200 bg-white px-3 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-slate-600 transition-colors hover:border-cyan-500/40 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-300 dark:hover:text-white"
+                >
+                  {item.label}
+                </a>
+              ))}
+            </nav>
+            <section className="container mt-6 grid gap-6 lg:grid-cols-[1fr_0.9fr]">
+              <div className="space-y-6">
+                <Section title="Business challenge" id="business-challenge">
+                  <p>{project.businessChallenge || project.summary}</p>
+                </Section>
 
-            <section className="rounded-2xl border border-cyan-400/20 bg-cyan-400/5 p-6 sm:p-8">
-              <h2 className="font-display text-xl font-semibold text-white">Build something similar</h2>
-              <p className="mt-3 text-sm leading-relaxed text-slate-300">
-                {project.closingText ||
-                  'Share your workflow constraints and target stack. We will respond with a practical delivery plan.'}
-              </p>
-              <Link
-                to={`/contact?ref=${project.slug}`}
-                className="btn-primary mt-5"
-              >
-                {project.closingCta || 'Book a consultation'} <FiArrowRight />
-              </Link>
+                <Section title="Solution overview" id="solution-overview">
+                  <p>{project.solution}</p>
+                </Section>
+
+                {engineeringApproach ? (
+                  <Section title="Technical architecture" id="technical-architecture">
+                    <p>{project.architectureSummary}</p>
+                    {project.modules?.length > 0 && (
+                      <div className="mt-6 grid gap-3">
+                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                          Engagement modules
+                        </p>
+                        {project.modules.map((mod) => (
+                          <div
+                            key={mod.id}
+                            className="border border-slate-200 bg-slate-50 p-4 dark:border-white/[0.06] dark:bg-white/[0.02]"
+                          >
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="font-display text-sm font-semibold text-slate-900 dark:text-white">
+                                {mod.id}. {mod.title}
+                              </span>
+                              <span className="border border-cyan-600/25 bg-cyan-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-cyan-800 dark:border-cyan-400/20 dark:text-cyan-200">
+                                {mod.status}
+                              </span>
+                            </div>
+                            <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                              {mod.summary}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </Section>
+                ) : null}
+
+                {project.responsibilities?.length > 0 ? (
+                  <Section title="Engineering responsibilities" id="engineering-responsibilities">
+                    <OutcomeList items={project.responsibilities} tone="cyan" />
+                  </Section>
+                ) : null}
+
+                {project.features?.length > 0 ? (
+                  <Section title="Delivered capabilities" id="capabilities">
+                    <OutcomeList items={project.features} tone="cyan" />
+                  </Section>
+                ) : (
+                  <PendingBlock
+                    title="Delivered capabilities"
+                    note={project.featuresNote || 'Awaiting founder verification of implemented features.'}
+                  />
+                )}
+
+                {verifiedOutcomes.length > 0 ? (
+                  <Section
+                    title={outcomesAreVerifiedScores ? 'Verified outcomes' : 'Observed outcomes'}
+                    id="verified-outcomes"
+                  >
+                    {project.outcomesNote && (
+                      <p className="mb-2 text-xs leading-relaxed text-slate-500">{project.outcomesNote}</p>
+                    )}
+                    {!outcomesAreVerifiedScores && (
+                      <p className="mb-2 text-xs leading-relaxed text-slate-500">
+                        Qualitative outcomes from verified delivery notes. Invented metrics are not published.
+                      </p>
+                    )}
+                    <OutcomeList items={verifiedOutcomes} />
+                  </Section>
+                ) : (
+                  <PendingBlock
+                    title="Verified outcomes"
+                    note="No independently verified outcomes are approved for publication yet. Unverified percentages and financial claims are withheld."
+                  />
+                )}
+              </div>
+
+              <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
+                <Section title="Technologies" id="technologies">
+                  {project.techConflictNote && (
+                    <p className="text-sm leading-relaxed text-amber-800 dark:text-amber-200/90">
+                      {project.techConflictNote}
+                    </p>
+                  )}
+                  {tech.length > 0 ? (
+                    <>
+                      <div className="mt-1 flex flex-wrap gap-2">
+                        {tech.map((t) => (
+                          <span
+                            key={t}
+                            className="border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-700 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-300"
+                          >
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                      {project.technologyRoles?.length > 0 && (
+                        <ul className="mt-4 space-y-2">
+                          {project.technologyRoles.map((role) => (
+                            <li key={role} className="text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+                              {role}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      {project.techPendingVerification && (
+                        <p className="mt-3 text-xs text-slate-500">
+                          Listed as candidates from source materials — pending verification.
+                        </p>
+                      )}
+                    </>
+                  ) : (
+                    <p className="text-sm text-slate-500">Technology list withheld until conflicts are resolved.</p>
+                  )}
+                </Section>
+
+                <Section title="Integrations" id="integrations">
+                  {project.integrations?.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {project.integrations.map((t) => (
+                        <span
+                          key={t}
+                          className="border border-slate-200 px-3 py-1.5 text-xs text-slate-700 dark:border-white/10 dark:text-slate-300"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-slate-500">Integrations pending confirmation.</p>
+                  )}
+                  {project.integrationsNote && (
+                    <p className="mt-3 text-xs leading-relaxed text-slate-500">{project.integrationsNote}</p>
+                  )}
+                </Section>
+
+                <ConsultationCTA
+                  variant={
+                    (project.categories || []).some((c) => /voice/i.test(c))
+                      ? 'voice'
+                      : 'similar'
+                  }
+                  href={`/contact?ref=${project.slug}`}
+                />
+              </aside>
             </section>
-          </aside>
-        </section>
+          </>
+        )}
 
         {related.length > 0 && (
           <section className="container mt-16">
-            <h2 className="font-display text-2xl font-semibold text-white">Related projects</h2>
-            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="font-display text-xs font-semibold uppercase tracking-[0.2em] text-cyan-800 dark:text-cyan-300/80">
+                  Related work
+                </p>
+                <h2 className="mt-2 font-display text-2xl font-semibold text-slate-900 dark:text-white">
+                  Related projects
+                </h2>
+              </div>
+              <Link
+                to="/portfolio"
+                className="text-sm font-semibold text-cyan-800 dark:text-cyan-300"
+              >
+                Browse full portfolio
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
               {related.map((p) => (
-                <ProjectCard key={p.id} project={p} />
+                <ProjectCard key={p.id} project={{ ...p, hasCaseStudy: p.hasCaseStudy === true }} />
               ))}
             </div>
           </section>

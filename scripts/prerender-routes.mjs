@@ -121,8 +121,9 @@ async function loadPages() {
   const siteMod = await import(pathToFileURL(join(root, 'src/lib/site.js')).href)
 
   const staticPages = seoMod.PUBLIC_SEO_PAGES
+  // Only full case studies (hasCaseStudy) — not all 34 approved listing cards
   const caseStudies = (approvedMod.APPROVED_PUBLIC_PROJECTS || [])
-    .filter((p) => p.publicationApproved === true && p.slug)
+    .filter((p) => p.publicationApproved === true && p.hasCaseStudy === true && p.slug)
     .map((p) => seoMod.caseStudySeoPage(p))
 
   return {

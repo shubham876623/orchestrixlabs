@@ -24,10 +24,12 @@ export default defineConfig(() => {
     },
     server: {
       proxy: {
+        // Local default so staff session cookies stay same-origin via Vite.
+        // Override with VITE_PROXY_API if you need a remote API during local UI work.
         '/api': {
-          target: process.env.VITE_PROXY_API || 'https://orchestrixlabsbackend-production.up.railway.app',
+          target: process.env.VITE_PROXY_API || 'http://127.0.0.1:8000',
           changeOrigin: true,
-          secure: true,
+          secure: false,
         },
       },
     },

@@ -8,14 +8,20 @@ import CategoryTabs from '../components/portfolio/CategoryTabs'
 import ProjectCard from '../components/portfolio/ProjectCard'
 import { SITE, SOCIAL, STATS } from '../lib/site'
 import { getSeoPage } from '../lib/seoPages'
+import ConsultationCTA from '../components/ConsultationCTA'
 import {
   PORTFOLIO_CATEGORIES,
   getAllProjectCards,
-  getFeaturedCaseStudies,
+  getHomepageFeaturedProjects,
   isDraftPortfolioMode,
 } from '../data/publishedProjects'
 
 const PAGE_SIZE = 12
+const DEPTH_OPTIONS = [
+  { id: 'all', label: 'All listings' },
+  { id: 'case-studies', label: 'Full case studies' },
+  { id: 'summaries', label: 'Engagement summaries' },
+]
 
 function countByCategory(projects) {
   const counts = { 'All Projects': projects.length }
@@ -34,6 +40,8 @@ export default function Portfolio() {
   const categoryParam = searchParams.get('category') || 'All Projects'
   const category = PORTFOLIO_CATEGORIES.includes(categoryParam) ? categoryParam : 'All Projects'
   const query = searchParams.get('q') || ''
+  const depthParam = searchParams.get('depth') || 'all'
+  const depth = DEPTH_OPTIONS.some((d) => d.id === depthParam) ? depthParam : 'all'
 
   const setCategory = (next) => {
     setPage(1)
@@ -52,23 +60,29 @@ export default function Portfolio() {
     setSearchParams(params, { replace: true })
   }
 
+  const setDepth = (next) => {
+    setPage(1)
+    const params = new URLSearchParams(searchParams)
+    if (!next || next === 'all') params.delete('depth')
+    else params.set('depth', next)
+    setSearchParams(params, { replace: true })
+  }
+
   const allCards = useMemo(() => getAllProjectCards(), [])
   const featured = useMemo(() => {
     const bySlug = new Map(allCards.map((c) => [c.slug, c]))
-    return getFeaturedCaseStudies()
-      .slice(0, 10)
-      .map((p) => {
-        const card = bySlug.get(p.slug)
-        if (!card) return { ...p, hasCaseStudy: true }
-        return {
-          ...p,
-          summary: card.summary || p.summary,
-          deliveryStatus: card.deliveryStatus || p.deliveryStatus,
-          techCandidates: card.techCandidates || p.techCandidates,
-          demoOnly: card.demoOnly || p.demoOnly,
-          hasCaseStudy: true,
-        }
-      })
+    return getHomepageFeaturedProjects().map((p) => {
+      const card = bySlug.get(p.slug)
+      if (!card) return { ...p, hasCaseStudy: true }
+      return {
+        ...p,
+        summary: card.summary || p.summary,
+        deliveryStatus: card.deliveryStatus || p.deliveryStatus,
+        techCandidates: card.techCandidates || p.techCandidates,
+        demoOnly: card.demoOnly || p.demoOnly,
+        hasCaseStudy: true,
+      }
+    })
   }, [allCards])
   const counts = useMemo(() => countByCategory(allCards), [allCards])
 
@@ -84,19 +98,28 @@ export default function Portfolio() {
     return allCards.filter((p) => {
       const cats = p.categories || []
       const catOk = activeCategory === 'All Projects' || cats.includes(activeCategory)
-      const qOk =
-        !q ||
-        (p.title || '').toLowerCase().includes(q) ||
-        (p.summary || '').toLowerCase().includes(q) ||
-        cats.some((c) => c.toLowerCase().includes(q)) ||
-        (p.techCandidates || []).some((t) => t.toLowerCase().includes(q))
-      return catOk && qOk
+      const isCs = p.hasCaseStudy === true
+      const depthOk =
+        depth === 'all' || (depth === 'case-studies' && isCs) || (depth === 'summaries' && !isCs)
+      const haystack = [
+        p.title,
+        p.subtitle,
+        p.summary,
+        ...(cats || []),
+        ...(p.techCandidates || []),
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase()
+      const qOk = !q || haystack.includes(q)
+      return catOk && depthOk && qOk
     })
-  }, [activeCategory, query, allCards])
+  }, [activeCategory, query, allCards, depth])
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const safePage = Math.min(page, pageCount)
   const paged = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE)
+  const caseStudyCount = allCards.filter((p) => p.hasCaseStudy === true).length
 
   const fade = (delay = 0) =>
     reduceMotion
@@ -126,22 +149,22 @@ export default function Portfolio() {
         <div className="absolute inset-0 hero-gradient grid-pattern opacity-40 dark:opacity-70" aria-hidden="true" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-50/40 to-slate-50 dark:via-transparent dark:to-dark-950" aria-hidden="true" />
         <div className="container relative z-10">
-          <motion.p {...fade(0)} className="mb-3 font-display text-xs font-semibold uppercase tracking-[0.22em] text-cyan-700 dark:text-cyan-300/80">
-            Portfolio
+          <motion.p {...fade(0)} className="mb-3 font-display text-xs font-semibold uppercase tracking-[0.22em] text-cyan-800 dark:text-cyan-300/80">
+            Orchestrix Labs · Portfolio
           </motion.p>
           <motion.h1
             {...fade(0.04)}
             className="max-w-3xl font-display text-[2rem] font-semibold leading-[1.12] text-slate-900 dark:text-white sm:text-5xl lg:text-[3.25rem]"
           >
-            Verified AI engineering and{' '}
-            <span className="gradient-text">software case studies</span>
+            Engineering case studies for{' '}
+            <span className="gradient-text">AI systems that ship</span>
           </motion.h1>
           <motion.p
             {...fade(0.08)}
             className="mt-4 max-w-2xl text-base leading-relaxed text-slate-600 dark:text-slate-400 sm:mt-5 sm:text-lg"
           >
-            Verified engineering across voice AI, agents, automation, CRM, full-stack platforms, and data systems.
-            Case studies publish only after explicit approval.
+            {allCards.length} curated engagements across voice AI, agents, automation, SaaS, CRM, and data systems —
+            including {caseStudyCount} full case studies. Nothing is published without editorial approval.
           </motion.p>
           <motion.div {...fade(0.12)} className="mt-7 flex flex-wrap items-center gap-3 sm:mt-8">
             <Link to="/contact" className="btn-primary">
@@ -164,7 +187,7 @@ export default function Portfolio() {
               href={SOCIAL.upwork}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-cyan-700 underline-offset-2 hover:underline dark:text-cyan-300"
+              className="font-medium text-cyan-800 underline-offset-2 hover:underline dark:text-cyan-300"
             >
               Upwork profile
             </a>
@@ -177,16 +200,20 @@ export default function Portfolio() {
           <div className="container">
             <div className="mb-7 flex flex-wrap items-end justify-between gap-3">
               <div>
-                <p className="font-display text-xs font-semibold uppercase tracking-[0.2em] text-cyan-700 dark:text-cyan-300/80">
+                <p className="font-display text-xs font-semibold uppercase tracking-[0.2em] text-cyan-800 dark:text-cyan-300/80">
                   Featured case studies
                 </p>
                 <h2 className="mt-2 font-display text-2xl font-semibold text-slate-900 dark:text-white sm:text-3xl">
                   Flagship work international teams can inspect
                 </h2>
               </div>
-              <Link to="/contact" className="text-sm font-semibold text-cyan-700 dark:text-cyan-300">
-                Request Consultation
-              </Link>
+              <button
+                type="button"
+                className="text-sm font-semibold text-cyan-800 dark:text-cyan-300"
+                onClick={() => setDepth('case-studies')}
+              >
+                View all case studies
+              </button>
             </div>
             <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
               {featured.map((project, i) => (
@@ -216,7 +243,7 @@ export default function Portfolio() {
                 All projects
               </p>
               <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                {allCards.length} verified distinct families — not every Upwork job is a separate product.
+                Filter by capability. Private Upwork contracts are never auto-published here.
               </p>
             </div>
           </div>
@@ -226,29 +253,59 @@ export default function Portfolio() {
             counts={counts}
             onChange={setCategory}
           />
-          <label className="relative block max-w-md">
-            <span className="sr-only">Search projects</span>
-            <FiSearch className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} aria-hidden="true" />
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by title, category, or technology"
-              className="min-h-[44px] w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/30 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-200 dark:placeholder:text-slate-600"
-            />
-          </label>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div
+              role="group"
+              aria-label="Filter by case study depth"
+              className="flex flex-wrap gap-2"
+            >
+              {DEPTH_OPTIONS.map((opt) => {
+                const selected = depth === opt.id
+                return (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => setDepth(opt.id)}
+                    className={[
+                      'min-h-[40px] border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition-colors',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500',
+                      selected
+                        ? 'border-slate-900 bg-slate-900 text-white dark:border-white dark:bg-white dark:text-slate-900'
+                        : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 dark:border-white/10 dark:bg-white/[0.02] dark:text-slate-300',
+                    ].join(' ')}
+                  >
+                    {opt.label}
+                  </button>
+                )
+              })}
+            </div>
+            <label className="relative block w-full max-w-md">
+              <span className="sr-only">Search projects</span>
+              <FiSearch className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} aria-hidden="true" />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search title, category, or technology"
+                className="min-h-[44px] w-full border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/30 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-200 dark:placeholder:text-slate-600"
+              />
+            </label>
+          </div>
         </div>
       </section>
 
-      <section className="py-10 sm:py-14">
+      <section className="py-10 sm:py-14" id="portfolio-panel" role="tabpanel" aria-labelledby="portfolio-tab-0">
         <div className="container">
           <p className="mb-6 text-sm text-slate-500">
             Showing <span className="font-medium text-slate-800 dark:text-slate-300">{filtered.length}</span> of {allCards.length} projects
             {activeCategory !== 'All Projects' ? ` in ${activeCategory}` : ''}
+            {depth === 'case-studies' ? ' · full case studies' : ''}
+            {depth === 'summaries' ? ' · engagement summaries' : ''}
           </p>
 
           {filtered.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 px-6 py-16 text-center dark:border-white/10 dark:bg-dark-900/40">
+            <div className="border border-dashed border-slate-200 bg-slate-50 px-6 py-16 text-center dark:border-white/10 dark:bg-dark-900/40">
               <p className="font-display text-xl text-slate-900 dark:text-white">No projects in this view</p>
               <button
                 type="button"
@@ -256,6 +313,7 @@ export default function Portfolio() {
                 onClick={() => {
                   setCategory('All Projects')
                   setQuery('')
+                  setDepth('all')
                 }}
               >
                 Reset filters
@@ -306,16 +364,8 @@ export default function Portfolio() {
             </>
           )}
 
-          <div className="mt-14 rounded-2xl border border-white/[0.08] bg-gradient-to-br from-dark-900 to-dark-950 p-7 text-center sm:mt-16 sm:p-10">
-            <h2 className="font-display text-2xl font-semibold text-white sm:text-3xl">
-              Need a production AI system, not a demo?
-            </h2>
-            <p className="mx-auto mt-3 max-w-xl text-slate-400">
-              Tell us about the workflow you want automated. We respond within {SITE.responseTime} with a practical scope.
-            </p>
-            <Link to="/contact" className="btn-primary mt-6">
-              Request Consultation <FiArrowRight />
-            </Link>
+          <div className="mt-14 sm:mt-16">
+            <ConsultationCTA variant="automation" />
           </div>
         </div>
       </section>

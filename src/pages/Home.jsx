@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import {
   FiArrowRight, FiCode, FiCpu, FiGlobe, FiZap, FiMic,
@@ -12,22 +12,28 @@ import api from '../lib/axios'
 import SEOHead from '../components/SEOHead'
 import TrustBar from '../components/TrustBar'
 import FAQSection from '../components/FAQSection'
+import ConsultationCTA from '../components/ConsultationCTA'
+import ProjectCard from '../components/portfolio/ProjectCard'
 import { services } from '../data/services'
 import { FAQ, SITE, SOCIAL } from '../lib/site'
 import { getSeoPage } from '../lib/seoPages'
-import { getFeaturedPublishedProjects, isDraftPortfolioMode } from '../data/publishedProjects'
+import { getHomepageFeaturedProjects } from '../data/publishedProjects'
 
-// ─── Animation helpers ────────────────────────────────────────────────────────
 const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
+  hidden: { opacity: 0, y: 28 },
   visible: (i = 0) => ({
-    opacity: 1, y: 0,
-    transition: { duration: 0.55, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] },
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] },
   }),
 }
 
 function Section({ children, className = '' }) {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 })
+  const reduceMotion = useReducedMotion()
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.08 })
+  if (reduceMotion) {
+    return <section className={className}>{children}</section>
+  }
   return (
     <motion.section
       ref={ref}
@@ -40,37 +46,31 @@ function Section({ children, className = '' }) {
   )
 }
 
-// ─── Service icon map ─────────────────────────────────────────────────────────
 const serviceIcons = {
   voice: FiMic, brain: FiCpu, code: FiCode, globe: FiGlobe, workflow: FiZap,
 }
 
-const colorMap = {
-  violet: 'from-violet-500/20 to-purple-600/5 border-violet-500/20 group-hover:border-violet-500/40',
-  indigo: 'from-indigo-500/20 to-blue-600/5 border-indigo-500/20 group-hover:border-indigo-500/40',
-  cyan:   'from-cyan-500/20 to-teal-600/5 border-cyan-500/20 group-hover:border-cyan-500/40',
-  emerald:'from-emerald-500/20 to-green-600/5 border-emerald-500/20 group-hover:border-emerald-500/40',
-  orange: 'from-orange-500/20 to-amber-600/5 border-orange-500/20 group-hover:border-orange-500/40',
-}
-const iconColorMap = {
-  violet: 'text-violet-400', indigo: 'text-indigo-400',
-  cyan: 'text-cyan-400', emerald: 'text-emerald-400', orange: 'text-orange-400',
+const SERVICE_PORTFOLIO_LINKS = {
+  voice: '/portfolio?category=Voice%20AI',
+  brain: '/portfolio?category=AI%20Agents',
+  code: '/portfolio?category=Full-Stack%20Development',
+  globe: '/portfolio?category=Data%20%26%20Analytics',
+  workflow: '/portfolio?category=Automation',
 }
 
 const techStack = [
-  { icon: SiPython,            label: 'Python' },
-  { icon: SiDjango,            label: 'Django' },
-  { icon: SiFastapi,           label: 'FastAPI' },
-  { icon: SiReact,             label: 'React' },
-  { icon: SiOpenai,            label: 'OpenAI' },
-  { icon: FiCloud,             label: 'AWS' },
-  { icon: SiDocker,            label: 'Docker' },
-  { icon: SiPostgresql,        label: 'PostgreSQL' },
-  { icon: SiTailwindcss,       label: 'Tailwind' },
+  { icon: SiPython, label: 'Python' },
+  { icon: SiDjango, label: 'Django' },
+  { icon: SiFastapi, label: 'FastAPI' },
+  { icon: SiReact, label: 'React' },
+  { icon: SiOpenai, label: 'OpenAI' },
+  { icon: FiCloud, label: 'AWS' },
+  { icon: SiDocker, label: 'Docker' },
+  { icon: SiPostgresql, label: 'PostgreSQL' },
+  { icon: SiTailwindcss, label: 'Tailwind' },
 ]
 
 function useSiteStats() {
-  // Unverified headcounts are not shown. Years reflect founder engineering experience.
   const defaults = { years_experience: SITE.founderExperienceYears, jss_score: 100 }
   const [s, setS] = useState(defaults)
   useEffect(() => {
@@ -78,7 +78,6 @@ function useSiteStats() {
       if (r.data && typeof r.data === 'object' && !Array.isArray(r.data)) {
         setS((prev) => ({
           ...prev,
-          // Prefer founder-attributed years from site config; CMS may lag
           years_experience: SITE.founderExperienceYears,
           jss_score: r.data.jss_score ?? prev.jss_score,
         }))
@@ -88,7 +87,6 @@ function useSiteStats() {
   return s
 }
 
-// Fallback data — overridden by CMS API when available
 const fallbackTestimonials = [
   { client_name: 'Verified Upwork Client', client_role: 'AI Framework Development', rating: 5, tags: ['Collaborative', 'Committed to Quality'], quote: 'Love working with Shubham, he\'s the best at what he does and he always tries his best! Thanks Shubham!' },
   { client_name: 'Verified Upwork Client', client_role: 'Qualitative Data Analysis', rating: 5, tags: ['Committed to Quality'], quote: 'Shubham delivered high-quality work on the qualitative analysis project. He had a strong understanding of qualitative research methods, provided well-structured and insightful analysis and ensured that all deliverables were aligned with the project requirements.' },
@@ -96,212 +94,167 @@ const fallbackTestimonials = [
   { client_name: 'Verified Upwork Client', client_role: 'AI & Full-Stack Development', rating: 5, tags: ['Clear Communicator', 'Collaborative'], quote: 'Experienced coder for AI related projects offering full stack development, great communicator and cooperator.' },
 ]
 
-const fallbackBadges = [
-  { label: 'Collaborative', count: 28 },
-  { label: 'Clear Communicator', count: 24 },
-  { label: 'Committed to Quality', count: 23 },
-  { label: 'Reliable', count: 18 },
-  { label: 'Solution Oriented', count: 15 },
-  { label: 'Accountable for Outcomes', count: 8 },
-]
-
-// ─── Sections ─────────────────────────────────────────────────────────────────
-
 function Hero() {
-  const siteStats = useSiteStats()
-  return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden pt-24 pb-16">
-      {/* Background */}
-      <div className="absolute inset-0 hero-gradient grid-pattern" />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-dark-950" />
+  const reduceMotion = useReducedMotion()
+  const motionProps = (delay) =>
+    reduceMotion
+      ? { initial: false, animate: { opacity: 1 } }
+      : {
+          initial: { opacity: 0, y: 20 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.55, delay },
+        }
 
-      {/* Glow orbs */}
-      <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl animate-pulse-slow" />
-      <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-secondary-500/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }} />
+  return (
+    <section className="relative flex min-h-[92vh] flex-col items-center justify-center overflow-hidden pb-16 pt-28 text-center sm:pt-32">
+      <div className="absolute inset-0 hero-gradient grid-pattern" aria-hidden="true" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-dark-950" aria-hidden="true" />
 
       <div className="container relative z-10">
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex justify-center mb-6"
-        >
-          <span className="section-tag">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            {SITE.positioning}
-          </span>
-        </motion.div>
+        <motion.p {...motionProps(0)} className="mb-6 font-display text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300/90">
+          {SITE.positioning}
+        </motion.p>
 
-        {/* Brand mark + primary slogan as hero brand signal */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.05 }}
-          className="flex justify-center mb-6"
-        >
+        <motion.div {...motionProps(0.05)} className="mb-7 flex justify-center">
           <img
             src="/brand/logo-wordmark-dark.svg"
             alt="Orchestrix Labs"
             width={280}
             height={128}
-            className="h-14 w-[12.75rem] sm:h-16 sm:w-[14.5rem] object-contain drop-shadow-[0_0_28px_rgba(0,239,253,0.22)]"
+            className="h-14 w-[12.75rem] object-contain sm:h-16 sm:w-[14.5rem]"
             decoding="async"
+            fetchPriority="high"
           />
         </motion.div>
+
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.12] text-white mb-4 max-w-4xl mx-auto"
+          {...motionProps(0.1)}
+          className="mx-auto mb-5 max-w-4xl font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl"
         >
           <span className="gradient-text block">{SITE.slogan}</span>
-          <span className="mt-4 block text-xl font-semibold tracking-tight text-white sm:text-2xl">
-            Orchestrix Labs — AI automation and custom software for real-world operations
+          <span className="mt-4 block text-lg font-medium leading-snug text-slate-200 sm:text-xl lg:text-2xl">
+            AI systems engineering for operators who need production integrations — not demos alone.
           </span>
         </motion.h1>
 
-        {/* Sub */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-slate-400 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed mb-10"
+          {...motionProps(0.18)}
+          className="mx-auto mb-10 max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg"
         >
-          Voice AI, business automation, custom software, and enterprise integrations—
-          delivered with production discipline. Led by founder {SITE.founder} with{' '}
-          {SITE.founderExperienceYears}+ years of professional software engineering experience
-          (founder experience, not company age).
+          Voice AI, CRM automation, field operations, and retrieval systems — delivered with human-reviewed
+          controls. Led by {SITE.founder} with {SITE.founderExperienceYears}+ years of professional engineering
+          experience.
         </motion.p>
 
-        {/* CTAs — consultation primary for lead gen */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
+          {...motionProps(0.26)}
+          className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
         >
-          <Link to="/contact" className="btn-primary text-base px-8 py-3.5">
-            Request Consultation <FiArrowRight />
+          <Link to="/contact" className="btn-primary px-8 py-3.5 text-base">
+            Request a Technical Consultation <FiArrowRight aria-hidden="true" />
           </Link>
-          <Link to="/portfolio" className="btn-outline text-base px-8 py-3.5">
-            Explore Our Work
+          <Link to="/portfolio" className="btn-outline px-8 py-3.5 text-base">
+            View Selected Work
           </Link>
-        </motion.div>
-
-        {/* ── Stats strip — visible immediately in hero ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.45 }}
-          className="flex flex-wrap items-center justify-center gap-3 mb-10"
-        >
-          {/* Top Rated */}
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#14a800]/10 border border-[#14a800]/25">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#14a800"><path d="M11.5 2C6.26 2 2 6.26 2 11.5S6.26 21 11.5 21 21 16.74 21 11.5 16.74 2 11.5 2zm-2 15.5-4-4 1.41-1.41L9.5 14.67l7.59-7.59L18.5 8.5l-9 9z"/></svg>
-            <span className="text-[#14a800] font-bold text-xs">Top Rated</span>
-          </div>
-          {/* JSS */}
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary-500/10 border border-primary-500/20">
-            <FiCheckCircle className="text-primary-400" size={13} />
-            <span className="text-white font-bold text-xs">100% Job Success</span>
-          </div>
-          <div className="px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.07]">
-            <span className="text-white font-bold text-xs">{siteStats.years_experience}+</span>
-            <span className="text-slate-500 text-xs ml-1.5">Years Founder Experience</span>
-          </div>
-          <div className="px-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.07]">
-            <span className="text-white font-bold text-xs">Worldwide</span>
-            <span className="text-slate-500 text-xs ml-1.5">Client Delivery</span>
-          </div>
-        </motion.div>
-
-        {/* Floating tech badges */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex flex-wrap items-center justify-center gap-2"
-        >
-          {['Python', 'Django', 'FastAPI', 'React', 'OpenAI GPT-4', 'LangChain', 'Twilio', 'AWS', 'Selenium'].map((tag) => (
-            <span
-              key={tag}
-              className="px-3 py-1.5 text-xs font-medium bg-white/[0.04] border border-white/[0.08] rounded-full text-slate-500"
-            >
-              {tag}
-            </span>
-          ))}
         </motion.div>
       </div>
-
-      {/* Scroll hint */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.6 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-      >
-        <span className="text-slate-600 text-xs">Scroll to explore</span>
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-px h-10 bg-gradient-to-b from-white/20 to-transparent"
-        />
-      </motion.div>
     </section>
   )
 }
 
+function WhoWeHelp() {
+  const audiences = [
+    {
+      title: 'Operators & field-service teams',
+      body: 'Connect CRM, estimating, and accounts without unsupervised financial posting.',
+    },
+    {
+      title: 'Sales & support organizations',
+      body: 'Qualify leads and handle high-volume conversations with voice and CRM write-back.',
+    },
+    {
+      title: 'Product and ops leaders',
+      body: 'Ship full-stack platforms, data pipelines, and RAG assistants with production discipline.',
+    },
+  ]
+  return (
+    <Section className="section-shell border-y border-white/[0.06] bg-dark-900/25">
+      <div className="container">
+        <motion.p variants={fadeUp} custom={0} className="section-tag mb-4 inline-flex">
+          Who we help
+        </motion.p>
+        <motion.h2 variants={fadeUp} custom={1} className="section-heading mb-4 max-w-3xl">
+          Built for teams that need systems that ship
+        </motion.h2>
+        <motion.p variants={fadeUp} custom={2} className="section-sub mb-12">
+          International clients come to Orchestrix Labs for integration-heavy AI engineering — clear ownership,
+          verified stacks, and honest delivery boundaries.
+        </motion.p>
+        <div className="grid gap-5 md:grid-cols-3">
+          {audiences.map((item, i) => (
+            <motion.div key={item.title} variants={fadeUp} custom={i + 3} className="card">
+              <h3 className="font-display text-lg font-semibold text-white">{item.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-400">{item.body}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </Section>
+  )
+}
 
 function ServicesPreview() {
   return (
-    <Section className="py-24">
+    <Section className="section-shell">
       <div className="container">
-        <div className="text-center mb-16">
+        <div className="mb-14 text-center">
           <motion.span variants={fadeUp} custom={0} className="section-tag mb-4 inline-flex">
-            What We Do
+            Capabilities
           </motion.span>
           <motion.h2 variants={fadeUp} custom={1} className="section-heading mb-4">
-            End-to-end expertise across<br className="hidden sm:block" />
-            <span className="gradient-text"> the AI stack</span>
+            Engineering across the <span className="gradient-text">AI delivery stack</span>
           </motion.h2>
           <motion.p variants={fadeUp} custom={2} className="section-sub mx-auto">
-            From intelligent voice agents to web automation pipelines — we build
-            systems designed for reliability, clarity, and commercial impact.
+            Voice agents, ML pipelines, full-stack platforms, data automation, and workflow systems —
+            scoped for reliability and commercial use.
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((svc, i) => {
             const Icon = serviceIcons[svc.icon]
+            const to = SERVICE_PORTFOLIO_LINKS[svc.icon] || '/portfolio'
             return (
-              <motion.div
-                key={svc.id}
-                custom={i}
-                variants={fadeUp}
-                className={`group relative card bg-gradient-to-br ${colorMap[svc.accent]} border hover:-translate-y-1 transition-all duration-300 cursor-pointer`}
-              >
-                <div className={`w-11 h-11 rounded-xl bg-white/[0.05] flex items-center justify-center mb-4 ${iconColorMap[svc.accent]}`}>
-                  <Icon size={20} />
-                </div>
-                <h3 className="text-white font-bold text-lg mb-2">{svc.title}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-4">{svc.tagline}</p>
-                <ul className="space-y-1.5">
-                  {svc.features.slice(0, 3).map(f => (
-                    <li key={f} className="flex items-start gap-2 text-slate-500 text-xs">
-                      <FiCheckCircle className="mt-0.5 text-emerald-500 flex-shrink-0" size={12} />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
+              <motion.div key={svc.id} custom={i} variants={fadeUp}>
+                <Link
+                  to={to}
+                  className="card group block h-full hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+                >
+                  <div className="mb-4 flex h-11 w-11 items-center justify-center border border-white/10 bg-white/[0.04] text-cyan-300">
+                    <Icon size={20} aria-hidden="true" />
+                  </div>
+                  <h3 className="mb-2 text-lg font-semibold text-white group-hover:text-cyan-200">{svc.title}</h3>
+                  <p className="mb-4 text-sm leading-relaxed text-slate-400">{svc.tagline}</p>
+                  <ul className="space-y-1.5">
+                    {svc.features.slice(0, 3).map((f) => (
+                      <li key={f} className="flex items-start gap-2 text-xs text-slate-500">
+                        <FiCheckCircle className="mt-0.5 shrink-0 text-emerald-500" size={12} aria-hidden="true" />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-cyan-300">
+                    See related projects <FiArrowRight aria-hidden="true" />
+                  </span>
+                </Link>
               </motion.div>
             )
           })}
         </div>
 
-        <motion.div variants={fadeUp} custom={6} className="text-center mt-10">
+        <motion.div variants={fadeUp} custom={6} className="mt-10 text-center">
           <Link to="/services" className="btn-outline">
-            View All Services <FiArrowRight />
+            View All Services <FiArrowRight aria-hidden="true" />
           </Link>
         </motion.div>
       </div>
@@ -310,91 +263,53 @@ function ServicesPreview() {
 }
 
 function FeaturedWork() {
-  // Marketing portfolio reads the controlled published bundle only (not /api/projects/).
-  // Production shows publication-approved featured rows (All Cleared first); drafts only in content_review.
-  const featuredProjects = getFeaturedPublishedProjects().slice(0, 6)
+  const featuredProjects = getHomepageFeaturedProjects()
 
   return (
-    <Section className="py-24 bg-dark-900/30">
+    <Section className="section-shell bg-dark-900/30">
       <div className="container">
-        <div className="text-center mb-16">
+        <div className="mb-12 text-center">
           <motion.span variants={fadeUp} custom={0} className="section-tag mb-4 inline-flex">
-            Featured Work
+            Selected work
           </motion.span>
           <motion.h2 variants={fadeUp} custom={1} className="section-heading mb-4">
-            What we build for{' '}
-            <span className="gradient-text">operators worldwide</span>
+            Verified project experience international buyers can inspect
           </motion.h2>
           <motion.p variants={fadeUp} custom={2} className="section-sub mx-auto">
-            Publication-approved case studies only. Full delivery archive lives in Work History.
+            Five publication-approved case studies — not private archives, not pending GPT profiles.
           </motion.p>
         </div>
 
         {featuredProjects.length === 0 ? (
-          <div className="mx-auto max-w-xl rounded-2xl border border-white/[0.08] bg-dark-900/50 px-6 py-12 text-center">
+          <div className="mx-auto max-w-xl border border-white/[0.08] bg-dark-900/50 px-6 py-12 text-center">
             <p className="font-display text-xl text-white">Featured case studies coming soon</p>
-            <p className="mt-3 text-sm leading-relaxed text-slate-400">
-              We are preparing publication-approved portfolio work. Meanwhile, reach out about the system you want built.
-            </p>
             <Link to="/contact" className="btn-primary mt-8 inline-flex">
-              Request Consultation <FiArrowRight />
+              Request Consultation <FiArrowRight aria-hidden="true" />
             </Link>
           </div>
         ) : (
-          <div className={`grid grid-cols-1 gap-6 ${featuredProjects.length === 1 ? 'md:grid-cols-1 max-w-2xl mx-auto' : 'md:grid-cols-2'}`}>
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {featuredProjects.map((project, i) => (
-              <motion.div
-                key={project.id}
-                custom={i}
-                variants={fadeUp}
-                className="group card hover:-translate-y-1 transition-all duration-300 flex flex-col"
-              >
-                <div className="flex items-start justify-between gap-3 mb-3">
-                  <span className="px-2.5 py-1 rounded-md bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs font-medium">
-                    {project.primaryCategory}
-                  </span>
-                  {project.flagshipRank === 1 && (
-                    <span className="text-[11px] uppercase tracking-wider text-emerald-400/90">Flagship</span>
-                  )}
-                  {isDraftPortfolioMode() && project.publicationApproved !== true && (
-                    <span className="text-[11px] uppercase tracking-wider text-slate-500">Draft preview</span>
-                  )}
-                </div>
-
-                <h3 className="text-white font-bold text-lg mb-2 group-hover:text-primary-300 transition-colors">
-                  <Link to={`/portfolio/${project.slug}`} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400">
-                    {project.title}
-                  </Link>
-                </h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-4 flex-1 line-clamp-3">
-                  {project.summary}
-                </p>
-
-                <div className="flex flex-wrap gap-1.5 pt-4 border-t border-white/[0.05]">
-                  {(project.techCandidates || []).slice(0, 5).map(t => (
-                    <span key={t} className="px-2 py-0.5 bg-white/[0.04] border border-white/[0.06] rounded text-slate-500 text-xs">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-
-                <Link
-                  to={`/portfolio/${project.slug}`}
-                  className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-cyan-300 hover:text-cyan-200"
-                >
-                  View case study <FiArrowRight />
-                </Link>
+              <motion.div key={project.id} custom={i} variants={fadeUp}>
+                <ProjectCard
+                  project={{ ...project, hasCaseStudy: true }}
+                  variant={i === 0 ? 'featured' : 'grid'}
+                />
               </motion.div>
             ))}
           </div>
         )}
 
-        <motion.div variants={fadeUp} custom={8} className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10">
+        <motion.div
+          variants={fadeUp}
+          custom={8}
+          className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
+        >
           <Link to="/portfolio" className="btn-primary">
-            Explore Our Work <FiArrowRight />
+            Explore Our Work <FiArrowRight aria-hidden="true" />
           </Link>
-          <Link to="/work-history" className="btn-outline">
-            Browse Work History
+          <Link to="/portfolio?category=Automation" className="btn-outline">
+            Explore Our AI Automation Work
           </Link>
         </motion.div>
       </div>
@@ -404,30 +319,25 @@ function FeaturedWork() {
 
 function TechStackSection() {
   return (
-    <Section className="py-20">
+    <Section className="section-shell">
       <div className="container">
-        <motion.div variants={fadeUp} custom={0} className="text-center mb-12">
-          <span className="section-tag mb-4 inline-flex">Tech Stack</span>
+        <motion.div variants={fadeUp} custom={0} className="mb-12 text-center">
+          <span className="section-tag mb-4 inline-flex">Tech stack</span>
           <h2 className="section-heading mb-3">
-            Built with the <span className="gradient-text">right tools</span>
+            Tools chosen for <span className="gradient-text">reliability</span>
           </h2>
-          <p className="text-slate-500 text-base">
-            Industry-standard technologies, chosen for reliability and performance.
+          <p className="text-base text-slate-500">
+            Core technologies we use across production engagements.
           </p>
         </motion.div>
-
-        <motion.div
-          variants={fadeUp}
-          custom={1}
-          className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-4"
-        >
+        <motion.div variants={fadeUp} custom={1} className="grid grid-cols-3 gap-3 sm:grid-cols-5 lg:grid-cols-9">
           {techStack.map(({ icon: Icon, label }) => (
             <div
               key={label}
-              className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/[0.03] border border-white/[0.05] hover:border-primary-500/30 hover:bg-primary-500/5 transition-all duration-200 group"
+              className="flex flex-col items-center gap-2 border border-white/[0.06] bg-white/[0.02] p-4 transition-colors hover:border-cyan-500/25"
             >
-              <Icon className="text-slate-400 group-hover:text-primary-400 transition-colors" size={28} />
-              <span className="text-slate-600 text-xs text-center group-hover:text-slate-400 transition-colors">{label}</span>
+              <Icon className="text-slate-400" size={26} aria-hidden="true" />
+              <span className="text-center text-xs text-slate-500">{label}</span>
             </div>
           ))}
         </motion.div>
@@ -438,31 +348,26 @@ function TechStackSection() {
 
 function ProcessSection() {
   const steps = [
-    { step: '01', title: 'Discovery Call', desc: 'We understand your goals, stack, and constraints. You get a clear project plan and timeline — no surprises.' },
-    { step: '02', title: 'Architecture', desc: 'We design the technical solution, choose the right stack, and break it into clear milestones.' },
-    { step: '03', title: 'Build & Iterate', desc: 'We build fast and show progress regularly. Working demos at every milestone with feedback loops built in.' },
-    { step: '04', title: 'Deploy & Support', desc: 'Deployed to production with monitoring, SSL, and full documentation. Ongoing support always available.' },
+    { step: '01', title: 'Discovery', desc: 'Goals, stack, and constraints — then a clear plan and timeline.' },
+    { step: '02', title: 'Architecture', desc: 'Technical design with milestones and explicit delivery boundaries.' },
+    { step: '03', title: 'Build & iterate', desc: 'Working demos at milestones with feedback loops built in.' },
+    { step: '04', title: 'Deploy & support', desc: 'Production deployment with documentation and ongoing support options.' },
   ]
   return (
-    <Section className="py-24 bg-dark-900/30">
+    <Section className="section-shell bg-dark-900/30">
       <div className="container">
-        <div className="text-center mb-16">
-          <motion.span variants={fadeUp} custom={0} className="section-tag mb-4 inline-flex">How It Works</motion.span>
-          <motion.h2 variants={fadeUp} custom={1} className="section-heading mb-4">
+        <div className="mb-14 text-center">
+          <motion.span variants={fadeUp} custom={0} className="section-tag mb-4 inline-flex">How it works</motion.span>
+          <motion.h2 variants={fadeUp} custom={1} className="section-heading">
             From idea to <span className="gradient-text">production</span>
           </motion.h2>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((s, i) => (
-            <motion.div key={s.step} custom={i} variants={fadeUp} className="relative">
-              {i < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-8 left-full w-full h-px bg-gradient-to-r from-primary-500/30 to-transparent z-10" />
-              )}
-              <div className="card h-full">
-                <span className="text-4xl font-black gradient-text mb-4 block">{s.step}</span>
-                <h3 className="text-white font-bold text-lg mb-2">{s.title}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">{s.desc}</p>
-              </div>
+            <motion.div key={s.step} custom={i} variants={fadeUp} className="card h-full">
+              <span className="mb-3 block font-display text-3xl font-semibold gradient-text">{s.step}</span>
+              <h3 className="mb-2 text-lg font-semibold text-white">{s.title}</h3>
+              <p className="text-sm leading-relaxed text-slate-400">{s.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -474,128 +379,76 @@ function ProcessSection() {
 function Testimonials() {
   const siteStats = useSiteStats()
   const [testimonials, setTestimonials] = useState(fallbackTestimonials)
-  const [insightBadges, setInsightBadges] = useState(fallbackBadges)
 
   useEffect(() => {
     api.get('/api/testimonials/').then(r => {
       if (Array.isArray(r.data) && r.data.length > 0) setTestimonials(r.data)
     }).catch(() => {})
-    api.get('/api/badges/').then(r => {
-      if (Array.isArray(r.data) && r.data.length > 0) setInsightBadges(r.data)
-    }).catch(() => {})
   }, [])
-  return (
-    <Section className="py-24 bg-dark-900/30">
-      <div className="container">
 
-        {/* ── Heading ── */}
-        <div className="text-center mb-12">
+  return (
+    <Section className="section-shell">
+      <div className="container">
+        <div className="mb-12 text-center">
           <motion.span variants={fadeUp} custom={0} className="section-tag mb-4 inline-flex">
-            Client Reviews
+            Client feedback
           </motion.span>
           <motion.h2 variants={fadeUp} custom={1} className="section-heading mb-4">
-            Trusted by clients <span className="gradient-text">worldwide</span>
+            Verified founder credentials clients can check
           </motion.h2>
           <motion.p variants={fadeUp} custom={2} className="section-sub mx-auto">
-            Founder Upwork credentials: {siteStats.jss_score}% Job Success · Top Rated — verified client feedback (separate from company age).
+            Founder Upwork profile: {siteStats.jss_score}% Job Success · Top Rated — separate from company age.
           </motion.p>
         </div>
 
-        {/* ── Layer 1: Upwork social proof bar ── */}
-        <motion.div
-          variants={fadeUp} custom={3}
-          className="flex flex-wrap items-center justify-center gap-4 mb-10"
-        >
-          {/* Top Rated badge */}
-          <div className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-[#14a800]/10 border border-[#14a800]/25">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#14a800">
-              <path d="M11.5 2C6.26 2 2 6.26 2 11.5S6.26 21 11.5 21 21 16.74 21 11.5 16.74 2 11.5 2zm-2 15.5-4-4 1.41-1.41L9.5 14.67l7.59-7.59L18.5 8.5l-9 9z"/>
-            </svg>
-            <span className="text-[#14a800] font-bold text-sm">Top Rated</span>
+        <motion.div variants={fadeUp} custom={3} className="mb-10 flex flex-wrap items-center justify-center gap-3">
+          <div className="flex items-center gap-2 border border-[#14a800]/25 bg-[#14a800]/10 px-4 py-2.5">
+            <span className="text-sm font-semibold text-[#14a800]">Top Rated</span>
           </div>
-          {/* JSS */}
-          <div className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-primary-500/10 border border-primary-500/20">
-            <FiCheckCircle className="text-primary-400" size={16} />
-            <span className="text-white font-bold text-sm">100% Job Success</span>
+          <div className="flex items-center gap-2 border border-cyan-500/20 bg-cyan-500/10 px-4 py-2.5">
+            <FiCheckCircle className="text-cyan-300" size={14} aria-hidden="true" />
+            <span className="text-sm font-semibold text-white">100% Job Success</span>
           </div>
-          <div className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
-            <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.years_experience}+</span> years founder experience</span>
+          <div className="border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-slate-300">
+            <span className="font-semibold text-white">{siteStats.years_experience}+</span> years founder experience
           </div>
         </motion.div>
 
-        {/* ── Layer 2: Skill insight badges ── */}
-        <motion.div
-          variants={fadeUp} custom={4}
-          className="flex flex-wrap justify-center gap-2 mb-12"
-        >
-          {insightBadges.map(({ label, count }) => (
-            <span
-              key={label}
-              className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.07] text-slate-400 text-xs font-medium"
-            >
-              <span className="w-5 h-5 rounded-full bg-primary-500/20 text-primary-400 text-[10px] font-bold flex items-center justify-center flex-shrink-0">
-                {count}
-              </span>
-              {label}
-            </span>
-          ))}
-        </motion.div>
-
-        {/* ── Layer 3: Review cards ── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10">
+        <div className="mb-10 grid grid-cols-1 gap-5 md:grid-cols-2">
           {testimonials.map((t, i) => (
-            <motion.div key={i} custom={i + 5} variants={fadeUp} className="card flex flex-col">
-              {/* Stars */}
-              <div className="flex gap-0.5 mb-3">
+            <motion.div key={i} custom={i + 4} variants={fadeUp} className="card flex flex-col">
+              <div
+                className="mb-3 flex gap-0.5"
+                role="img"
+                aria-label={`${t.rating || 5} star rating`}
+              >
                 {[...Array(Math.round(Number(t.rating || t.stars || 5)))].map((_, j) => (
-                  <FiStar key={j} className="text-amber-400" style={{ fill: '#FBBF24' }} size={13} />
+                  <FiStar key={j} className="text-amber-400" style={{ fill: '#FBBF24' }} size={13} aria-hidden="true" />
                 ))}
               </div>
-              {/* Quote */}
-              <p className="text-slate-300 text-sm leading-relaxed flex-1 mb-4 italic">
-                "{t.quote || t.text}"
+              <p className="mb-4 flex-1 text-sm italic leading-relaxed text-slate-300">
+                “{t.quote || t.text}”
               </p>
-              {/* Skill tags */}
-              {t.tags && t.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {t.tags.map(tag => (
-                    <span key={tag} className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-              {/* Author */}
-              <div className="pt-3 border-t border-white/[0.05] flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-primary-400 text-xs font-bold">
-                    {(t.client_name || t.name || 'V').charAt(0).toUpperCase()}
-                  </span>
-                </div>
-                <div>
-                  <p className="text-white font-semibold text-xs">{t.client_name || t.name}</p>
-                  <p className="text-slate-500 text-xs mt-0.5">{t.client_role || t.role} · {t.source || 'Upwork'}</p>
-                </div>
+              <div className="border-t border-white/[0.06] pt-3">
+                <p className="text-xs font-semibold text-white">{t.client_name || t.name}</p>
+                <p className="mt-0.5 text-xs text-slate-500">
+                  {t.client_role || t.role} · {t.source || 'Upwork'}
+                </p>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* ── Layer 4: Upwork CTA ── */}
         <motion.div variants={fadeUp} custom={9} className="text-center">
           <a
             href={SOCIAL.upwork}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-[#14a800]/10 border border-[#14a800]/30 text-[#14a800] font-semibold text-sm hover:bg-[#14a800]/20 transition-all duration-200"
+            className="inline-flex items-center gap-2 border border-[#14a800]/30 bg-[#14a800]/10 px-5 py-3 text-sm font-semibold text-[#14a800] transition-colors hover:bg-[#14a800]/20"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18.561 13.158c-1.102 0-2.135-.467-3.074-1.227l.228-1.076.008-.042c.207-1.143.849-3.06 2.839-3.06 1.492 0 2.703 1.212 2.703 2.703-.001 1.489-1.212 2.702-2.704 2.702zm0-8.14c-2.539 0-4.51 1.649-5.31 4.366-1.22-1.834-2.148-4.036-2.687-5.892H7.828v7.112c-.002 1.406-1.141 2.546-2.547 2.546-1.405 0-2.543-1.14-2.545-2.546V3.492H0v7.112c0 2.914 2.37 5.303 5.281 5.303 2.913 0 5.283-2.389 5.283-5.303v-1.19c.529 1.107 1.182 2.229 1.974 3.221l-1.673 7.873h2.797l1.213-5.71c1.063.679 2.285 1.109 3.686 1.109 3 0 5.439-2.452 5.439-5.45 0-3-2.439-5.439-5.439-5.439z"/>
-            </svg>
             View client reviews on Upwork
           </a>
         </motion.div>
-
       </div>
     </Section>
   )
@@ -603,43 +456,14 @@ function Testimonials() {
 
 function CTABanner() {
   return (
-    <Section className="py-24">
+    <Section className="section-shell pt-8">
       <div className="container">
-        <motion.div
-          variants={fadeUp}
-          custom={0}
-          className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-600/20 via-dark-900 to-secondary-600/20 border border-white/[0.08] p-12 text-center"
-        >
-          {/* Glow */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="w-96 h-96 bg-primary-500/10 rounded-full blur-3xl" />
-          </div>
-
-          <div className="relative z-10">
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-4">
-              Ready to automate growth with{' '}
-              <span className="gradient-text">reliable systems?</span>
-            </h2>
-            <p className="text-slate-400 text-lg max-w-xl mx-auto mb-10">
-              Share your constraints. We respond within {SITE.responseTime} with an
-              honest assessment and a clear next step—no inflated promises.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link to="/contact" className="btn-primary text-base px-8 py-3.5">
-                Request Consultation <FiArrowRight />
-              </Link>
-              <Link to="/portfolio" className="btn-outline text-base px-8 py-3.5">
-                Explore Our Work
-              </Link>
-            </div>
-          </div>
-        </motion.div>
+        <ConsultationCTA variant="consultation" />
       </div>
     </Section>
   )
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
 export default function Home() {
   return (
     <>
@@ -650,6 +474,7 @@ export default function Home() {
       />
       <Hero />
       <TrustBar />
+      <WhoWeHelp />
       <ServicesPreview />
       <FeaturedWork />
       <TechStackSection />

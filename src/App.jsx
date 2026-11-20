@@ -2,7 +2,10 @@ import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import { useEffect, lazy, Suspense } from 'react'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import AnalyticsConsentBanner from './components/AnalyticsConsentBanner'
 import usePageTracking from './hooks/usePageTracking'
+import useClarity from './hooks/useClarity'
+import usePrivateAdminNavigation from './hooks/usePrivateAdminNavigation'
 
 const Home = lazy(() => import('./pages/Home'))
 const Services = lazy(() => import('./pages/Services'))
@@ -14,6 +17,7 @@ const Contact = lazy(() => import('./pages/Contact'))
 const Reviews = lazy(() => import('./pages/Reviews'))
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
+const StaffEditorial = lazy(() => import('./pages/StaffEditorial'))
 
 function RouteFallback() {
   return (
@@ -32,8 +36,10 @@ function ScrollToTop() {
 
 function AppInner() {
   usePageTracking()
+  useClarity()
+  usePrivateAdminNavigation()
   const { pathname } = useLocation()
-  const isDashboard = pathname.startsWith('/dashboard')
+  const isDashboard = pathname.startsWith('/dashboard') || pathname.startsWith('/staff')
 
   return (
     <>
@@ -55,11 +61,14 @@ function AppInner() {
             <Route path="/reviews" element={<Reviews />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/staff" element={<StaffEditorial />} />
+            <Route path="/staff/*" element={<StaffEditorial />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
       </main>
       {!isDashboard && <Footer />}
+      {!isDashboard && <AnalyticsConsentBanner />}
     </>
   )
 }

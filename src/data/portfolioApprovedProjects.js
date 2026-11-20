@@ -113,7 +113,11 @@ export const APPROVED_PUBLIC_PROJECTS = [
     "coverTone": "agents",
     "engagementType": "freelance_client",
     "engagementLabel": "Technical Lead / Full-Stack & AI Automation Engineer (Freelance)",
-    "relatedSlugs": [],
+    "relatedSlugs": [
+      "retail-flooring-automation-suite",
+      "hubspot-voice-lead-qualification",
+      "erp-bills-entry-automation"
+    ],
     "featured": true,
     "flagshipRank": 1,
     "verificationStatus": "published",

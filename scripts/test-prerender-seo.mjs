@@ -47,10 +47,11 @@ async function main() {
     pathToFileURL(join(root, 'src/data/portfolioApprovedProjects.js')).href
   )
 
+  // Align with prerender-routes.mjs / sitemap: only indexable case studies are emitted.
   const pages = [
     ...seoMod.PUBLIC_SEO_PAGES,
     ...(approvedMod.APPROVED_PUBLIC_PROJECTS || [])
-      .filter((p) => p.publicationApproved === true)
+      .filter((p) => p.publicationApproved === true && p.hasCaseStudy === true && p.slug)
       .map((p) => seoMod.caseStudySeoPage(p)),
   ]
 

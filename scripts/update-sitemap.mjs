@@ -1,12 +1,13 @@
 /**
- * Rebuild public/sitemap.xml from static public routes + publication-approved
- * portfolio pages (aligned with prerender-routes.mjs).
+ * Rebuild public/sitemap.xml from static public routes + full case studies only.
+ * Card-only approved projects appear on /portfolio listing but are not indexed as
+ * /portfolio/{slug} (aligned with prerender-routes.mjs).
  */
 import { writeFileSync } from 'node:fs'
 import { APPROVED_PUBLIC_PROJECTS } from '../src/data/portfolioApprovedProjects.js'
 
 const caseStudies = APPROVED_PUBLIC_PROJECTS.filter(
-  (p) => p.publicationApproved === true && p.slug
+  (p) => p.publicationApproved === true && p.hasCaseStudy === true && p.slug
 ).sort(
   (a, b) =>
     (a.flagshipRank ?? 99) - (b.flagshipRank ?? 99) || a.title.localeCompare(b.title)

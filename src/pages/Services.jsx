@@ -27,6 +27,14 @@ function Section({ children, className = '' }) {
 
 const iconMap = { voice: FiMic, brain: FiCpu, code: FiCode, globe: FiGlobe, workflow: FiZap }
 
+const SERVICE_PORTFOLIO_LINKS = {
+  voice: '/portfolio?category=Voice%20AI',
+  brain: '/portfolio?category=AI%20Agents',
+  code: '/portfolio?category=Full-Stack%20Development',
+  globe: '/portfolio?category=Data%20%26%20Analytics',
+  workflow: '/portfolio?category=Automation',
+}
+
 const gradients = {
   violet:  { card: 'from-violet-500/10  to-dark-900',  badge: 'bg-violet-500/10  border-violet-500/20  text-violet-400',  icon: 'bg-violet-500/15  text-violet-400'  },
   indigo:  { card: 'from-indigo-500/10  to-dark-900',  badge: 'bg-indigo-500/10  border-indigo-500/20  text-indigo-400',  icon: 'bg-indigo-500/15  text-indigo-400'  },
@@ -128,9 +136,17 @@ export default function Services() {
                     <p className="text-slate-400 text-sm leading-relaxed mb-6">
                       {svc.description}
                     </p>
-                    <Link to="/contact" className="btn-primary text-sm">
-                      Get Started <FiArrowRight />
-                    </Link>
+                    <div className="flex flex-wrap gap-3">
+                      <Link to="/contact" className="btn-primary text-sm">
+                        Request a Technical Consultation <FiArrowRight />
+                      </Link>
+                      <Link
+                        to={SERVICE_PORTFOLIO_LINKS[svc.icon] || '/portfolio'}
+                        className="btn-outline text-sm"
+                      >
+                        See related projects
+                      </Link>
+                    </div>
                   </div>
 
                   {/* Right */}

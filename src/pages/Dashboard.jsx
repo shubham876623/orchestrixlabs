@@ -637,7 +637,10 @@ function LoginScreen({ onLogin }) {
   }
 
   return (
-    <div className="min-h-screen bg-dark-950 flex items-center justify-center p-4">
+    <div
+      className="min-h-screen bg-dark-950 flex items-center justify-center p-4"
+      data-clarity-mask="true"
+    >
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
@@ -656,6 +659,7 @@ function LoginScreen({ onLogin }) {
             placeholder="Enter dashboard password"
             className="w-full bg-dark-950 border border-white/[0.1] rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-primary-500/60 transition-colors mb-3"
             autoFocus
+            data-clarity-mask="true"
           />
           {error && <p className="text-rose-400 text-xs mb-3">{error}</p>}
           <button
@@ -1130,17 +1134,23 @@ function VisitorAnalytics({ stats }) {
           <div className="bg-dark-900 border border-white/[0.07] rounded-xl p-4">
             <p className="text-slate-500 text-xs mb-0.5">Today</p>
             <p className="text-white font-bold text-xl">{stats.visits.today}</p>
-            <p className="text-slate-600 text-xs mt-0.5">{stats.visits.unique_today} unique</p>
+            {typeof stats.visits.unique_today === 'number' && (
+              <p className="text-slate-600 text-xs mt-0.5">{stats.visits.unique_today} unique</p>
+            )}
           </div>
           <div className="bg-dark-900 border border-white/[0.07] rounded-xl p-4">
             <p className="text-slate-500 text-xs mb-0.5">This Week</p>
             <p className="text-white font-bold text-xl">{stats.visits.this_week}</p>
-            <p className="text-slate-600 text-xs mt-0.5">{stats.visits.unique_week} unique</p>
+            {typeof stats.visits.unique_week === 'number' && (
+              <p className="text-slate-600 text-xs mt-0.5">{stats.visits.unique_week} unique</p>
+            )}
           </div>
           <div className="bg-dark-900 border border-white/[0.07] rounded-xl p-4">
             <p className="text-slate-500 text-xs mb-0.5">This Month</p>
             <p className="text-white font-bold text-xl">{stats.visits.this_month}</p>
-            <p className="text-slate-600 text-xs mt-0.5">{stats.visits.unique_month} unique</p>
+            {typeof stats.visits.unique_month === 'number' && (
+              <p className="text-slate-600 text-xs mt-0.5">{stats.visits.unique_month} unique</p>
+            )}
           </div>
           <div className="bg-dark-900 border border-white/[0.07] rounded-xl p-4">
             <p className="text-slate-500 text-xs mb-0.5">All Time</p>
@@ -1490,7 +1500,10 @@ export default function Dashboard() {
     : contacts
 
   return (
-    <div className="min-h-screen bg-dark-950 text-white flex">
+    <div
+      className="min-h-screen bg-dark-950 text-white flex"
+      data-clarity-mask="true"
+    >
       {/* Sidebar - Desktop */}
       <aside className="hidden lg:flex flex-col w-60 border-r border-white/[0.06] bg-dark-900/50 fixed inset-y-0 left-0 z-40">
         <div className="p-5 border-b border-white/[0.06]">
@@ -1589,9 +1602,27 @@ export default function Dashboard() {
             <div className="space-y-8">
               {stats ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-                  <StatCard icon={FiEye} label="Total Visits" value={stats.visits.total} color="primary" sub={`${stats.visits.unique_month || 0} unique this month`} />
-                  <StatCard icon={FiTrendingUp} label="This Week" value={stats.visits.this_week} color="emerald" sub={`${stats.visits.unique_week || 0} unique`} />
-                  <StatCard icon={FiUsers} label="Today" value={stats.visits.today} color="amber" sub={`${stats.visits.unique_today || 0} unique`} />
+                  <StatCard
+                    icon={FiEye}
+                    label="Total Visits"
+                    value={stats.visits.total}
+                    color="primary"
+                    sub={typeof stats.visits.unique_month === 'number' ? `${stats.visits.unique_month} unique this month` : 'Consent-gated page views'}
+                  />
+                  <StatCard
+                    icon={FiTrendingUp}
+                    label="This Week"
+                    value={stats.visits.this_week}
+                    color="emerald"
+                    sub={typeof stats.visits.unique_week === 'number' ? `${stats.visits.unique_week} unique` : 'Page views'}
+                  />
+                  <StatCard
+                    icon={FiUsers}
+                    label="Today"
+                    value={stats.visits.today}
+                    color="amber"
+                    sub={typeof stats.visits.unique_today === 'number' ? `${stats.visits.unique_today} unique` : 'Page views'}
+                  />
                   <StatCard icon={FiMail} label="New Leads" value={stats.contacts.unread} color={stats.contacts.unread > 0 ? 'amber' : 'emerald'} sub={stats.contacts.unread > 0 ? 'Needs attention' : 'All caught up'} />
                   <StatCard icon={FiGrid} label="Total Projects" value={stats.projects?.total || 0} color="violet" sub={`${stats.projects?.in_progress || 0} in progress`} />
                 </div>
