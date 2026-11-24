@@ -32,4 +32,13 @@ const prerender = spawnSync(process.execPath, [prerenderScript], {
   stdio: 'inherit',
   shell: false,
 })
-process.exit(prerender.status ?? 1)
+if ((prerender.status ?? 1) !== 0) process.exit(prerender.status ?? 1)
+
+const preloadScript = join(root, 'scripts', 'inject-homepage-preloads.mjs')
+const preload = spawnSync(process.execPath, [preloadScript], {
+  cwd: root,
+  env,
+  stdio: 'inherit',
+  shell: false,
+})
+process.exit(preload.status ?? 1)

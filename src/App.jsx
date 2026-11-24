@@ -7,7 +7,10 @@ import usePageTracking from './hooks/usePageTracking'
 import useClarity from './hooks/useClarity'
 import usePrivateAdminNavigation from './hooks/usePrivateAdminNavigation'
 
-const Home = lazy(() => import('./pages/Home'))
+// Start homepage chunk fetch as soon as App evaluates (overlaps main-bundle parse/exec).
+const homePageImport = () => import('./pages/Home')
+const homePagePromise = homePageImport()
+const Home = lazy(() => homePagePromise)
 const Services = lazy(() => import('./pages/Services'))
 const Portfolio = lazy(() => import('./pages/Portfolio'))
 const PortfolioCaseStudy = lazy(() => import('./pages/PortfolioCaseStudy'))

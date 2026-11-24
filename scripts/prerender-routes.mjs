@@ -53,8 +53,10 @@ function replaceCanonical(html, href) {
 }
 
 function injectRootShell(html, { h1, lead, path }) {
+  // Visually hidden: keeps crawler/no-JS text without painting a layout that React then
+  // replaces (that swap was a major intermittent CLS source in mobile Lighthouse).
   const shell = `
-    <div id="prerender-shell" data-prerender-path="${escapeHtml(path)}">
+    <div id="prerender-shell" class="sr-only" data-prerender-path="${escapeHtml(path)}">
       <header>
         <p>Orchestrix Labs</p>
         <h1>${escapeHtml(h1)}</h1>

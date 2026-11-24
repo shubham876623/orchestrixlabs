@@ -30,6 +30,7 @@ export default function AnalyticsConsentBanner() {
       return
     }
     setConsent(getAnalyticsConsent())
+    // Show immediately; copy stays compact so hero remains the LCP candidate.
     if (!hasAnalyticsConsentDecision()) setOpen(true)
   }, [pathname])
 
@@ -96,9 +97,8 @@ export default function AnalyticsConsentBanner() {
           )}
         </div>
         <p className="text-sm leading-relaxed text-slate-400">
-          With your opt-in, we use Microsoft Clarity (session analytics and heatmaps) and limited first-party
-          page-view analytics on public marketing pages only. Form inputs and the admin dashboard are protected.
-          Declining keeps the site working. See our{' '}
+          With your opt-in, Microsoft Clarity and limited first-party page-view analytics run on public pages
+          only. Decline anytime — see our{' '}
           <Link
             to="/privacy-policy#cookies-analytics"
             className="text-cyan-300 underline-offset-2 hover:text-white hover:underline"
@@ -106,7 +106,7 @@ export default function AnalyticsConsentBanner() {
           >
             Privacy Policy
           </Link>
-          . You can change this choice anytime via Cookie Settings in the footer.
+          .
         </p>
         <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
           <button

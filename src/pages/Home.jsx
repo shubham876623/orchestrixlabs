@@ -7,8 +7,6 @@ import {
 } from 'react-icons/fi'
 import { SiPython, SiDjango, SiFastapi, SiReact, SiOpenai,
          SiDocker, SiPostgresql, SiTailwindcss } from 'react-icons/si'
-import { useState, useEffect } from 'react'
-import api from '../lib/axios'
 import SEOHead from '../components/SEOHead'
 import TrustBar from '../components/TrustBar'
 import FAQSection from '../components/FAQSection'
@@ -70,23 +68,6 @@ const techStack = [
   { icon: SiTailwindcss, label: 'Tailwind' },
 ]
 
-function useSiteStats() {
-  const defaults = { years_experience: SITE.founderExperienceYears, jss_score: 100 }
-  const [s, setS] = useState(defaults)
-  useEffect(() => {
-    api.get('/api/site-stats/').then(r => {
-      if (r.data && typeof r.data === 'object' && !Array.isArray(r.data)) {
-        setS((prev) => ({
-          ...prev,
-          years_experience: SITE.founderExperienceYears,
-          jss_score: r.data.jss_score ?? prev.jss_score,
-        }))
-      }
-    }).catch(() => {})
-  }, [])
-  return s
-}
-
 const fallbackTestimonials = [
   { client_name: 'Verified Upwork Client', client_role: 'AI Framework Development', rating: 5, tags: ['Collaborative', 'Committed to Quality'], quote: 'Love working with Shubham, he\'s the best at what he does and he always tries his best! Thanks Shubham!' },
   { client_name: 'Verified Upwork Client', client_role: 'Qualitative Data Analysis', rating: 5, tags: ['Committed to Quality'], quote: 'Shubham delivered high-quality work on the qualitative analysis project. He had a strong understanding of qualitative research methods, provided well-structured and insightful analysis and ensured that all deliverables were aligned with the project requirements.' },
@@ -96,13 +77,14 @@ const fallbackTestimonials = [
 
 function Hero() {
   const reduceMotion = useReducedMotion()
+  // Keep hero content visible on first paint (opacity never 0) so LCP is not delayed by enter animation.
   const motionProps = (delay) =>
     reduceMotion
       ? { initial: false, animate: { opacity: 1 } }
       : {
-          initial: { opacity: 0, y: 20 },
+          initial: { opacity: 1, y: 12 },
           animate: { opacity: 1, y: 0 },
-          transition: { duration: 0.55, delay },
+          transition: { duration: 0.45, delay },
         }
 
   return (
@@ -111,11 +93,11 @@ function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-dark-950" aria-hidden="true" />
 
       <div className="container relative z-10">
-        <motion.p {...motionProps(0)} className="mb-6 font-display text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300/90">
+        <p className="mb-6 font-display text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300/90">
           {SITE.positioning}
-        </motion.p>
+        </p>
 
-        <motion.div {...motionProps(0.05)} className="mb-7 flex justify-center">
+        <div className="mb-7 flex justify-center">
           <img
             src="/brand/logo-wordmark-dark.svg"
             alt="Orchestrix Labs"
@@ -125,29 +107,24 @@ function Hero() {
             decoding="async"
             fetchPriority="high"
           />
-        </motion.div>
+        </div>
 
-        <motion.h1
-          {...motionProps(0.1)}
-          className="mx-auto mb-5 max-w-4xl font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl"
-        >
+        {/* Static hero copy (no enter animation) so LCP is not gated on Framer Motion hydration. */}
+        <h1 className="mx-auto mb-5 max-w-4xl font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
           <span className="gradient-text block">{SITE.slogan}</span>
           <span className="mt-4 block text-lg font-medium leading-snug text-slate-200 sm:text-xl lg:text-2xl">
             AI systems engineering for operators who need production integrations — not demos alone.
           </span>
-        </motion.h1>
+        </h1>
 
-        <motion.p
-          {...motionProps(0.18)}
-          className="mx-auto mb-10 max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg"
-        >
+        <p className="mx-auto mb-10 max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg">
           Voice AI, CRM automation, field operations, and retrieval systems — delivered with human-reviewed
           controls. Led by {SITE.founder} with {SITE.founderExperienceYears}+ years of professional engineering
           experience.
-        </motion.p>
+        </p>
 
         <motion.div
-          {...motionProps(0.26)}
+          {...motionProps(0.12)}
           className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
         >
           <Link to="/contact" className="btn-primary px-8 py-3.5 text-base">
@@ -377,14 +354,9 @@ function ProcessSection() {
 }
 
 function Testimonials() {
-  const siteStats = useSiteStats()
-  const [testimonials, setTestimonials] = useState(fallbackTestimonials)
-
-  useEffect(() => {
-    api.get('/api/testimonials/').then(r => {
-      if (Array.isArray(r.data) && r.data.length > 0) setTestimonials(r.data)
-    }).catch(() => {})
-  }, [])
+  // Static verified quotes on the homepage avoid post-paint CLS from CMS card swaps.
+  // Live CMS testimonials continue to hydrate on /reviews.
+  const testimonials = fallbackTestimonials
 
   return (
     <Section className="section-shell">
@@ -397,7 +369,7 @@ function Testimonials() {
             Verified founder credentials clients can check
           </motion.h2>
           <motion.p variants={fadeUp} custom={2} className="section-sub mx-auto">
-            Founder Upwork profile: {siteStats.jss_score}% Job Success · Top Rated — separate from company age.
+            Founder Upwork profile: 100% Job Success · Top Rated — separate from company age.
           </motion.p>
         </div>
 
@@ -410,7 +382,7 @@ function Testimonials() {
             <span className="text-sm font-semibold text-white">100% Job Success</span>
           </div>
           <div className="border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-slate-300">
-            <span className="font-semibold text-white">{siteStats.years_experience}+</span> years founder experience
+            <span className="font-semibold text-white">{SITE.founderExperienceYears}+</span> years founder experience
           </div>
         </motion.div>
 

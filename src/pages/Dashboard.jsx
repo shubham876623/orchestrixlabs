@@ -625,14 +625,21 @@ function LoginScreen({ onLogin }) {
   const attempt = async () => {
     setLoading(true)
     setError('')
+    const secret = password.trim()
     try {
       await api.get('/api/dashboard/stats/', {
-        headers: { Authorization: `Bearer ${password}` },
+        headers: { Authorization: `Bearer ${secret}` },
       })
-      localStorage.setItem(STORAGE_KEY, password)
+      localStorage.setItem(STORAGE_KEY, secret)
       onLogin()
-    } catch {
-      setError('Incorrect password.')
+    } catch (err) {
+      if (!err?.response) {
+        setError('Cannot reach the API. Check that the backend is available.')
+      } else if (err.response.status === 401 || err.response.status === 403) {
+        setError('Incorrect password — or this IP is temporarily locked after too many failed attempts. Wait 15 minutes, then retry with DASHBOARD_SECRET from Railway.')
+      } else {
+        setError(`Sign-in failed (${err.response.status}). Try again.`)
+      }
     } finally { setLoading(false) }
   }
 
@@ -1450,21 +1457,58 @@ export default function Dashboard() {
   const [contactTab, setContactTab] = useState('new')
   const [refreshing, setRefreshing] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [loadError, setLoadError] = useState('')
+
+  const forceLogout = useCallback(() => {
+    localStorage.removeItem(STORAGE_KEY)
+    setAuthed(false)
+    setStats(null)
+    setContacts([])
+    setLoadError('')
+  }, [])
 
   const loadAll = useCallback(async () => {
     setRefreshing(true)
-    try {
-      const [s, c] = await Promise.all([
-        api.get('/api/dashboard/stats/', { headers: authHeader() }),
-        api.get('/api/dashboard/contacts/', { headers: authHeader() }),
-      ])
-      setStats(s.data)
-      setContacts(c.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)))
-    } catch {
-      localStorage.removeItem(STORAGE_KEY)
-      setAuthed(false)
-    } finally { setRefreshing(false) }
-  }, [])
+    setLoadError('')
+    const headers = authHeader()
+    const results = await Promise.allSettled([
+      api.get('/api/dashboard/stats/', { headers }),
+      api.get('/api/dashboard/contacts/', { headers }),
+    ])
+
+    const unauthorized = results.some(
+      (r) => r.status === 'rejected' && [401, 403].includes(r.reason?.response?.status),
+    )
+    if (unauthorized) {
+      forceLogout()
+      setRefreshing(false)
+      return
+    }
+
+    const [statsResult, contactsResult] = results
+    const softErrors = []
+
+    if (statsResult.status === 'fulfilled') {
+      setStats(statsResult.value.data)
+    } else {
+      softErrors.push('stats')
+    }
+
+    if (contactsResult.status === 'fulfilled') {
+      const rows = Array.isArray(contactsResult.value.data)
+        ? contactsResult.value.data
+        : []
+      setContacts(rows.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)))
+    } else {
+      softErrors.push('leads')
+    }
+
+    if (softErrors.length) {
+      setLoadError(`Could not load ${softErrors.join(' & ')}. You are still signed in — try Refresh.`)
+    }
+
+    setRefreshing(false)
+  }, [forceLogout])
 
   useEffect(() => {
     if (authed) loadAll()
@@ -1477,10 +1521,7 @@ export default function Dashboard() {
     } catch { /* ignore */ }
   }
 
-  const logout = () => {
-    localStorage.removeItem(STORAGE_KEY)
-    setAuthed(false)
-  }
+  const logout = forceLogout
 
   if (!authed) return <LoginScreen onLogin={() => setAuthed(true)} />
 
@@ -1597,6 +1638,12 @@ export default function Dashboard() {
         </header>
 
         <main className="p-4 sm:p-6 lg:p-8 max-w-6xl">
+          {loadError && (
+            <div className="mb-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-amber-200 text-sm flex items-center justify-between gap-3">
+              <span>{loadError}</span>
+              <button onClick={loadAll} className="shrink-0 text-amber-100 underline text-xs">Retry</button>
+            </div>
+          )}
           {/* ── Overview Page ── */}
           {page === 'overview' && (
             <div className="space-y-8">

@@ -24,12 +24,14 @@ export default defineConfig(() => {
     },
     server: {
       proxy: {
-        // Local default so staff session cookies stay same-origin via Vite.
-        // Override with VITE_PROXY_API if you need a remote API during local UI work.
+        // Same-origin /api via Vite. Default to Railway so /dashboard works without local Django.
+        // For a local backend: set VITE_PROXY_API=http://127.0.0.1:8000
         '/api': {
-          target: process.env.VITE_PROXY_API || 'http://127.0.0.1:8000',
+          target:
+            process.env.VITE_PROXY_API ||
+            'https://orchestrixlabsbackend-production.up.railway.app',
           changeOrigin: true,
-          secure: false,
+          secure: true,
         },
       },
     },
