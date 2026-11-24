@@ -145,23 +145,17 @@ export default function Portfolio() {
 
       <DraftPreviewBanner />
 
-      <section className="relative overflow-hidden pb-8 pt-28 sm:pb-10 sm:pt-32">
-        <div className="absolute inset-0 hero-gradient grid-pattern opacity-40 dark:opacity-70" aria-hidden="true" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-50/40 to-slate-50 dark:via-transparent dark:to-dark-950" aria-hidden="true" />
-        <div className="container relative z-10">
-          <motion.p {...fade(0)} className="mb-3 font-display text-xs font-semibold uppercase tracking-[0.22em] text-cyan-800 dark:text-cyan-300/80">
-            Orchestrix Labs · Portfolio
-          </motion.p>
+      <section className="border-b border-line pb-10 pt-28 sm:pb-12 sm:pt-32">
+        <div className="container">
           <motion.h1
             {...fade(0.04)}
-            className="max-w-3xl font-display text-[2rem] font-semibold leading-[1.12] text-slate-900 dark:text-white sm:text-5xl lg:text-[3.25rem]"
+            className="max-w-3xl font-display text-[2rem] font-semibold leading-[1.12] text-white sm:text-5xl"
           >
-            Engineering case studies for{' '}
-            <span className="gradient-text">AI systems that ship</span>
+            Engineering case studies for AI systems that ship
           </motion.h1>
           <motion.p
             {...fade(0.08)}
-            className="mt-4 max-w-2xl text-base leading-relaxed text-slate-600 dark:text-slate-400 sm:mt-5 sm:text-lg"
+            className="mt-4 max-w-2xl text-base leading-relaxed text-copy sm:mt-5 sm:text-lg"
           >
             {allCards.length} curated engagements across voice AI, agents, automation, SaaS, CRM, and data systems —
             including {caseStudyCount} full case studies. Nothing is published without editorial approval.
@@ -177,17 +171,17 @@ export default function Portfolio() {
 
           <motion.div
             {...fade(0.16)}
-            className="mt-8 flex flex-wrap gap-x-6 gap-y-2 border-t border-slate-200/80 pt-5 text-sm text-slate-600 dark:border-white/10 dark:text-slate-400"
+            className="mt-8 flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-5 text-sm text-mute"
           >
             <p>
-              <span className="font-semibold text-slate-900 dark:text-white">Founder credentials</span>
+              <span className="font-semibold text-white">Founder credentials</span>
               {' '}({SITE.founder}) — Top Rated on Upwork · {STATS.jss} Job Success · {SITE.founderExperienceYears}+ years engineering experience
             </p>
             <a
               href={SOCIAL.upwork}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-cyan-800 underline-offset-2 hover:underline dark:text-cyan-300"
+              className="font-medium text-cyan-300 underline-offset-2 hover:underline"
             >
               Upwork profile
             </a>
@@ -196,46 +190,26 @@ export default function Portfolio() {
       </section>
 
       {featured.length > 0 && (
-        <section className="border-b border-slate-200/80 py-10 dark:border-white/[0.06] sm:py-14">
+        <section className="border-b border-line py-8 sm:py-10">
           <div className="container">
-            <div className="mb-7 flex flex-wrap items-end justify-between gap-3">
-              <div>
-                <p className="font-display text-xs font-semibold uppercase tracking-[0.2em] text-cyan-800 dark:text-cyan-300/80">
-                  Featured case studies
-                </p>
-                <h2 className="mt-2 font-display text-2xl font-semibold text-slate-900 dark:text-white sm:text-3xl">
-                  Flagship work international teams can inspect
-                </h2>
-              </div>
+            <div className="mb-2 flex flex-wrap items-end justify-between gap-3">
+              <h2 className="font-display text-xl font-semibold text-white">Featured case study</h2>
               <button
                 type="button"
-                className="text-sm font-semibold text-cyan-800 dark:text-cyan-300"
+                className="text-sm font-semibold text-cyan-300 hover:text-cyan-200"
                 onClick={() => setDepth('case-studies')}
               >
                 View all case studies
               </button>
             </div>
-            <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-              {featured.map((project, i) => (
-                <motion.div
-                  key={project.id}
-                  {...(reduceMotion
-                    ? { initial: false }
-                    : {
-                        initial: { opacity: 0, y: 14 },
-                        animate: { opacity: 1, y: 0 },
-                        transition: { delay: Math.min(i * 0.04, 0.24), duration: 0.3 },
-                      })}
-                >
-                  <ProjectCard project={{ ...project, hasCaseStudy: true }} variant={i === 0 ? 'featured' : 'grid'} />
-                </motion.div>
-              ))}
+            <div className="border-t border-line">
+              <ProjectCard project={{ ...featured[0], hasCaseStudy: true }} variant="row" />
             </div>
           </div>
         </section>
       )}
 
-      <section className="sticky top-[4.25rem] z-30 border-y border-slate-200/80 bg-white/95 py-4 backdrop-blur-xl dark:border-white/[0.06] dark:bg-dark-950/95">
+      <section className="sticky top-[4.25rem] z-30 border-b border-line bg-ink py-4">
         <div className="container space-y-4">
           <div className="flex flex-wrap items-end justify-between gap-2">
             <div>
@@ -321,7 +295,7 @@ export default function Portfolio() {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2 xl:grid-cols-3">
+              <div className="flex flex-col border-t border-line">
                 {paged.map((project, i) => (
                   <motion.div
                     key={project.id}
@@ -333,7 +307,7 @@ export default function Portfolio() {
                           transition: { delay: Math.min(i * 0.03, 0.2), duration: 0.3 },
                         })}
                   >
-                    <ProjectCard project={project} />
+                    <ProjectCard project={project} variant="row" />
                   </motion.div>
                 ))}
               </div>

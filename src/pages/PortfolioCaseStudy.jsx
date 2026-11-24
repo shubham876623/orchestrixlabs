@@ -26,12 +26,12 @@ function Section({ title, children, id }) {
   return (
     <section
       id={id}
-      className="border border-slate-200/90 bg-white p-6 dark:border-white/[0.08] dark:bg-dark-900/60 sm:p-8"
+      className="scroll-mt-28 border-t border-line py-8 first:border-t-0 first:pt-0"
     >
-      <h2 className="font-display text-xl font-semibold tracking-tight text-slate-900 dark:text-white">
+      <h2 className="font-display text-xl font-semibold tracking-tight text-white">
         {title}
       </h2>
-      <div className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300 sm:text-base">
+      <div className="mt-3 text-sm leading-relaxed text-copy sm:text-base">
         {children}
       </div>
     </section>
@@ -244,22 +244,23 @@ export default function PortfolioCaseStudy() {
           </section>
         ) : (
           <>
-            <nav
-              aria-label="Case study sections"
-              className="container mt-8 flex gap-2 overflow-x-auto pb-1 scrollbar-hide"
-            >
-              {CASE_NAV.map((item) => (
-                <a
-                  key={item.id}
-                  href={`#${item.id}`}
-                  className="shrink-0 border border-slate-200 bg-white px-3 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-slate-600 transition-colors hover:border-cyan-500/40 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-300 dark:hover:text-white"
-                >
-                  {item.label}
-                </a>
-              ))}
-            </nav>
-            <section className="container mt-6 grid gap-6 lg:grid-cols-[1fr_0.9fr]">
-              <div className="space-y-6">
+            <div className="container mt-8 gap-10 lg:grid lg:grid-cols-[12rem_1fr]">
+              <nav
+                aria-label="Case study sections"
+                className="flex gap-4 overflow-x-auto border-b border-line pb-3 scrollbar-hide lg:sticky lg:top-28 lg:flex-col lg:gap-1 lg:self-start lg:overflow-visible lg:border-b-0 lg:border-l lg:pb-0"
+              >
+                {CASE_NAV.map((item) => (
+                  <a
+                    key={item.id}
+                    href={`#${item.id}`}
+                    className="shrink-0 py-1 text-sm text-mute transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 lg:-ml-px lg:border-l lg:border-transparent lg:py-1.5 lg:pl-4 lg:hover:border-cyan-300"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </nav>
+              <section className="mt-6 grid gap-10 lg:mt-0 lg:grid-cols-[1fr_0.7fr]">
+              <div>
                 <Section title="Business challenge" id="business-challenge">
                   <p>{project.businessChallenge || project.summary}</p>
                 </Section>
@@ -339,7 +340,7 @@ export default function PortfolioCaseStudy() {
                 )}
               </div>
 
-              <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
+              <aside className="lg:self-start">
                 <Section title="Technologies" id="technologies">
                   {project.techConflictNote && (
                     <p className="text-sm leading-relaxed text-amber-800 dark:text-amber-200/90">
@@ -407,7 +408,8 @@ export default function PortfolioCaseStudy() {
                   href={`/contact?ref=${project.slug}`}
                 />
               </aside>
-            </section>
+              </section>
+            </div>
           </>
         )}
 
@@ -429,9 +431,9 @@ export default function PortfolioCaseStudy() {
                 Browse full portfolio
               </Link>
             </div>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+            <div className="flex flex-col border-t border-line">
               {related.map((p) => (
-                <ProjectCard key={p.id} project={{ ...p, hasCaseStudy: p.hasCaseStudy === true }} />
+                <ProjectCard key={p.id} variant="row" project={{ ...p, hasCaseStudy: p.hasCaseStudy === true }} />
               ))}
             </div>
           </section>

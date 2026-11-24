@@ -12,6 +12,57 @@ export default function ProjectCard({ project, variant = 'grid' }) {
   const isDemo = project.demoOnly || /interactive sales demo/i.test(project.title || '')
   const featured = variant === 'featured'
 
+  if (variant === 'row') {
+    return (
+      <article className="group border-b border-line py-6 sm:py-7">
+        <div className="grid gap-4 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.6fr)_auto] md:items-start md:gap-8">
+          <div>
+            <p className="mb-2 text-xs text-mute">
+              {project.primaryCategory} · {hasCaseStudy ? 'Case study' : 'Engagement summary'}
+              {isDemo ? ' · Interactive demo' : ''}
+              {project.flagshipRank === 1 ? ' · Flagship' : ''}
+            </p>
+            <h3 className="font-display text-lg font-semibold leading-snug text-white">
+              <Link
+                to={detailTo}
+                aria-label={`${detailLabel}: ${project.title}`}
+                className="transition-colors hover:text-cyan-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+              >
+                {project.title}
+              </Link>
+            </h3>
+          </div>
+
+          <div>
+            <p className="line-clamp-3 text-sm leading-relaxed text-copy">{project.summary}</p>
+            {techPreview.length > 0 && (
+              <ul className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs text-mute" aria-label="Technologies">
+                {techPreview.map((t) => (
+                  <li key={t}>{t}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 md:flex-col md:items-end md:gap-1">
+            <Link
+              to={detailTo}
+              className="inline-flex min-h-[44px] items-center gap-2 text-sm font-semibold text-cyan-300 transition-colors hover:text-cyan-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+            >
+              {detailLabel} <FiArrowUpRight size={16} aria-hidden="true" />
+            </Link>
+            <Link
+              to={consultTo}
+              className="inline-flex min-h-[44px] items-center text-sm text-mute transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+            >
+              {consultLabel}
+            </Link>
+          </div>
+        </div>
+      </article>
+    )
+  }
+
   return (
     <article
       className={[

@@ -45,6 +45,20 @@ must(order.every((v, i) => v !== -1 && (i === 0 || v > order[i - 1])), 'Home sec
 
 const cta = fs.readFileSync(path.join(root, 'src/components/ConsultationCTA.jsx'), 'utf8')
 must(!cta.includes('cta-panel') && cta.includes('border-line') && cta.includes('bg-panel'), 'ConsultationCTA uses quiet border-line bg-panel panel')
+const portfolio = fs.readFileSync(path.join(root, 'src/pages/Portfolio.jsx'), 'utf8')
+must(!portfolio.includes('xl:grid-cols-3'), 'Portfolio index must not use 3-column card grid as primary')
+must(portfolio.includes('variant="row"') || portfolio.includes("variant='row'") || portfolio.includes('work-log'), 'Portfolio uses row/work-log presentation')
+must(!portfolio.includes('hero-gradient') && !portfolio.includes('grid-pattern') && !portfolio.includes('gradient-text'), 'Portfolio hero drops gradient/grid-pattern theater')
+must(portfolio.includes('CategoryTabs') && portfolio.includes('setCategory'), 'Portfolio keeps category filters')
+const card = fs.readFileSync(path.join(root, 'src/components/portfolio/ProjectCard.jsx'), 'utf8')
+must(card.includes("variant === 'row'") && card.includes('border-line'), 'ProjectCard supports row variant with border-line')
+must(card.includes('/portfolio/${project.slug}') && card.includes('/contact?ref='), 'ProjectCard keeps case-study vs contact link logic')
+const caseStudy = fs.readFileSync(path.join(root, 'src/pages/PortfolioCaseStudy.jsx'), 'utf8')
+must(caseStudy.includes('lg:grid-cols-[12rem_1fr]'), 'Case study uses 12rem TOC rail grid on lg')
+must(caseStudy.includes('lg:sticky') && caseStudy.includes('Case study sections'), 'Case study has sticky TOC nav')
+const sectionFn = caseStudy.slice(caseStudy.indexOf('function Section'), caseStudy.indexOf('function PendingBlock'))
+must(sectionFn.includes('border-line') && !/bg-white|bg-dark|rounded|shadow/.test(sectionFn), 'Case study Section uses hairline rule, not a glass/white card')
+
 if (failures.length) {
   console.error('FAIL\n' + failures.map(f => ' - ' + f).join('\n'))
   process.exit(1)
