@@ -16,14 +16,6 @@ const fallbackTestimonials = [
   { client_name: 'Verified Upwork Client', client_role: 'AI & Full-Stack Development', rating: 5, quote: 'Experienced coder for AI related projects offering full stack development, great communicator and cooperator.' },
 ]
 
-const SERVICE_PORTFOLIO_LINKS = {
-  voice: '/portfolio?category=Voice%20AI',
-  brain: '/portfolio?category=AI%20Agents',
-  code: '/portfolio?category=Full-Stack%20Development',
-  globe: '/portfolio?category=Data%20%26%20Analytics',
-  workflow: '/portfolio?category=Automation',
-}
-
 function Hero() {
   return (
     <section className="flex min-h-[88vh] flex-col justify-center border-b border-line pb-16 pt-28 sm:pt-32">
@@ -78,7 +70,7 @@ function ServicesPreview() {
           {services.map((svc) => (
             <li key={svc.id} className="border-t border-line">
               <Link
-                to={SERVICE_PORTFOLIO_LINKS[svc.icon] || '/portfolio'}
+                to="/services"
                 className="group grid gap-2 py-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 md:grid-cols-[18rem_1fr_auto] md:items-baseline md:gap-8"
               >
                 <h3 className="text-lg font-semibold text-white group-hover:text-cyan-200">{svc.title}</h3>
