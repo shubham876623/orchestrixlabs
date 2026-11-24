@@ -627,9 +627,13 @@ function LoginScreen({ onLogin }) {
     setError('')
     const secret = password.trim()
     try {
-      await api.get('/api/dashboard/stats/', {
+      const r = await api.get('/api/dashboard/stats/', {
         headers: { Authorization: `Bearer ${secret}` },
       })
+      if (!r?.data || typeof r.data !== 'object' || Array.isArray(r.data) || !r.data.visits) {
+        setError('API did not return dashboard data. The site proxy may be misconfigured — try again after redeploy.')
+        return
+      }
       localStorage.setItem(STORAGE_KEY, secret)
       onLogin()
     } catch (err) {
@@ -637,6 +641,8 @@ function LoginScreen({ onLogin }) {
         setError('Cannot reach the API. Check that the backend is available.')
       } else if (err.response.status === 401 || err.response.status === 403) {
         setError('Incorrect password — or this IP is temporarily locked after too many failed attempts. Wait 15 minutes, then retry with DASHBOARD_SECRET from Railway.')
+      } else if (err.response.status === 502) {
+        setError('API proxy is down (HTML instead of JSON). Wait for redeploy, then hard-refresh.')
       } else {
         setError(`Sign-in failed (${err.response.status}). Try again.`)
       }
@@ -1489,7 +1495,12 @@ export default function Dashboard() {
     const softErrors = []
 
     if (statsResult.status === 'fulfilled') {
-      setStats(statsResult.value.data)
+      const data = statsResult.value.data
+      if (data && typeof data === 'object' && !Array.isArray(data) && data.visits) {
+        setStats(data)
+      } else {
+        softErrors.push('stats')
+      }
     } else {
       softErrors.push('stats')
     }
@@ -1647,7 +1658,7 @@ export default function Dashboard() {
           {/* ── Overview Page ── */}
           {page === 'overview' && (
             <div className="space-y-8">
-              {stats ? (
+              {stats?.visits ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                   <StatCard
                     icon={FiEye}
@@ -1670,7 +1681,7 @@ export default function Dashboard() {
                     color="amber"
                     sub={typeof stats.visits.unique_today === 'number' ? `${stats.visits.unique_today} unique` : 'Page views'}
                   />
-                  <StatCard icon={FiMail} label="New Leads" value={stats.contacts.unread} color={stats.contacts.unread > 0 ? 'amber' : 'emerald'} sub={stats.contacts.unread > 0 ? 'Needs attention' : 'All caught up'} />
+                  <StatCard icon={FiMail} label="New Leads" value={stats.contacts?.unread} color={(stats.contacts?.unread || 0) > 0 ? 'amber' : 'emerald'} sub={(stats.contacts?.unread || 0) > 0 ? 'Needs attention' : 'All caught up'} />
                   <StatCard icon={FiGrid} label="Total Projects" value={stats.projects?.total || 0} color="violet" sub={`${stats.projects?.in_progress || 0} in progress`} />
                 </div>
               ) : (
@@ -1680,10 +1691,10 @@ export default function Dashboard() {
               )}
 
               {/* Daily Views Chart + Top Pages side by side */}
-              {stats && (
+              {stats?.visits && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {/* Daily views bar chart */}
-                  {stats.visits.daily.length > 0 && (
+                  {(stats.visits.daily?.length || 0) > 0 && (
                     <div className="bg-dark-900 border border-white/[0.07] rounded-2xl p-6">
                       <h3 className="text-white font-semibold text-base mb-4 flex items-center gap-2">
                         <FiTrendingUp size={16} className="text-emerald-400" /> Daily Views (Last 7 Days)
@@ -1706,7 +1717,7 @@ export default function Dashboard() {
                   )}
 
                   {/* Top Pages */}
-                  {stats.top_pages.length > 0 && (
+                  {(stats.top_pages?.length || 0) > 0 && (
                     <div className="bg-dark-900 border border-white/[0.07] rounded-2xl p-6">
                       <h3 className="text-white font-semibold text-base mb-4 flex items-center gap-2">
                         <FiEye size={16} className="text-primary-400" /> Top Pages
