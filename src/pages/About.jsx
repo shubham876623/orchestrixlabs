@@ -80,12 +80,10 @@ export default function About() {
 
       {/* Hero */}
       <section className="relative pt-36 pb-20 overflow-hidden">
-        <div className="absolute inset-0 hero-gradient grid-pattern" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-dark-950" />
         <div className="container relative z-10">
           <motion.span
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            className="section-tag mb-5 inline-flex"
+            className="section-tag mb-5"
           >
             About Us
           </motion.span>
@@ -115,7 +113,7 @@ export default function About() {
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
-              <motion.span variants={fadeUp} custom={0} className="section-tag mb-5 inline-flex">Our Story</motion.span>
+              <motion.span variants={fadeUp} custom={0} className="section-tag mb-5">Our Story</motion.span>
               <motion.h2 variants={fadeUp} custom={1} className="text-3xl font-black text-white mb-6">
                 Purpose-built for<br /><span className="gradient-text">the AI era</span>
               </motion.h2>
@@ -162,7 +160,7 @@ export default function About() {
       <Section className="py-20 bg-dark-900/40">
         <div className="container">
           <div className="text-center mb-14">
-            <motion.span variants={fadeUp} custom={0} className="section-tag mb-4 inline-flex">Our Values</motion.span>
+            <motion.span variants={fadeUp} custom={0} className="section-tag mb-4">Our Values</motion.span>
             <motion.h2 variants={fadeUp} custom={1} className="section-heading">
               How we <span className="gradient-text">operate</span>
             </motion.h2>
@@ -187,7 +185,7 @@ export default function About() {
       <Section className="py-20">
         <div className="container">
           <div className="text-center mb-14">
-            <motion.span variants={fadeUp} custom={0} className="section-tag mb-4 inline-flex">Expertise</motion.span>
+            <motion.span variants={fadeUp} custom={0} className="section-tag mb-4">Expertise</motion.span>
             <motion.h2 variants={fadeUp} custom={1} className="section-heading">
               Deep skills across the<br /><span className="gradient-text">full AI stack</span>
             </motion.h2>
@@ -223,7 +221,7 @@ export default function About() {
       <Section className="py-20 bg-dark-900/40">
         <div className="container">
           <div className="text-center mb-12">
-            <motion.span variants={fadeUp} custom={0} className="section-tag mb-4 inline-flex">Tech Stack</motion.span>
+            <motion.span variants={fadeUp} custom={0} className="section-tag mb-4">Tech Stack</motion.span>
             <motion.h2 variants={fadeUp} custom={1} className="section-heading">
               Our <span className="gradient-text">toolbox</span>
             </motion.h2>

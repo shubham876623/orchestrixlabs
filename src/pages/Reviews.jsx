@@ -94,17 +94,13 @@ export default function Reviews() {
 
       {/* Hero */}
       <section className="relative pt-32 pb-16 text-center overflow-hidden">
-        <div className="absolute inset-0 hero-gradient grid-pattern" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-dark-950" />
-        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-primary-500/8 rounded-full blur-3xl animate-pulse-slow" />
-        <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-secondary-500/8 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }} />
 
         <div className="container relative z-10">
           <motion.span
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
-            className="section-tag mb-5 inline-flex"
+            className="section-tag mb-5"
           >
             Client Reviews
           </motion.span>

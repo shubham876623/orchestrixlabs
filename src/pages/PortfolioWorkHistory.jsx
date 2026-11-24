@@ -536,10 +536,8 @@ export default function PortfolioWorkHistory() {
 
       {/* Hero */}
       <section className="relative pt-36 pb-16 text-center overflow-hidden">
-        <div className="absolute inset-0 hero-gradient grid-pattern" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-dark-950" />
         <div className="container relative z-10">
-          <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="section-tag mb-5 inline-flex">
+          <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="section-tag mb-5">
             Work History Archive
           </motion.span>
           <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="section-heading mb-5">

@@ -58,10 +58,8 @@ export default function PrivacyPolicy() {
       />
 
       <section className="relative overflow-hidden pt-36 pb-12">
-        <div className="absolute inset-0 hero-gradient grid-pattern" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-dark-950" />
         <div className="container relative z-10">
-          <p className="section-tag mb-5 inline-flex">Legal</p>
+          <p className="section-tag mb-5">Legal</p>
           <h1 className="section-heading mb-4 max-w-3xl">Privacy Policy</h1>
           <p className="max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg">
             This Privacy Policy explains how Orchestrix Labs handles personal information when you visit
