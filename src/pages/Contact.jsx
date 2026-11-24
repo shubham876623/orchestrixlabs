@@ -132,7 +132,7 @@ export default function Contact() {
   }
 
   const inputClass = (field) =>
-    `w-full bg-white/[0.03] border ${errors[field] ? 'border-red-500/50' : 'border-white/[0.08]'} rounded-xl px-4 py-3 text-white placeholder-slate-600 text-sm outline-none focus:border-primary-500/60 focus:bg-primary-500/5 transition-all duration-200`
+    `w-full bg-ink border ${errors[field] ? 'border-red-500/50' : 'border-line'} rounded-md px-4 py-3 text-white placeholder-slate-600 text-sm outline-none focus:border-primary-500 transition-colors duration-200`
 
   return (
     <>
@@ -146,25 +146,23 @@ export default function Contact() {
         ]}
       />
 
-      <section className="relative pt-36 pb-16 text-center overflow-hidden">
-        <div className="absolute inset-0 hero-gradient grid-pattern noise" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-dark-950" />
-        <div className="container relative z-10">
+      <section className="pt-36 pb-10">
+        <div className="container">
           <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="section-tag mb-5 inline-flex">
             Consultation
           </motion.span>
           <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="section-heading mb-4">
-            Tell us what you need to<br /><span className="gradient-text">ship next</span>
+            Tell us what you need to ship next
           </motion.h1>
-          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="section-sub mx-auto">
-            Share a short brief. We reply within {SITE.responseTime} with an honest assessment and a practical next step.
+          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="section-sub">
+            Share a short brief. We reply within {SITE.responseTime} with an assessment and a practical next step.
           </motion.p>
           {refProject && (
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.28 }}
-              className="mx-auto mt-5 max-w-xl border border-cyan-500/20 bg-cyan-500/10 px-4 py-3 text-sm text-cyan-100"
+              className="mt-5 max-w-xl border border-line bg-panel rounded-md px-4 py-3 text-sm text-copy"
             >
               Context from portfolio: <span className="font-semibold">{refProject.title}</span>
             </motion.p>
@@ -177,7 +175,7 @@ export default function Contact() {
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
 
             <div className="lg:col-span-3">
-              <motion.div variants={fadeUp} custom={0} className="card p-8">
+              <motion.div variants={fadeUp} custom={0} className="bg-panel border border-line rounded-md p-6">
                 {status === 'success' ? (
                   <div className="text-center py-12 px-2">
                     <div className="w-16 h-16 rounded-full bg-emerald-500/15 flex items-center justify-center mx-auto mb-4">
@@ -332,13 +330,13 @@ export default function Contact() {
             </div>
 
             <div className="lg:col-span-2 space-y-5">
-              <motion.div variants={fadeUp} custom={1} className="card p-6">
+              <motion.div variants={fadeUp} custom={1} className="bg-panel border border-line rounded-md p-6">
                 <h3 className="text-white font-bold text-base mb-5">Get in touch</h3>
                 <div className="space-y-4">
                   {contactInfo.map(({ icon: Icon, label, value, href }) => {
                     const inner = (
                       <>
-                        <div className="w-9 h-9 rounded-lg bg-primary-500/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary-500/20 transition-colors">
+                        <div className="w-9 h-9 rounded-md border border-line flex items-center justify-center flex-shrink-0">
                           <Icon className="text-primary-400" size={16} />
                         </div>
                         <div>
@@ -360,18 +358,18 @@ export default function Contact() {
                 </div>
               </motion.div>
 
-              <motion.div variants={fadeUp} custom={2} className="card p-6 bg-gradient-to-br from-primary-500/10 to-dark-900 border-primary-500/20">
+              <motion.div variants={fadeUp} custom={2} className="bg-panel border border-line rounded-md p-6">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
                   <span className="text-emerald-400 text-xs font-semibold">Quick Response</span>
                 </div>
-                <p className="text-white font-semibold text-base mb-1">{SITE.responseTime} response guaranteed</p>
+                <p className="text-white font-semibold text-base mb-1">{SITE.responseTime} typical response</p>
                 <p className="text-slate-400 text-sm leading-relaxed">
                   We review every message personally and always respond with a clear, honest assessment — no auto-replies.
                 </p>
               </motion.div>
 
-              <motion.div variants={fadeUp} custom={3} className="card p-6">
+              <motion.div variants={fadeUp} custom={3} className="bg-panel border border-line rounded-md p-6">
                 <h3 className="text-white font-bold text-sm mb-4">What happens next?</h3>
                 <ol className="space-y-3">
                   {[
@@ -381,7 +379,7 @@ export default function Contact() {
                     'We start building',
                   ].map((step, i) => (
                     <li key={step} className="flex items-start gap-3">
-                      <span className="w-5 h-5 rounded-full bg-primary-500/20 text-primary-400 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="w-5 h-5 rounded-md border border-line text-mute text-xs font-semibold flex items-center justify-center flex-shrink-0 mt-0.5">
                         {i + 1}
                       </span>
                       <span className="text-slate-400 text-sm">{step}</span>

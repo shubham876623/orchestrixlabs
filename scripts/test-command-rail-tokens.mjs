@@ -59,6 +59,17 @@ must(caseStudy.includes('lg:sticky') && caseStudy.includes('Case study sections'
 const sectionFn = caseStudy.slice(caseStudy.indexOf('function Section'), caseStudy.indexOf('function PendingBlock'))
 must(sectionFn.includes('border-line') && !/bg-white|bg-dark|rounded|shadow/.test(sectionFn), 'Case study Section uses hairline rule, not a glass/white card')
 
+const services = fs.readFileSync(path.join(root, 'src/pages/Services.jsx'), 'utf8')
+must(services.includes('/contact') && /Discuss this/.test(services), 'Services links to contact with "Discuss this"')
+must(!/xl:grid-cols-3/.test(services), 'Services avoids 3-column icon mosaic as primary layout')
+must(services.includes('border-t border-line'), 'Services blocks use border-t border-line')
+must(/Problem/.test(services) && /What we build/.test(services) && /Fit/.test(services), 'Services blocks have Problem / What we build / Fit subheads')
+must(!/gradients\b|iconMap|react-icons|rounded-3xl|gradient-text|hero-gradient|grid-pattern|glass/.test(services), 'Services drops icon grid, gradients, glass')
+const contact = fs.readFileSync(path.join(root, 'src/pages/Contact.jsx'), 'utf8')
+must(contact.includes('bg-panel border border-line'), 'Contact form wrapper uses bg-panel border border-line')
+must(!/hero-gradient|grid-pattern|gradient-text|from-primary-500\/10|bg-gradient-to-br/.test(contact), 'Contact has no decorative gradient panels')
+must(contact.includes('btn-primary'), 'Contact submit uses btn-primary')
+
 if (failures.length) {
   console.error('FAIL\n' + failures.map(f => ' - ' + f).join('\n'))
   process.exit(1)

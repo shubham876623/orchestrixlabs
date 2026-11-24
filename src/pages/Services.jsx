@@ -1,31 +1,9 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
-import { useInView } from 'react-intersection-observer'
-import { FiArrowRight, FiCheck, FiMic, FiCpu, FiCode, FiGlobe, FiZap } from 'react-icons/fi'
 import SEOHead from '../components/SEOHead'
 import api from '../lib/axios'
 import { services, process } from '../data/services'
 import { getSeoPage } from '../lib/seoPages'
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: (i = 0) => ({
-    opacity: 1, y: 0,
-    transition: { duration: 0.5, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] },
-  }),
-}
-
-function Section({ children, className = '' }) {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.08 })
-  return (
-    <motion.section ref={ref} initial="hidden" animate={inView ? 'visible' : 'hidden'} className={className}>
-      {children}
-    </motion.section>
-  )
-}
-
-const iconMap = { voice: FiMic, brain: FiCpu, code: FiCode, globe: FiGlobe, workflow: FiZap }
 
 const SERVICE_PORTFOLIO_LINKS = {
   voice: '/portfolio?category=Voice%20AI',
@@ -35,14 +13,6 @@ const SERVICE_PORTFOLIO_LINKS = {
   workflow: '/portfolio?category=Automation',
 }
 
-const gradients = {
-  violet:  { card: 'from-violet-500/10  to-dark-900',  badge: 'bg-violet-500/10  border-violet-500/20  text-violet-400',  icon: 'bg-violet-500/15  text-violet-400'  },
-  indigo:  { card: 'from-indigo-500/10  to-dark-900',  badge: 'bg-indigo-500/10  border-indigo-500/20  text-indigo-400',  icon: 'bg-indigo-500/15  text-indigo-400'  },
-  cyan:    { card: 'from-cyan-500/10    to-dark-900',  badge: 'bg-cyan-500/10    border-cyan-500/20    text-cyan-400',    icon: 'bg-cyan-500/15    text-cyan-400'    },
-  emerald: { card: 'from-emerald-500/10 to-dark-900',  badge: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400', icon: 'bg-emerald-500/15 text-emerald-400' },
-  orange:  { card: 'from-orange-500/10  to-dark-900',  badge: 'bg-orange-500/10  border-orange-500/20  text-orange-400',  icon: 'bg-orange-500/15  text-orange-400'  },
-}
-
 const fallbackFaq = [
   { question: 'How long does a typical project take?', answer: 'Depends on scope — automation bots take 1–2 weeks, voice AI systems 2–4 weeks, full-stack platforms 4–8 weeks. You\'ll get a detailed estimate before we start.' },
   { question: 'Do you work on fixed-price or hourly contracts?', answer: 'Both. For well-defined projects, fixed-price works great. For evolving or research-heavy work, hourly with weekly milestones keeps things transparent.' },
@@ -50,6 +20,10 @@ const fallbackFaq = [
   { question: 'Do you provide post-launch support?', answer: 'Yes. We offer bug fixes, feature additions, and maintenance. Most projects include a free 2-week post-launch support window.' },
   { question: 'Can you work with our existing codebase?', answer: 'Absolutely. We\'ve migrated legacy systems, added features to existing apps, and extended third-party platforms. We always read the code before touching it.' },
 ]
+
+function Label({ children }) {
+  return <h3 className="text-mute text-xs font-medium mb-3">{children}</h3>
+}
 
 export default function Services() {
   const { hash } = useLocation()
@@ -79,164 +53,96 @@ export default function Services() {
         ]}
       />
 
-      {/* Hero */}
-      <section className="relative pt-36 pb-20 text-center overflow-hidden">
-        <div className="absolute inset-0 hero-gradient grid-pattern" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-dark-950" />
-        <div className="container relative z-10">
-          <motion.span
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-            className="section-tag mb-5 inline-flex"
-          >
-            Our Services
-          </motion.span>
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, delay: 0.1 }}
-            className="section-heading mb-5"
-          >
-            Capabilities that turn operations into<br />
-            <span className="gradient-text">dependable software systems</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }}
-            className="section-sub mx-auto"
-          >
+      <section className="pt-36 pb-14">
+        <div className="container">
+          <h1 className="section-heading mb-5">Services</h1>
+          <p className="section-sub">
             Voice AI, automation, custom platforms, and integrations—scoped for real business
-            constraints, delivered with clear milestones and production-minded engineering.
-          </motion.p>
+            constraints and delivered with clear milestones.
+          </p>
         </div>
       </section>
 
-      {/* Service Cards */}
-      <Section className="py-20">
-        <div className="container space-y-8">
-          {services.map((svc, i) => {
-            const Icon = iconMap[svc.icon]
-            const g = gradients[svc.accent]
-            return (
-              <motion.div
-                key={svc.id}
-                id={svc.id}
-                custom={i}
-                variants={fadeUp}
-                className={`relative rounded-3xl bg-gradient-to-br ${g.card} border border-white/[0.07] p-8 lg:p-10 hover:border-white/[0.12] transition-all duration-300`}
-              >
-                <div className="flex flex-col lg:flex-row gap-10">
-                  {/* Left */}
-                  <div className="lg:w-2/5">
-                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-5 ${g.icon}`}>
-                      <Icon size={24} />
-                    </div>
-                    <span className={`inline-block px-3 py-1 rounded-full border text-xs font-semibold mb-4 ${g.badge}`}>
-                      {svc.title}
-                    </span>
-                    <h2 className="text-white font-bold text-2xl lg:text-3xl mb-3 leading-tight">
-                      {svc.tagline}
-                    </h2>
-                    <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                      {svc.description}
-                    </p>
-                    <div className="flex flex-wrap gap-3">
-                      <Link to="/contact" className="btn-primary text-sm">
-                        Request a Technical Consultation <FiArrowRight />
-                      </Link>
-                      <Link
-                        to={SERVICE_PORTFOLIO_LINKS[svc.icon] || '/portfolio'}
-                        className="btn-outline text-sm"
-                      >
-                        See related projects
-                      </Link>
-                    </div>
-                  </div>
-
-                  {/* Right */}
-                  <div className="lg:w-3/5 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {svc.features.map(f => (
-                      <div key={f} className="flex items-start gap-3">
-                        <div className="w-5 h-5 rounded-full bg-emerald-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <FiCheck size={10} className="text-emerald-400" />
-                        </div>
-                        <span className="text-slate-300 text-sm leading-relaxed">{f}</span>
-                      </div>
-                    ))}
-
-                    {/* Tools */}
-                    <div className="sm:col-span-2 pt-4 border-t border-white/[0.06] mt-2">
-                      <p className="text-slate-600 text-xs mb-2 uppercase tracking-wider">Tools & Platforms</p>
-                      <div className="flex flex-wrap gap-2">
-                        {svc.tools.map(t => (
-                          <span key={t} className="px-2.5 py-1 bg-white/[0.04] border border-white/[0.06] rounded-lg text-slate-400 text-xs">
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
+      <section className="pb-10">
+        <div className="container">
+          {services.map(svc => (
+            <article key={svc.id} id={svc.id} className="border-t border-line py-10">
+              <div className="grid grid-cols-1 lg:grid-cols-[14rem_1fr] gap-8">
+                <div>
+                  <h2 className="text-white font-display font-semibold text-xl mb-4">{svc.title}</h2>
+                  <div className="flex flex-wrap gap-3">
+                    <Link to="/contact" className="btn-primary text-sm">Discuss this</Link>
+                    <Link to={SERVICE_PORTFOLIO_LINKS[svc.icon] || '/portfolio'} className="btn-outline text-sm">
+                      Related work
+                    </Link>
                   </div>
                 </div>
-              </motion.div>
-            )
-          })}
-        </div>
-      </Section>
 
-      {/* Process */}
-      <Section className="py-24 bg-dark-900/40">
+                <div className="space-y-8">
+                  <div>
+                    <Label>Problem</Label>
+                    <p className="text-white text-lg leading-snug">{svc.tagline}</p>
+                  </div>
+                  <div>
+                    <Label>What we build</Label>
+                    <p className="text-copy text-sm leading-relaxed mb-4">{svc.description}</p>
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
+                      {svc.features.map(f => (
+                        <li key={f} className="text-copy text-sm leading-relaxed">{f}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <Label>Fit</Label>
+                    <p className="text-mute text-sm leading-relaxed">{svc.tools.join(' · ')}</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="py-14">
         <div className="container">
-          <div className="text-center mb-14">
-            <motion.span variants={fadeUp} custom={0} className="section-tag mb-4 inline-flex">Our Process</motion.span>
-            <motion.h2 variants={fadeUp} custom={1} className="section-heading mb-4">
-              How we work with <span className="gradient-text">you</span>
-            </motion.h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {process.map((p, i) => (
-              <motion.div key={p.step} custom={i} variants={fadeUp} className="card text-center">
-                <span className="text-5xl font-black gradient-text block mb-4">{p.step}</span>
-                <h3 className="text-white font-bold text-lg mb-2">{p.title}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">{p.description}</p>
-              </motion.div>
+          <h2 className="text-white font-display font-semibold text-2xl mb-8">How we work</h2>
+          <ol>
+            {process.map(p => (
+              <li key={p.step} className="border-t border-line py-6 grid grid-cols-1 lg:grid-cols-[14rem_1fr] gap-2 lg:gap-8">
+                <h3 className="text-white font-semibold text-base">
+                  <span className="text-mute font-normal mr-3">{p.step}</span>{p.title}
+                </h3>
+                <p className="text-copy text-sm leading-relaxed">{p.description}</p>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
-      </Section>
+      </section>
 
-      {/* FAQ */}
-      <Section className="py-24">
-        <div className="container max-w-3xl">
-          <div className="text-center mb-14">
-            <motion.span variants={fadeUp} custom={0} className="section-tag mb-4 inline-flex">FAQ</motion.span>
-            <motion.h2 variants={fadeUp} custom={1} className="section-heading">
-              Common <span className="gradient-text">questions</span>
-            </motion.h2>
-          </div>
-          <div className="space-y-4">
+      <section className="py-14">
+        <div className="container">
+          <h2 className="text-white font-display font-semibold text-2xl mb-8">Common questions</h2>
+          <div>
             {faq.map((item, i) => (
-              <motion.div key={i} custom={i} variants={fadeUp} className="card">
-                <h3 className="text-white font-semibold text-base mb-2">{item.question}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">{item.answer}</p>
-              </motion.div>
+              <div key={i} className="border-t border-line py-6 grid grid-cols-1 lg:grid-cols-[14rem_1fr] gap-2 lg:gap-8">
+                <h3 className="text-white font-semibold text-base">{item.question}</h3>
+                <p className="text-copy text-sm leading-relaxed">{item.answer}</p>
+              </div>
             ))}
           </div>
         </div>
-      </Section>
+      </section>
 
-      {/* CTA */}
-      <Section className="py-20">
-        <div className="container text-center">
-          <motion.div variants={fadeUp} custom={0} className="glass p-12 rounded-3xl max-w-2xl mx-auto">
-            <h2 className="text-3xl font-black text-white mb-4">
-              Not sure where to start?
-            </h2>
-            <p className="text-slate-400 mb-8">
-              Describe the workflow you want to improve. We will recommend a practical path—
-              no inflated scope, no commitment required to start the conversation.
-            </p>
-            <Link to="/contact" className="btn-primary">
-              Request Consultation <FiArrowRight />
-            </Link>
-          </motion.div>
+      <section className="py-14">
+        <div className="container border-t border-line pt-10">
+          <h2 className="text-white font-display font-semibold text-2xl mb-3">Not sure where to start?</h2>
+          <p className="text-copy mb-6 max-w-xl">
+            Describe the workflow you want to improve. We will recommend a practical path—no commitment
+            required to start the conversation.
+          </p>
+          <Link to="/contact" className="btn-primary">Discuss this</Link>
         </div>
-      </Section>
+      </section>
     </>
   )
 }
