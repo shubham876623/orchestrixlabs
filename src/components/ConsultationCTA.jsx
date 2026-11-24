@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+﻿import { Link } from 'react-router-dom'
 import { FiArrowRight } from 'react-icons/fi'
 
 const VARIANTS = {
@@ -40,7 +40,7 @@ export default function ConsultationCTA({
   return (
     <aside
       className={[
-        'cta-panel',
+        'border border-line bg-panel',
         compact ? 'p-5 sm:p-6' : 'p-6 sm:p-8',
         className,
       ].join(' ')}
