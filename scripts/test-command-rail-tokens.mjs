@@ -21,6 +21,13 @@ must(!/btn-primary[\s\S]*from-cyan-600 to-primary-600/.test(css), 'btn-primary m
 must(!css.includes('.glow {'), 'remove .glow utility (or leave unused and assert not present)')
 must(!/section-tag[\s\S]*uppercase tracking-\[0\.18em\]/.test(css), 'section-tag must drop ALL-CAPS tracking spam')
 
+const nav = fs.readFileSync(path.join(root, 'src/components/Navbar.jsx'), 'utf8')
+const foot = fs.readFileSync(path.join(root, 'src/components/Footer.jsx'), 'utf8')
+must(!nav.includes('drop-shadow-[0_0_18px_rgba(0,239,253,0.18)]'), 'Navbar must remove logo glow drop-shadow')
+must(!nav.includes('backdrop-blur-2xl'), 'Navbar must not use heavy glass blur')
+must(nav.includes('Contact') || nav.includes('/contact'), 'Navbar keeps Contact CTA')
+must(!/Newsletter|Subscribe/i.test(foot), 'Footer stays utility (no newsletter collage)')
+
 if (failures.length) {
   console.error('FAIL\n' + failures.map(f => ' - ' + f).join('\n'))
   process.exit(1)

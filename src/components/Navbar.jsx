@@ -54,17 +54,15 @@ export default function Navbar() {
 
   return (
     <motion.header
-      initial={{ y: -80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
+      initial={false}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'py-3 bg-dark-950/80 backdrop-blur-2xl border-b border-white/[0.05] shadow-xl shadow-black/20'
-          : 'py-5 bg-transparent'
+          ? 'py-3 bg-panel/95 border-b border-line'
+          : 'py-4 bg-ink/80'
       }`}
     >
       <div className="container flex items-center justify-between">
-        <BrandLogo variant="nav" imgClassName="drop-shadow-[0_0_18px_rgba(0,239,253,0.18)]" />
+        <BrandLogo variant="nav" />
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-1">
@@ -77,20 +75,19 @@ export default function Navbar() {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                className={`relative px-4 py-2 text-sm font-medium transition-colors duration-200 ${
                   active
-                    ? 'text-white'
-                    : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
+                    ? 'text-cyan-400'
+                    : 'text-mute hover:text-copy'
                 }`}
               >
-                {link.name}
                 {active && (
-                  <motion.span
-                    layoutId="nav-pill"
-                    className="absolute inset-0 rounded-lg bg-white/[0.07] border border-white/[0.08]"
-                    transition={{ type: 'spring', bounce: 0.2, duration: 0.4 }}
+                  <span
+                    className="absolute left-2 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full bg-cyan-400"
+                    aria-hidden
                   />
                 )}
+                <span className={active ? 'pl-1' : undefined}>{link.name}</span>
               </Link>
             )
           })}
@@ -101,7 +98,7 @@ export default function Navbar() {
           <button
             type="button"
             onClick={toggle}
-            className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-white/10 text-slate-300 transition-colors hover:bg-white/[0.04] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+            className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-line text-mute transition-colors hover:bg-panel hover:text-copy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
             aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
           >
             {isDark ? <FiSun size={16} /> : <FiMoon size={16} />}
@@ -125,14 +122,14 @@ export default function Navbar() {
           <button
             type="button"
             onClick={toggle}
-            className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl text-slate-300 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+            className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl text-mute transition-colors hover:text-copy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
             aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
           >
             {isDark ? <FiSun size={18} /> : <FiMoon size={18} />}
           </button>
           <button
             type="button"
-            className="p-2 text-slate-400 hover:text-white transition-colors"
+            className="p-2 text-mute hover:text-copy transition-colors"
             onClick={() => setMobileOpen(v => !v)}
             aria-label="Toggle menu"
             aria-expanded={mobileOpen}
@@ -149,8 +146,8 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25 }}
-            className="md:hidden overflow-hidden bg-dark-950/95 backdrop-blur-2xl border-b border-white/[0.05]"
+            transition={{ duration: 0.2 }}
+            className="md:hidden overflow-hidden bg-panel/95 border-b border-line"
           >
             <nav className="container py-5 flex flex-col gap-1" aria-label="Mobile">
               {navLinks.map(link => {
@@ -162,17 +159,17 @@ export default function Navbar() {
                   <Link
                     key={link.path}
                     to={link.path}
-                    className={`min-h-[44px] px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+                    className={`min-h-[44px] px-4 py-3 rounded-lg text-sm font-medium transition-colors border-l-2 ${
                       active
-                        ? 'text-white bg-white/[0.07]'
-                        : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
+                        ? 'text-cyan-400 border-cyan-400 bg-panel/50'
+                        : 'text-mute border-transparent hover:text-copy hover:bg-panel/30'
                     }`}
                   >
                     {link.name}
                   </Link>
                 )
               })}
-              <div className="pt-3 border-t border-white/[0.06] mt-2 flex flex-col gap-3">
+              <div className="pt-3 border-t border-line mt-2 flex flex-col gap-3">
                 <a
                   href="https://www.upwork.com/agencies/1464061503601672192/"
                   target="_blank"
