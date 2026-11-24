@@ -13,6 +13,15 @@
 }
 
 @layer base {
+  :root {
+    --orch-ink: #070B12;
+    --orch-panel: #0E1520;
+    --orch-line: #1C2736;
+    --orch-copy: #C5D0DC;
+    --orch-mute: #7A8798;
+    --orch-signal: #06B6D4;
+  }
+
   * {
     box-sizing: border-box;
     margin: 0;
@@ -24,7 +33,7 @@
   }
 
   body {
-    @apply bg-dark-950 text-slate-100 font-sans antialiased;
+    @apply bg-dark-950 text-copy font-sans antialiased;
     overflow-x: hidden;
   }
 
@@ -89,19 +98,19 @@
   }
 
   .btn-primary {
-    @apply inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-600 to-primary-600
-           text-white font-semibold rounded-lg hover:opacity-95 transition-all duration-200
-           shadow-md shadow-cyan-900/30 hover:-translate-y-0.5
-           active:translate-y-0 cursor-pointer
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-dark-950;
+    @apply inline-flex items-center gap-2 px-6 py-3 bg-cyan-600
+           text-white font-semibold rounded-md hover:bg-cyan-500
+           transition-colors duration-150 cursor-pointer
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400
+           focus-visible:ring-offset-2 focus-visible:ring-offset-dark-950;
   }
 
   .btn-outline {
-    @apply inline-flex items-center gap-2 px-6 py-3 border border-white/15 text-slate-200
-           font-semibold rounded-lg hover:border-cyan-500/40 hover:bg-cyan-500/10
-           transition-all duration-200 hover:-translate-y-0.5
-           active:translate-y-0 cursor-pointer
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-dark-950;
+    @apply inline-flex items-center gap-2 px-6 py-3 border border-line text-copy
+           font-semibold rounded-md hover:border-mute hover:bg-panel
+           transition-colors duration-150 cursor-pointer
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400
+           focus-visible:ring-offset-2 focus-visible:ring-offset-dark-950;
   }
 
   .card {
@@ -115,14 +124,11 @@
   }
 
   .section-tag {
-    @apply inline-flex items-center gap-2 px-3 py-1.5
-           border border-cyan-500/25 bg-cyan-500/10
-           text-cyan-300 text-xs font-semibold uppercase tracking-[0.18em];
+    @apply inline-flex items-center gap-2 text-mute text-xs font-medium;
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-cyan-300 via-sky-200 to-primary-300
-           bg-clip-text text-transparent;
+    @apply text-white;
   }
 
   .section-heading {
@@ -138,8 +144,7 @@
   }
 
   .cta-panel {
-    @apply border border-cyan-700/25 bg-gradient-to-br from-cyan-950/40 via-dark-900 to-dark-950
-           dark:border-cyan-400/20;
+    @apply bg-panel border border-line;
   }
 
   .project-chip {
@@ -153,14 +158,6 @@
     text-wrap: balance;
   }
 
-  .glow {
-    box-shadow: 0 0 40px rgba(99, 102, 241, 0.15);
-  }
-
-  .glow-cyan {
-    box-shadow: 0 0 40px rgba(6, 182, 212, 0.15);
-  }
-
   .skip-link {
     @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100]
            focus:px-4 focus:py-2 focus:bg-primary-500 focus:text-white focus:rounded-lg
@@ -168,12 +165,10 @@
   }
 }
 
-/* Atmospheric hero plane — cyan/slate, restrained (brand-preserving) */
+/* Atmospheric hero plane — restrained ink radial */
 .hero-gradient {
   background:
-    radial-gradient(ellipse at 20% 30%, rgba(8, 145, 178, 0.16) 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 20%, rgba(99, 102, 241, 0.10) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 100%, rgba(15, 23, 42, 0.9) 0%, transparent 55%);
+    radial-gradient(ellipse at 50% 40%, rgba(7, 11, 18, 0.85) 0%, transparent 70%);
 }
 
 /* Grid pattern overlay */
