@@ -70,6 +70,15 @@ must(contact.includes('bg-panel border border-line'), 'Contact form wrapper uses
 must(!/hero-gradient|grid-pattern|gradient-text|from-primary-500\/10|bg-gradient-to-br/.test(contact), 'Contact has no decorative gradient panels')
 must(contact.includes('btn-primary'), 'Contact submit uses btn-primary')
 
+const dash = fs.readFileSync(path.join(root, 'src/pages/Dashboard.jsx'), 'utf8')
+must(dash.includes("orchestrix_dash_secret"), 'Dashboard auth storage key unchanged')
+must(dash.includes('forceLogout') || dash.includes('setAuthed(false)'), 'Dashboard logout path remains')
+must(dash.includes('/api/dashboard/stats/'), 'Dashboard still calls stats API')
+must(dash.includes('bg-panel border-r border-line'), 'Dashboard sidebar uses panel + line rail')
+must(dash.includes('border-l-2') && dash.includes('border-cyan-500'), 'Dashboard active nav uses cyan left rail')
+must(!dash.includes('bg-primary-500/15 text-primary-400'), 'Dashboard nav drops SaaS pill wash')
+must(dash.includes('border border-line bg-panel rounded-md'), 'Dashboard widgets use panel surfaces')
+
 if (failures.length) {
   console.error('FAIL\n' + failures.map(f => ' - ' + f).join('\n'))
   process.exit(1)
