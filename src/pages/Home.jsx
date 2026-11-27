@@ -4,6 +4,7 @@ import SEOHead from '../components/SEOHead'
 import FAQSection from '../components/FAQSection'
 import ConsultationCTA from '../components/ConsultationCTA'
 import CaseStudyCard from '../components/home/CaseStudyCard'
+import HowWeWork from '../components/home/HowWeWork'
 import { services } from '../data/services'
 import { FAQ, SITE, SOCIAL } from '../lib/site'
 import { getSeoPage } from '../lib/seoPages'
@@ -230,6 +231,7 @@ export default function Home() {
       <Hero />
       <ServicesPreview />
       <FeaturedWork />
+      <HowWeWork />
       <Testimonials />
       <FAQSection />
       <CTABanner />
