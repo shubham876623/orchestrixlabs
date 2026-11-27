@@ -5,6 +5,8 @@ import FAQSection from '../components/FAQSection'
 import ConsultationCTA from '../components/ConsultationCTA'
 import CaseStudyCard from '../components/home/CaseStudyCard'
 import HowWeWork from '../components/home/HowWeWork'
+import WhoItsFor from '../components/home/WhoItsFor'
+import FounderSection from '../components/home/FounderSection'
 import { services } from '../data/services'
 import { FAQ, SITE, SOCIAL } from '../lib/site'
 import { getSeoPage } from '../lib/seoPages'
@@ -232,6 +234,8 @@ export default function Home() {
       <ServicesPreview />
       <FeaturedWork />
       <HowWeWork />
+      <WhoItsFor />
+      <FounderSection />
       <Testimonials />
       <FAQSection />
       <CTABanner />
