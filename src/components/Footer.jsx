@@ -60,7 +60,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-9 h-9 rounded-lg bg-ink border border-line flex items-center justify-center text-mute hover:text-copy hover:border-cyan-400/40 transition-colors duration-200"
+                  className="w-9 h-9 rounded-lg bg-paper-elevated border border-border flex items-center justify-center text-navy-secondary hover:text-navy-body hover:border-cyan-accent transition-colors duration-200"
                 >
                   <Icon size={15} aria-hidden="true" focusable="false" />
                 </a>
@@ -76,7 +76,7 @@ export default function Footer() {
                   <li key={link.name}>
                     <Link
                       to={link.path}
-                      className="text-mute hover:text-copy text-sm transition-colors duration-200"
+                      className="text-navy-secondary hover:text-navy-body text-sm transition-colors duration-200"
                     >
                       {link.name}
                     </Link>
@@ -101,7 +101,7 @@ export default function Footer() {
             <button
               type="button"
               onClick={openPrivacyPreferences}
-              className="text-xs text-mute hover:text-copy transition-colors font-medium"
+              className="text-xs text-navy-secondary hover:text-navy-body transition-colors font-medium"
             >
               Cookie Settings
             </button>
