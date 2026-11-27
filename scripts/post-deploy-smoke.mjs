@@ -113,6 +113,18 @@ results.push({
   detail: `status=${dash.status}`,
 })
 
+// Edge-stamp canary: the backend reports which client-identity rule matched.
+// Through orchestrixlabs.com it must be 'edge', or every visitor shares one rate-limit bucket.
+const stamped = await get(`${BASE}/api/site-stats/`)
+const clientSource = stamped.headers.get('x-orx-client-source')
+results.push({
+  check: 'Vercel edge stamp reaches the backend',
+  ok: clientSource === 'edge',
+  detail: clientSource === 'edge'
+    ? 'x-orx-client-source=edge'
+    : `x-orx-client-source=${clientSource} - Vercel edge stamp missing: check EDGE_PROXY_SECRET in Vercel and Railway, then redeploy Vercel`,
+})
+
 console.log('=== Post-deploy smoke ===')
 let failed = 0
 for (const r of results) {
