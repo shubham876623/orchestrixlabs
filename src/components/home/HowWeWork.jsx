@@ -40,7 +40,7 @@ export default function HowWeWork() {
           {steps.map((step, index) => (
             <div
               key={step.number}
-              className="card-flat p-6 hover:border-cyan-accent transition-all duration-base"
+              className="card-flat p-6 hover:border-cyan-accent transition-all duration-200"
             >
               {/* Step number */}
               <div className="flex items-start gap-4 mb-4">

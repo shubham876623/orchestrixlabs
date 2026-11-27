@@ -48,7 +48,7 @@ export default function Navbar() {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`relative px-4 py-2 text-sm font-medium transition-colors duration-fast ${
+                className={`relative px-4 py-2 text-sm font-medium transition-colors duration-150 ${
                   active
                     ? 'text-cyan-accent'
                     : 'text-navy-secondary hover:text-cyan-accent'
