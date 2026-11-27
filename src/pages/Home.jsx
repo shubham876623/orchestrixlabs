@@ -1,7 +1,6 @@
 ﻿import { Link } from 'react-router-dom'
 import { FiArrowRight, FiStar } from 'react-icons/fi'
 import SEOHead from '../components/SEOHead'
-import TrustBar from '../components/TrustBar'
 import FAQSection from '../components/FAQSection'
 import ConsultationCTA from '../components/ConsultationCTA'
 import { services } from '../data/services'
@@ -178,7 +177,6 @@ export default function Home() {
       <Hero />
       <ServicesPreview />
       <FeaturedWork />
-      <TrustBar />
       <Testimonials />
       <FAQSection />
       <CTABanner />
