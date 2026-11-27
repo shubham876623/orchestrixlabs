@@ -17,30 +17,78 @@ const fallbackTestimonials = [
 
 function Hero() {
   return (
-    <section className="flex min-h-[88vh] flex-col justify-center border-b border-line pb-16 pt-28 sm:pt-32">
+    <section className="relative min-h-[85vh] flex flex-col justify-center border-b border-border-default pt-24 pb-16 sm:pt-28 sm:pb-20">
       <div className="container">
-        <img
-          src="/brand/logo-wordmark-dark.svg"
-          alt="Orchestrix Labs"
-          width={280}
-          height={128}
-          className="mb-8 h-14 w-[12.75rem] object-contain sm:h-16 sm:w-[14.5rem]"
-          decoding="async"
-          fetchPriority="high"
-        />
-        <h1 className="max-w-3xl font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
-          {SITE.slogan}
+        {/* Logo - shown once on first screen */}
+        <div className="mb-10">
+          <img
+            src="/brand/logo-wordmark-dark.svg"
+            alt="Orchestrix Labs"
+            width={280}
+            height={64}
+            className="h-12 w-auto sm:h-14"
+            decoding="async"
+            fetchPriority="high"
+          />
+        </div>
+
+        {/* Clear statement - no buzzwords */}
+        <h1 className="max-w-3xl font-sans text-4xl sm:text-5xl lg:text-6xl font-semibold text-navy-primary tracking-tight leading-tight text-balance">
+          We build AI integrations that actually ship to production
         </h1>
-        <p className="mt-6 max-w-xl text-base leading-relaxed text-copy sm:text-lg">
-          Voice AI, CRM automation, and field-ops systems — production integrations, not demos.
+        
+        <p className="mt-6 max-w-xl text-lg text-navy-body leading-relaxed">
+          Voice AI systems, CRM automation, and field-ops tools for companies with real users and real deadlines.
         </p>
-        <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:gap-4">
+
+        {/* Single CTA */}
+        <div className="mt-10">
           <Link to="/contact" className="btn-primary">
-            Start a project <FiArrowRight aria-hidden="true" />
+            Book a 30-min call
           </Link>
-          <Link to="/portfolio" className="btn-outline">
-            View work
-          </Link>
+        </div>
+
+        {/* Workflow diagram placeholder - will be real diagram later */}
+        <div className="mt-16 p-8 bg-paper-elevated border border-border-default rounded-lg">
+          <div className="flex items-center justify-between gap-4 overflow-x-auto">
+            <div className="flex flex-col items-center min-w-[140px]">
+              <div className="w-12 h-12 rounded-full bg-cyan-subtle flex items-center justify-center mb-3">
+                <span className="text-2xl font-semibold text-cyan-accent">1</span>
+              </div>
+              <span className="text-sm font-medium text-navy-primary text-center">Discovery</span>
+              <span className="text-xs text-navy-secondary text-center mt-1">Requirements & Planning</span>
+            </div>
+            
+            <div className="text-cyan-accent flex-shrink-0">→</div>
+            
+            <div className="flex flex-col items-center min-w-[140px]">
+              <div className="w-12 h-12 rounded-full bg-cyan-subtle flex items-center justify-center mb-3">
+                <span className="text-2xl font-semibold text-cyan-accent">2</span>
+              </div>
+              <span className="text-sm font-medium text-navy-primary text-center">Architecture</span>
+              <span className="text-xs text-navy-secondary text-center mt-1">System Design & APIs</span>
+            </div>
+            
+            <div className="text-cyan-accent flex-shrink-0">→</div>
+            
+            <div className="flex flex-col items-center min-w-[140px]">
+              <div className="w-12 h-12 rounded-full bg-cyan-subtle flex items-center justify-center mb-3">
+                <span className="text-2xl font-semibold text-cyan-accent">3</span>
+              </div>
+              <span className="text-sm font-medium text-navy-primary text-center">Development</span>
+              <span className="text-xs text-navy-secondary text-center mt-1">Build & Integration</span>
+            </div>
+            
+            <div className="text-cyan-accent flex-shrink-0">→</div>
+            
+            <div className="flex flex-col items-center min-w-[140px]">
+              <div className="w-12 h-12 rounded-full bg-cyan-subtle flex items-center justify-center mb-3">
+                <span className="text-2xl font-semibold text-cyan-accent">4</span>
+              </div>
+              <span className="text-sm font-medium text-navy-primary text-center">Deploy</span>
+              <span className="text-xs text-navy-secondary text-center mt-1">Testing & Launch</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
