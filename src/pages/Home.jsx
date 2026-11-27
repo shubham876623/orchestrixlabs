@@ -3,6 +3,7 @@ import { FiArrowRight, FiStar } from 'react-icons/fi'
 import SEOHead from '../components/SEOHead'
 import FAQSection from '../components/FAQSection'
 import ConsultationCTA from '../components/ConsultationCTA'
+import CaseStudyCard from '../components/home/CaseStudyCard'
 import { services } from '../data/services'
 import { FAQ, SITE, SOCIAL } from '../lib/site'
 import { getSeoPage } from '../lib/seoPages'
@@ -133,36 +134,40 @@ function ServicesPreview() {
 }
 
 function FeaturedWork() {
-  const featuredProjects = getHomepageFeaturedProjects()
+  const featuredProjects = getHomepageFeaturedProjects().slice(0, 3)
 
   return (
-    <section className="section-shell border-t border-line">
+    <section className="section">
       <div className="container">
-        <SectionHead title="Work log" to="/portfolio" linkLabel="All work" />
+        <div className="mb-12">
+          <h2 className="section-heading mb-4">Case Studies</h2>
+          <p className="section-subheading">
+            Real projects, real results. Here's what we've shipped to production.
+          </p>
+        </div>
+
         {featuredProjects.length === 0 ? (
-          <div className="border border-line bg-panel px-6 py-10">
-            <p className="font-display text-xl text-white">Featured case studies coming soon</p>
-            <Link to="/contact" className="btn-primary mt-6">
-              Request Consultation <FiArrowRight aria-hidden="true" />
+          <div className="card p-10 text-center">
+            <p className="text-xl font-medium text-navy-primary mb-6">
+              Featured case studies coming soon
+            </p>
+            <Link to="/contact" className="btn-primary">
+              Book a 30-min call
             </Link>
           </div>
         ) : (
-          <ul className="border-b border-line">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredProjects.map((project) => (
-              <li key={project.id} className="border-t border-line">
-                <Link
-                  to={`/portfolio/${project.slug}`}
-                  className="group grid gap-2 py-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 md:grid-cols-[16rem_12rem_1fr_auto] md:items-baseline md:gap-8"
-                >
-                  <h3 className="text-lg font-semibold text-white group-hover:text-cyan-200">{project.title}</h3>
-                  <p className="text-sm text-mute">{(project.categories || [project.primaryCategory]).slice(0, 2).join(' · ')}</p>
-                  <p className="line-clamp-2 text-sm leading-relaxed text-copy">{project.summary}</p>
-                  <FiArrowRight className="hidden text-mute group-hover:text-cyan-300 md:block" aria-hidden="true" />
-                </Link>
-              </li>
+              <CaseStudyCard key={project.id} project={project} />
             ))}
-          </ul>
+          </div>
         )}
+
+        <div className="mt-10 text-center">
+          <Link to="/portfolio" className="link inline-flex items-center gap-2">
+            View all work <FiArrowRight aria-hidden="true" />
+          </Link>
+        </div>
       </div>
     </section>
   )
