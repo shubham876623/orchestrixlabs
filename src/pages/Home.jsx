@@ -18,7 +18,7 @@ const fallbackTestimonials = [
 
 function Hero() {
   return (
-    <section className="relative min-h-[85vh] flex flex-col justify-center border-b border-border-default pt-24 pb-16 sm:pt-28 sm:pb-20">
+    <section className="relative min-h-[85vh] flex flex-col justify-center border-b border-border pt-24 pb-16 sm:pt-28 sm:pb-20">
       <div className="container">
         {/* Logo - shown once on first screen */}
         <div className="mb-10">
@@ -50,7 +50,7 @@ function Hero() {
         </div>
 
         {/* Workflow diagram placeholder - will be real diagram later */}
-        <div className="mt-16 p-8 bg-paper-elevated border border-border-default rounded-lg">
+        <div className="mt-16 p-8 bg-paper-elevated border border-border rounded-lg">
           <div className="flex items-center justify-between gap-4 overflow-x-auto">
             <div className="flex flex-col items-center min-w-[140px]">
               <div className="w-12 h-12 rounded-full bg-cyan-subtle flex items-center justify-center mb-3">

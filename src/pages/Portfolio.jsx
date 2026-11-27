@@ -194,13 +194,13 @@ export default function Portfolio() {
           <div className="container">
             <div className="mb-2 flex flex-wrap items-end justify-between gap-3">
               <h2 className="font-display text-xl font-semibold text-white">Featured case study</h2>
-              <button
+            <button
                 type="button"
                 className="text-sm font-semibold text-cyan-300 hover:text-cyan-200"
                 onClick={() => setDepth('case-studies')}
               >
                 View all case studies
-              </button>
+            </button>
             </div>
             <div className="border-t border-line">
               <ProjectCard project={{ ...featured[0], hasCaseStudy: true }} variant="row" />
@@ -266,7 +266,7 @@ export default function Portfolio() {
               />
             </label>
           </div>
-        </div>
+                </div>
       </section>
 
       <section className="py-10 sm:py-14" id="portfolio-panel" role="tabpanel" aria-labelledby="portfolio-tab-0">
@@ -298,7 +298,7 @@ export default function Portfolio() {
               <div className="flex flex-col border-t border-line">
                 {paged.map((project, i) => (
                   <motion.div
-                    key={project.id}
+                  key={project.id}
                     {...(reduceMotion
                       ? { initial: false }
                       : {
@@ -314,26 +314,26 @@ export default function Portfolio() {
 
               {pageCount > 1 && (
                 <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-                  <button
+              <button
                     type="button"
                     className="btn-outline"
                     disabled={safePage <= 1}
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  >
-                    Previous
-                  </button>
+              >
+                Previous
+              </button>
                   <span className="text-sm text-slate-600 dark:text-slate-400">
                     Page {safePage} of {pageCount}
                   </span>
-                  <button
+                <button
                     type="button"
                     className="btn-outline"
                     disabled={safePage >= pageCount}
                     onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
-                  >
-                    Next
-                  </button>
-                </div>
+              >
+                Next
+              </button>
+            </div>
               )}
             </>
           )}

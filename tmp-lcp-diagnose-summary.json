@@ -1,0 +1,220 @@
+{
+  "scores": {
+    "perf": 0.8
+  },
+  "metrics": {
+    "FCP": "1.5 s",
+    "LCP": "5.3 s",
+    "TBT": "60 ms",
+    "CLS": "0.002",
+    "SI": "2.0 s"
+  },
+  "lcpInsight": [
+    {
+      "type": "table",
+      "headings": [
+        {
+          "key": "label",
+          "valueType": "text",
+          "label": "Subpart"
+        },
+        {
+          "key": "duration",
+          "valueType": "ms",
+          "label": "Duration"
+        }
+      ],
+      "items": [
+        {
+          "subpart": "timeToFirstByte",
+          "label": "Time to first byte",
+          "duration": 9.580999992370606
+        },
+        {
+          "subpart": "elementRenderDelay",
+          "label": "Element render delay",
+          "duration": 849.4220000076294
+        }
+      ]
+    },
+    {
+      "type": "node",
+      "lhId": "page-0-P",
+      "path": "1,HTML,1,BODY,0,DIV,2,MAIN,0,SECTION,2,DIV,3,P",
+      "selector": "main#main-content > section.relative > div.container > p.mx-auto",
+      "boundingRect": {
+        "top": 458,
+        "bottom": 562,
+        "left": 16,
+        "right": 396,
+        "width": 380,
+        "height": 104
+      },
+      "snippet": "<p class=\"mx-auto mb-10 max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg\">",
+      "nodeLabel": "Voice AI, CRM automation, field operations, and retrieval systems — delivered w…"
+    }
+  ],
+  "renderBlocking": [
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Syne:wght@500;600;700;800&display=swap",
+      "totalBytes": 1359,
+      "wastedMs": 897
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-DiIY0nmD.css",
+      "totalBytes": 65449,
+      "wastedMs": 755
+    }
+  ],
+  "unusedJs": [
+    {
+      "url": "http://127.0.0.1:4173/assets/index-a6Rot1AW.js",
+      "wasted": 158178
+    }
+  ],
+  "bootup": [
+    {
+      "url": "http://127.0.0.1:4173/assets/index-a6Rot1AW.js",
+      "total": 447.7839999999998,
+      "scripting": 223.8519999999998,
+      "scriptParseCompile": 2.132
+    },
+    {
+      "url": "http://127.0.0.1:4173/",
+      "total": 400.572,
+      "scripting": 33.50000000000001,
+      "scriptParseCompile": 1.1280000000000001
+    },
+    {
+      "url": "Unattributable",
+      "total": 362.94000000000085,
+      "scripting": 9.995999999999997,
+      "scriptParseCompile": 0
+    }
+  ],
+  "networkEarly": [
+    {
+      "url": "/",
+      "type": "Document",
+      "start": 1,
+      "end": 10,
+      "size": 6191,
+      "priority": "VeryHigh"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Syne:wght@500;600;700;800&display=swap",
+      "type": "Stylesheet",
+      "start": 63,
+      "end": 248,
+      "size": 14776,
+      "priority": "VeryHigh"
+    },
+    {
+      "url": "/assets/index-a6Rot1AW.js",
+      "type": "Script",
+      "start": 67,
+      "end": 74,
+      "size": 395884,
+      "priority": "High"
+    },
+    {
+      "url": "/assets/index-DiIY0nmD.css",
+      "type": "Stylesheet",
+      "start": 67,
+      "end": 72,
+      "size": 65266,
+      "priority": "VeryHigh"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/sourcesans3/v20/nwpStKy2OAdR1K-IwhWudF-R3w8aZejf5Hc.woff2",
+      "type": "Font",
+      "start": 269,
+      "end": 298,
+      "size": 28804,
+      "priority": "VeryHigh"
+    },
+    {
+      "url": "/assets/Home-2Shb-Fwf.js",
+      "type": "Script",
+      "start": 282,
+      "end": 288,
+      "size": 17486,
+      "priority": "High"
+    },
+    {
+      "url": "/assets/index-BaExx2Ey.js",
+      "type": "Script",
+      "start": 282,
+      "end": 288,
+      "size": 1963,
+      "priority": "High"
+    },
+    {
+      "url": "/assets/SEOHead-BueErdYY.js",
+      "type": "Script",
+      "start": 282,
+      "end": 292,
+      "size": 8099,
+      "priority": "High"
+    },
+    {
+      "url": "/assets/ProjectCard-Cm4FwVNh.js",
+      "type": "Script",
+      "start": 282,
+      "end": 292,
+      "size": 7557,
+      "priority": "High"
+    },
+    {
+      "url": "/assets/services-BOJz0-Nl.js",
+      "type": "Script",
+      "start": 283,
+      "end": 293,
+      "size": 4328,
+      "priority": "High"
+    },
+    {
+      "url": "/assets/publishedProjects-jVtjJv_0.js",
+      "type": "Script",
+      "start": 283,
+      "end": 293,
+      "size": 53637,
+      "priority": "High"
+    },
+    {
+      "url": "/assets/use-reduced-motion-o0r_cnEz.js",
+      "type": "Script",
+      "start": 285,
+      "end": 293,
+      "size": 136,
+      "priority": "High"
+    },
+    {
+      "url": "/brand/logo-wordmark-dark.svg",
+      "type": "Image",
+      "start": 293,
+      "end": 300,
+      "size": 15622,
+      "priority": "High"
+    },
+    {
+      "url": "/favicon.svg",
+      "type": "Other",
+      "start": 349,
+      "end": 352,
+      "size": 11031,
+      "priority": "High"
+    },
+    {
+      "url": "https://fonts.gstatic.com/s/syne/v24/8vIH7w4qzmVxm2BL9G78HEY.woff2",
+      "type": "Font",
+      "start": 522,
+      "end": 553,
+      "size": 34560,
+      "priority": "VeryHigh"
+    }
+  ],
+  "diagnostics": {
+    "mainthread": "1.2 s"
+  }
+}

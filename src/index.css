@@ -98,7 +98,7 @@
   /* Cards */
   .card {
     @apply bg-paper-elevated 
-           border border-border-default 
+           border border-border 
            rounded-lg 
            shadow-sm
            transition-all duration-base
@@ -186,7 +186,7 @@
 
   /* Dividers */
   .divider {
-    @apply border-t border-border-default;
+    @apply border-t border-border;
   }
 
   .divider-subtle {
