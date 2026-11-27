@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { FiCheck } from 'react-icons/fi'
 
 const targetClients = [
@@ -66,9 +67,9 @@ export default function WhoItsFor() {
           <p className="text-navy-secondary mb-4">
             Not sure if we're a fit? Let's talk.
           </p>
-          <a href="/contact" className="btn-primary">
+          <Link to="/contact" className="btn-primary">
             Book a 30-min call
-          </a>
+          </Link>
         </div>
       </div>
     </section>

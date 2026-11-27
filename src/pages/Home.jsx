@@ -63,7 +63,7 @@ function Hero() {
               <span className="text-xs text-navy-secondary text-center mt-1">Requirements & Planning</span>
             </div>
             
-            <div className="text-cyan-accent flex-shrink-0">→</div>
+            <div className="text-cyan-accent flex-shrink-0" aria-hidden="true">→</div>
             
             <div className="flex flex-col items-center min-w-[140px]">
               <div className="w-12 h-12 rounded-full bg-cyan-subtle flex items-center justify-center mb-3">
@@ -73,7 +73,7 @@ function Hero() {
               <span className="text-xs text-navy-secondary text-center mt-1">System Design & APIs</span>
             </div>
             
-            <div className="text-cyan-accent flex-shrink-0">→</div>
+            <div className="text-cyan-accent flex-shrink-0" aria-hidden="true">→</div>
             
             <div className="flex flex-col items-center min-w-[140px]">
               <div className="w-12 h-12 rounded-full bg-cyan-subtle flex items-center justify-center mb-3">
@@ -83,7 +83,7 @@ function Hero() {
               <span className="text-xs text-navy-secondary text-center mt-1">Build & Integration</span>
             </div>
             
-            <div className="text-cyan-accent flex-shrink-0">→</div>
+            <div className="text-cyan-accent flex-shrink-0" aria-hidden="true">→</div>
             
             <div className="flex flex-col items-center min-w-[140px]">
               <div className="w-12 h-12 rounded-full bg-cyan-subtle flex items-center justify-center mb-3">
@@ -178,15 +178,19 @@ function FeaturedWork() {
 
 function Testimonials() {
   return (
-    <section className="section-shell">
+    <section className="section">
       <div className="container">
-        <SectionHead title="Client feedback" />
-        <p className="-mt-4 mb-8 max-w-2xl text-sm text-mute">
-          Founder Upwork profile: 100% Job Success · Top Rated · {SITE.founderExperienceYears}+ years engineering experience.
-        </p>
-        <div className="grid grid-cols-1 gap-px border border-line bg-line md:grid-cols-2">
-          {fallbackTestimonials.map((t) => (
-            <figure key={t.client_role} className="flex flex-col bg-ink p-6">
+        <div className="mb-12">
+          <h2 className="section-heading mb-4">Client Reviews</h2>
+          <p className="text-navy-secondary">
+            Real feedback from verified Upwork clients. Founder profile: 
+            <span className="font-semibold text-navy-primary"> 100% Job Success • Top Rated • {SITE.founderExperienceYears}+ years experience</span>
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {fallbackTestimonials.map((testimonial) => (
+            <figure key={testimonial.client_role} className="card p-6">
               <div className="mb-3 flex gap-0.5" role="img" aria-label={`${t.rating} star rating`}>
                 {[...Array(t.rating)].map((_, j) => (
                   <FiStar key={j} className="text-amber-400" style={{ fill: '#FBBF24' }} size={13} aria-hidden="true" />
@@ -199,14 +203,16 @@ function Testimonials() {
             </figure>
           ))}
         </div>
-        <a
-          href={SOCIAL.upwork}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-cyan-300 hover:text-cyan-200"
-        >
-          View client reviews on Upwork <FiArrowRight aria-hidden="true" />
-        </a>
+        <div className="mt-10 text-center">
+          <a
+            href={SOCIAL.upwork}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link inline-flex items-center gap-2"
+          >
+            View all reviews on Upwork <FiArrowRight aria-hidden="true" />
+          </a>
+        </div>
       </div>
     </section>
   )

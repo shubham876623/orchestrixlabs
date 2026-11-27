@@ -59,14 +59,22 @@ function proxyApi(req, res) {
 }
 
 function resolveStatic(urlPath) {
-  const clean = decodeURIComponent(urlPath.split('?')[0])
+  let clean
+  try {
+    clean = decodeURIComponent(urlPath.split('?')[0])
+  } catch {
+    return path.join(dist, 'index.html') // malformed %-escape: never crash the server
+  }
+  const root = path.resolve(dist)
   const candidates = [
     path.join(dist, clean),
     path.join(dist, clean, 'index.html'),
     path.join(dist, `${clean}.html`),
   ]
   for (const c of candidates) {
-    if (fs.existsSync(c) && fs.statSync(c).isFile()) return c
+    const resolved = path.resolve(c)
+    if (resolved !== root && !resolved.startsWith(root + path.sep)) continue // block ../ traversal out of dist
+    if (fs.existsSync(resolved) && fs.statSync(resolved).isFile()) return resolved
   }
   return path.join(dist, 'index.html')
 }

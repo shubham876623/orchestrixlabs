@@ -79,6 +79,7 @@ export default function Navbar() {
           onClick={() => setMobileOpen(!mobileOpen)}
           className="md:hidden p-2 text-navy-primary hover:text-cyan-accent transition-colors"
           aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={mobileOpen}
         >
           {mobileOpen ? <HiX size={24} /> : <HiMenuAlt3 size={24} />}
         </button>
@@ -93,7 +94,7 @@ export default function Navbar() {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden border-t border-border bg-paper-elevated"
           >
-            <nav className="container py-4 flex flex-col gap-2">
+            <nav className="container py-4 flex flex-col gap-2" aria-label="Mobile">
               {navLinks.map(link => {
                 const active =
                   link.path === '/portfolio'
@@ -103,7 +104,7 @@ export default function Navbar() {
                   <Link
                     key={link.path}
                     to={link.path}
-                    className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                    className={`flex min-h-[44px] items-center px-4 py-2 text-sm font-medium rounded-md transition-colors ${
                       active
                         ? 'bg-cyan-subtle text-cyan-accent'
                         : 'text-navy-secondary hover:bg-paper-subtle hover:text-navy-primary'
