@@ -22,7 +22,7 @@ const fallbackFaq = [
 ]
 
 function Label({ children }) {
-  return <h3 className="text-mute text-xs font-medium mb-3">{children}</h3>
+  return <h3 className="text-navy-secondary text-xs font-medium mb-3">{children}</h3>
 }
 
 export default function Services() {
@@ -66,7 +66,7 @@ export default function Services() {
       <section className="pb-10">
         <div className="container">
           {services.map(svc => (
-            <article key={svc.id} id={svc.id} className="border-t border-line py-10">
+            <article key={svc.id} id={svc.id} className="border-t border-border py-10">
               <div className="grid grid-cols-1 lg:grid-cols-[14rem_1fr] gap-8">
                 <div>
                   <h2 className="text-white font-display font-semibold text-xl mb-4">{svc.title}</h2>
@@ -85,16 +85,16 @@ export default function Services() {
                   </div>
                   <div>
                     <Label>What we build</Label>
-                    <p className="text-copy text-sm leading-relaxed mb-4">{svc.description}</p>
+                    <p className="text-navy-body text-sm leading-relaxed mb-4">{svc.description}</p>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
                       {svc.features.map(f => (
-                        <li key={f} className="text-copy text-sm leading-relaxed">{f}</li>
+                        <li key={f} className="text-navy-body text-sm leading-relaxed">{f}</li>
                       ))}
                     </ul>
                   </div>
                   <div>
                     <Label>Fit</Label>
-                    <p className="text-mute text-sm leading-relaxed">{svc.tools.join(' · ')}</p>
+                    <p className="text-navy-secondary text-sm leading-relaxed">{svc.tools.join(' · ')}</p>
                   </div>
                 </div>
               </div>
@@ -108,11 +108,11 @@ export default function Services() {
           <h2 className="text-white font-display font-semibold text-2xl mb-8">How we work</h2>
           <ol>
             {process.map(p => (
-              <li key={p.step} className="border-t border-line py-6 grid grid-cols-1 lg:grid-cols-[14rem_1fr] gap-2 lg:gap-8">
+              <li key={p.step} className="border-t border-border py-6 grid grid-cols-1 lg:grid-cols-[14rem_1fr] gap-2 lg:gap-8">
                 <h3 className="text-white font-semibold text-base">
-                  <span className="text-mute font-normal mr-3">{p.step}</span>{p.title}
+                  <span className="text-navy-secondary font-normal mr-3">{p.step}</span>{p.title}
                 </h3>
-                <p className="text-copy text-sm leading-relaxed">{p.description}</p>
+                <p className="text-navy-body text-sm leading-relaxed">{p.description}</p>
               </li>
             ))}
           </ol>
@@ -124,9 +124,9 @@ export default function Services() {
           <h2 className="text-white font-display font-semibold text-2xl mb-8">Common questions</h2>
           <div>
             {faq.map((item, i) => (
-              <div key={i} className="border-t border-line py-6 grid grid-cols-1 lg:grid-cols-[14rem_1fr] gap-2 lg:gap-8">
+              <div key={i} className="border-t border-border py-6 grid grid-cols-1 lg:grid-cols-[14rem_1fr] gap-2 lg:gap-8">
                 <h3 className="text-white font-semibold text-base">{item.question}</h3>
-                <p className="text-copy text-sm leading-relaxed">{item.answer}</p>
+                <p className="text-navy-body text-sm leading-relaxed">{item.answer}</p>
               </div>
             ))}
           </div>
@@ -134,9 +134,9 @@ export default function Services() {
       </section>
 
       <section className="py-14">
-        <div className="container border-t border-line pt-10">
+        <div className="container border-t border-border pt-10">
           <h2 className="text-white font-display font-semibold text-2xl mb-3">Not sure where to start?</h2>
-          <p className="text-copy mb-6 max-w-xl">
+          <p className="text-navy-body mb-6 max-w-xl">
             Describe the workflow you want to improve. We will recommend a practical path—no commitment
             required to start the conversation.
           </p>

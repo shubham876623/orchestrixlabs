@@ -145,7 +145,7 @@ export default function Portfolio() {
 
       <DraftPreviewBanner />
 
-      <section className="border-b border-line pb-10 pt-28 sm:pb-12 sm:pt-32">
+      <section className="border-b border-border pb-10 pt-28 sm:pb-12 sm:pt-32">
         <div className="container">
           <motion.h1
             {...fade(0.04)}
@@ -155,7 +155,7 @@ export default function Portfolio() {
           </motion.h1>
           <motion.p
             {...fade(0.08)}
-            className="mt-4 max-w-2xl text-base leading-relaxed text-copy sm:mt-5 sm:text-lg"
+            className="mt-4 max-w-2xl text-base leading-relaxed text-navy-body sm:mt-5 sm:text-lg"
           >
             {allCards.length} curated engagements across voice AI, agents, automation, SaaS, CRM, and data systems —
             including {caseStudyCount} full case studies. Nothing is published without editorial approval.
@@ -171,7 +171,7 @@ export default function Portfolio() {
 
           <motion.div
             {...fade(0.16)}
-            className="mt-8 flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-5 text-sm text-mute"
+            className="mt-8 flex flex-wrap gap-x-6 gap-y-2 border-t border-border pt-5 text-sm text-navy-secondary"
           >
             <p>
               <span className="font-semibold text-white">Founder credentials</span>
@@ -190,7 +190,7 @@ export default function Portfolio() {
       </section>
 
       {featured.length > 0 && (
-        <section className="border-b border-line py-8 sm:py-10">
+        <section className="border-b border-border py-8 sm:py-10">
           <div className="container">
             <div className="mb-2 flex flex-wrap items-end justify-between gap-3">
               <h2 className="font-display text-xl font-semibold text-white">Featured case study</h2>
@@ -202,14 +202,14 @@ export default function Portfolio() {
                 View all case studies
               </button>
             </div>
-            <div className="border-t border-line">
+            <div className="border-t border-border">
               <ProjectCard project={{ ...featured[0], hasCaseStudy: true }} variant="row" />
             </div>
           </div>
         </section>
       )}
 
-      <section className="sticky top-[4.25rem] z-30 border-b border-line bg-ink py-4">
+      <section className="sticky top-[4.25rem] z-30 border-b border-border bg-paper-elevated py-4">
         <div className="container space-y-4">
           <div className="flex flex-wrap items-end justify-between gap-2">
             <div>
@@ -295,7 +295,7 @@ export default function Portfolio() {
             </div>
           ) : (
             <>
-              <div className="flex flex-col border-t border-line">
+              <div className="flex flex-col border-t border-border">
                 {paged.map((project, i) => (
                   <motion.div
                     key={project.id}
