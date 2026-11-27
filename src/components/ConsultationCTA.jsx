@@ -45,7 +45,7 @@ export default function ConsultationCTA({
         className,
       ].join(' ')}
     >
-      <h2 className="font-display text-xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-2xl">
+      <h2 className="font-display text-xl font-semibold tracking-tight text-slate-900 dark:text-navy-primary sm:text-2xl">
         {config.title}
       </h2>
       <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-600 dark:text-slate-300 sm:text-base">

@@ -50,7 +50,7 @@ function LoginPanel({ onLoggedIn }) {
 
   return (
     <div className="mx-auto max-w-md py-24">
-      <h1 className="font-display text-2xl font-semibold text-white">Editorial staff login</h1>
+      <h1 className="font-display text-2xl font-semibold text-navy-primary">Editorial staff login</h1>
       <p className="mt-2 text-sm text-slate-400">
         Session cookie auth (HttpOnly). Does not use DASHBOARD_SECRET.
       </p>
@@ -58,7 +58,7 @@ function LoginPanel({ onLoggedIn }) {
         <label className="block text-sm text-slate-300">
           Username
           <input
-            className="mt-1 w-full border border-white/10 bg-dark-900 px-3 py-2 text-white"
+            className="mt-1 w-full border border-white/10 bg-dark-900 px-3 py-2 text-navy-primary"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             autoComplete="username"
@@ -69,7 +69,7 @@ function LoginPanel({ onLoggedIn }) {
           Password
           <input
             type="password"
-            className="mt-1 w-full border border-white/10 bg-dark-900 px-3 py-2 text-white"
+            className="mt-1 w-full border border-white/10 bg-dark-900 px-3 py-2 text-navy-primary"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="current-password"
@@ -224,7 +224,7 @@ export default function StaffEditorial() {
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-cyan-300/80">Orchestrix Labs</p>
-            <h1 className="font-display text-xl font-semibold text-white">Editorial portfolio dashboard</h1>
+            <h1 className="font-display text-xl font-semibold text-navy-primary">Editorial portfolio dashboard</h1>
             <p className="text-xs text-slate-500">Signed in as {user.username} · session auth</p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -324,7 +324,7 @@ export default function StaffEditorial() {
                             : 'border-transparent hover:border-white/10'
                         }`}
                       >
-                        <span className="font-medium text-white">{c.title || c.contract_id}</span>
+                        <span className="font-medium text-navy-primary">{c.title || c.contract_id}</span>
                         <span className="mt-1 block text-xs text-slate-500">
                           {c.contract_id} · {c.editorial_status}
                           {c.is_private ? ' · PRIVATE' : ''}
@@ -342,7 +342,7 @@ export default function StaffEditorial() {
                 ) : (
                   <div className="space-y-4">
                     {restrictedWarning && <WarningBanner>{restrictedWarning}</WarningBanner>}
-                    <h2 className="font-display text-lg text-white">{detail.title}</h2>
+                    <h2 className="font-display text-lg text-navy-primary">{detail.title}</h2>
                     <p className="text-xs text-slate-500">{detail.contract_id}</p>
                     <p className="text-sm text-slate-300 whitespace-pre-wrap">{detail.description}</p>
                     <div className="grid gap-2 text-xs text-slate-400 sm:grid-cols-2">
@@ -417,7 +417,7 @@ export default function StaffEditorial() {
                     </button>
                     {detail.feedback_entries?.length > 0 && (
                       <div>
-                        <h3 className="text-sm font-semibold text-white">Feedback (review before testimonial approval)</h3>
+                        <h3 className="text-sm font-semibold text-navy-primary">Feedback (review before testimonial approval)</h3>
                         <ul className="mt-2 space-y-2 text-xs text-slate-400">
                           {detail.feedback_entries.map((f) => (
                             <li key={f.id} className="border border-white/10 p-2">
@@ -439,7 +439,7 @@ export default function StaffEditorial() {
           {tab === 'projects' && (
             <div className="space-y-6">
               <section className="border border-white/10 p-4">
-                <h2 className="font-display text-lg text-white">Create editorial project</h2>
+                <h2 className="font-display text-lg text-navy-primary">Create editorial project</h2>
                 <div className="mt-3 grid gap-2 sm:grid-cols-3">
                   <input
                     placeholder="slug"
@@ -476,7 +476,7 @@ export default function StaffEditorial() {
                         className="w-full border border-transparent px-3 py-2 text-left text-sm hover:border-white/10"
                         onClick={() => openProject(p.slug)}
                       >
-                        <span className="text-white">{p.title}</span>
+                        <span className="text-navy-primary">{p.title}</span>
                         <span className="block text-xs text-slate-500">
                           {p.slug} · {p.editorial_status}
                         </span>
@@ -491,7 +491,7 @@ export default function StaffEditorial() {
                       <WarningBanner key={w}>{w}</WarningBanner>
                     ))}
                     <input
-                      className="w-full border border-white/10 bg-dark-900 px-3 py-2 text-lg text-white"
+                      className="w-full border border-white/10 bg-dark-900 px-3 py-2 text-lg text-navy-primary"
                       value={project.title}
                       onChange={(e) => setProject({ ...project, title: e.target.value })}
                     />
@@ -618,7 +618,7 @@ export default function StaffEditorial() {
                         }`}
                         onClick={() => setGptSelected(p)}
                       >
-                        <span className="text-white">{p.title}</span>
+                        <span className="text-navy-primary">{p.title}</span>
                         <span className="mt-1 block text-xs text-slate-500">
                           {p.slug} · GPT {p.gpt_export_approved ? 'APPROVED' : 'pending'}
                           {p.gpt_export_stale ? ' · STALE' : ''}
@@ -639,7 +639,7 @@ export default function StaffEditorial() {
                       {(gptSelected.warnings || []).map((w) => (
                         <WarningBanner key={w}>{w}</WarningBanner>
                       ))}
-                      <h2 className="font-display text-lg text-white">{gptSelected.title}</h2>
+                      <h2 className="font-display text-lg text-navy-primary">{gptSelected.title}</h2>
                       <p className="text-xs text-slate-500">
                         contentVersion: {gptSelected.gpt_content_version || '—'} · approvedVersion:{' '}
                         {gptSelected.gpt_approved_content_version || '—'}
@@ -700,7 +700,7 @@ export default function StaffEditorial() {
                         </button>
                       </div>
                       <div>
-                        <h3 className="text-sm font-semibold text-white">Recent GPT decisions</h3>
+                        <h3 className="text-sm font-semibold text-navy-primary">Recent GPT decisions</h3>
                         <ul className="mt-2 space-y-1 text-xs text-slate-400">
                           {gptDecisions
                             .filter((d) => d.project_slug === gptSelected.slug)

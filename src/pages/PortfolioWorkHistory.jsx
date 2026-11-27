@@ -101,7 +101,7 @@ function ProjectDetailModal({ project, onClose }) {
           <div className="p-6 sm:p-8 border-b border-white/[0.06]">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <h2 className="text-white font-bold text-xl sm:text-2xl leading-tight mb-3">{project.title}</h2>
+                <h2 className="text-navy-primary font-bold text-xl sm:text-2xl leading-tight mb-3">{project.title}</h2>
                 <div className="flex items-center gap-3 flex-wrap">
                   {project.rating && <StarRating rating={project.rating} />}
                   {project.category && (
@@ -121,7 +121,7 @@ function ProjectDetailModal({ project, onClose }) {
                   )}
                 </div>
               </div>
-              <button onClick={onClose} className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors flex-shrink-0 ml-4">
+              <button onClick={onClose} className="p-2 rounded-lg text-slate-400 hover:text-navy-primary hover:bg-white/[0.06] transition-colors flex-shrink-0 ml-4">
                 <FiX size={20} />
               </button>
             </div>
@@ -147,7 +147,7 @@ function ProjectDetailModal({ project, onClose }) {
                     V
                   </div>
                   <div>
-                    <p className="text-white text-sm font-medium">Verified Upwork Client</p>
+                    <p className="text-navy-primary text-sm font-medium">Verified Upwork Client</p>
                     {project.rating && <StarRating rating={project.rating} size={11} />}
                   </div>
                 </div>
@@ -179,7 +179,7 @@ function ProjectDetailModal({ project, onClose }) {
             {/* Job Description (what client posted) */}
             {project.job_description && (
               <div>
-                <h3 className="text-white font-semibold text-sm mb-2 uppercase tracking-wider flex items-center gap-2">
+                <h3 className="text-navy-primary font-semibold text-sm mb-2 uppercase tracking-wider flex items-center gap-2">
                   <span className="w-1 h-4 bg-primary-500 rounded-full" />
                   What the Client Needed
                 </h3>
@@ -190,7 +190,7 @@ function ProjectDetailModal({ project, onClose }) {
             {/* What we delivered */}
             {project.deliverables && (
               <div>
-                <h3 className="text-white font-semibold text-sm mb-2 uppercase tracking-wider flex items-center gap-2">
+                <h3 className="text-navy-primary font-semibold text-sm mb-2 uppercase tracking-wider flex items-center gap-2">
                   <span className="w-1 h-4 bg-emerald-500 rounded-full" />
                   What We Delivered
                 </h3>
@@ -201,7 +201,7 @@ function ProjectDetailModal({ project, onClose }) {
             {/* Description fallback */}
             {!project.job_description && !project.deliverables && project.description && (
               <div>
-                <h3 className="text-white font-semibold text-sm mb-2 uppercase tracking-wider">About This Project</h3>
+                <h3 className="text-navy-primary font-semibold text-sm mb-2 uppercase tracking-wider">About This Project</h3>
                 <p className="text-slate-400 text-sm leading-relaxed">{project.description}</p>
               </div>
             )}
@@ -209,7 +209,7 @@ function ProjectDetailModal({ project, onClose }) {
             {/* Highlights */}
             {project.highlights && project.highlights.length > 0 && (
               <div>
-                <h3 className="text-white font-semibold text-sm mb-3 uppercase tracking-wider">Key Deliverables</h3>
+                <h3 className="text-navy-primary font-semibold text-sm mb-3 uppercase tracking-wider">Key Deliverables</h3>
                 <ul className="space-y-2">
                   {project.highlights.map(h => (
                     <li key={h} className="flex items-start gap-2.5 text-slate-300 text-sm">
@@ -224,7 +224,7 @@ function ProjectDetailModal({ project, onClose }) {
             {/* Impact */}
             {project.impact && project.impact.length > 0 && (
               <div>
-                <h3 className="text-white font-semibold text-sm mb-3 uppercase tracking-wider">Impact</h3>
+                <h3 className="text-navy-primary font-semibold text-sm mb-3 uppercase tracking-wider">Impact</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {project.impact.map(imp => (
                     <div key={imp} className="flex items-center gap-2 bg-emerald-500/5 border border-emerald-500/15 rounded-lg px-3 py-2">
@@ -239,7 +239,7 @@ function ProjectDetailModal({ project, onClose }) {
             {/* Tech Stack */}
             {project.tech && project.tech.length > 0 && (
               <div>
-                <h3 className="text-white font-semibold text-sm mb-3 uppercase tracking-wider">Tech Stack</h3>
+                <h3 className="text-navy-primary font-semibold text-sm mb-3 uppercase tracking-wider">Tech Stack</h3>
                 <div className="flex flex-wrap gap-2">
                   {project.tech.map(t => (
                     <span key={t} className="px-3 py-1 bg-white/[0.04] border border-white/[0.08] rounded-lg text-slate-300 text-xs">
@@ -253,7 +253,7 @@ function ProjectDetailModal({ project, onClose }) {
             {/* Demo Video */}
             {getEmbedUrl(project.video_url) && (
               <div>
-                <h3 className="text-white font-semibold text-sm mb-3 uppercase tracking-wider">Demo Video</h3>
+                <h3 className="text-navy-primary font-semibold text-sm mb-3 uppercase tracking-wider">Demo Video</h3>
                 <div className="aspect-video rounded-xl overflow-hidden border border-white/[0.08]">
                   <iframe
                     src={getEmbedUrl(project.video_url)}
@@ -269,7 +269,7 @@ function ProjectDetailModal({ project, onClose }) {
             {/* Project Images */}
             {project.images && project.images.length > 0 && (
               <div>
-                <h3 className="text-white font-semibold text-sm mb-3 uppercase tracking-wider flex items-center gap-2">
+                <h3 className="text-navy-primary font-semibold text-sm mb-3 uppercase tracking-wider flex items-center gap-2">
                   <FiImage size={14} /> Project Screenshots
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -288,7 +288,7 @@ function ProjectDetailModal({ project, onClose }) {
                 <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary-500/20 to-emerald-500/20 border border-white/[0.08] flex items-center justify-center">
                   <FiCheck className="text-emerald-400" size={24} />
                 </div>
-                <h3 className="text-white font-semibold text-lg mb-2">Successfully Delivered</h3>
+                <h3 className="text-navy-primary font-semibold text-lg mb-2">Successfully Delivered</h3>
                 <p className="text-slate-400 text-sm max-w-md mx-auto leading-relaxed mb-5">
                   This {project.category || 'project'} was completed to the client's satisfaction.
                   Want something similar built for your business?
@@ -296,7 +296,7 @@ function ProjectDetailModal({ project, onClose }) {
                 <Link
                   to="/contact"
                   onClick={onClose}
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-emerald-500 text-white text-sm font-semibold hover:shadow-lg hover:shadow-primary-500/25 transition-all"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-emerald-500 text-navy-primary text-sm font-semibold hover:shadow-lg hover:shadow-primary-500/25 transition-all"
                 >
                   Get a Free Quote <FiArrowRight size={14} />
                 </Link>
@@ -307,7 +307,7 @@ function ProjectDetailModal({ project, onClose }) {
           {/* Footer buttons */}
           <div className="p-6 sm:p-8 border-t border-white/[0.06] flex flex-col sm:flex-row gap-3">
             {project.live_url && (
-              <a href={project.live_url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-white/[0.1] text-slate-300 hover:text-white hover:border-white/[0.2] text-sm font-medium transition-all">
+              <a href={project.live_url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-white/[0.1] text-slate-300 hover:text-navy-primary hover:border-white/[0.2] text-sm font-medium transition-all">
                 <FiGlobe size={14} /> View Live Project
               </a>
             )}
@@ -580,8 +580,8 @@ export default function PortfolioWorkHistory() {
               onClick={() => { setStatusFilter('completed'); setCurrentPage(1) }}
               className={`px-5 py-3 text-sm font-semibold transition-all border-b-2 ${
                 statusFilter === 'completed'
-                  ? 'text-white border-primary-500'
-                  : 'text-slate-500 border-transparent hover:text-white'
+                  ? 'text-navy-primary border-primary-500'
+                  : 'text-slate-500 border-transparent hover:text-navy-primary'
               }`}
             >
               Completed jobs ({loading ? '…' : completedProjects.length})
@@ -590,8 +590,8 @@ export default function PortfolioWorkHistory() {
               onClick={() => { setStatusFilter('in_progress'); setCurrentPage(1) }}
               className={`px-5 py-3 text-sm font-semibold transition-all border-b-2 ${
                 statusFilter === 'in_progress'
-                  ? 'text-white border-primary-500'
-                  : 'text-slate-500 border-transparent hover:text-white'
+                  ? 'text-navy-primary border-primary-500'
+                  : 'text-slate-500 border-transparent hover:text-navy-primary'
               }`}
             >
               In progress ({loading ? '…' : inProgressProjects.length})
@@ -613,7 +613,7 @@ export default function PortfolioWorkHistory() {
                 placeholder="Search projects..."
                 value={searchQuery}
                 onChange={e => { setSearchQuery(e.target.value); setCurrentPage(1) }}
-                className="w-full bg-white/[0.03] border border-white/[0.08] rounded-lg pl-9 pr-4 py-2 text-white text-sm outline-none focus:border-primary-500/50 placeholder:text-slate-600 transition-colors"
+                className="w-full bg-white/[0.03] border border-white/[0.08] rounded-lg pl-9 pr-4 py-2 text-navy-primary text-sm outline-none focus:border-primary-500/50 placeholder:text-slate-600 transition-colors"
               />
             </div>
             {/* Category pills */}
@@ -629,7 +629,7 @@ export default function PortfolioWorkHistory() {
                     className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                       categoryFilter === cat
                         ? 'bg-primary-500/15 border border-primary-500/40 text-primary-400'
-                        : 'bg-white/[0.03] border border-white/[0.08] text-slate-400 hover:text-white hover:border-white/[0.15]'
+                        : 'bg-white/[0.03] border border-white/[0.08] text-slate-400 hover:text-navy-primary hover:border-white/[0.15]'
                     }`}
                   >
                     {cat} <span className="ml-1 opacity-60">{loading ? '…' : count}</span>
@@ -673,7 +673,7 @@ export default function PortfolioWorkHistory() {
               <button
                 onClick={() => { setCurrentPage(p => Math.max(1, p - 1)); window.scrollTo({ top: 400, behavior: 'smooth' }) }}
                 disabled={currentPage === 1}
-                className="px-3 py-2 rounded-lg border border-white/[0.08] text-sm text-slate-400 hover:text-white hover:border-white/[0.15] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="px-3 py-2 rounded-lg border border-white/[0.08] text-sm text-slate-400 hover:text-navy-primary hover:border-white/[0.15] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
               >
                 Previous
               </button>
@@ -684,7 +684,7 @@ export default function PortfolioWorkHistory() {
                   className={`w-9 h-9 rounded-lg text-sm font-medium transition-all ${
                     page === currentPage
                       ? 'bg-primary-500/20 border border-primary-500/40 text-primary-400'
-                      : 'border border-white/[0.08] text-slate-500 hover:text-white hover:border-white/[0.15]'
+                      : 'border border-white/[0.08] text-slate-500 hover:text-navy-primary hover:border-white/[0.15]'
                   }`}
                 >
                   {page}
@@ -693,7 +693,7 @@ export default function PortfolioWorkHistory() {
               <button
                 onClick={() => { setCurrentPage(p => Math.min(totalPages, p + 1)); window.scrollTo({ top: 400, behavior: 'smooth' }) }}
                 disabled={currentPage === totalPages}
-                className="px-3 py-2 rounded-lg border border-white/[0.08] text-sm text-slate-400 hover:text-white hover:border-white/[0.15] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="px-3 py-2 rounded-lg border border-white/[0.08] text-sm text-slate-400 hover:text-navy-primary hover:border-white/[0.15] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
               >
                 Next
               </button>

@@ -114,7 +114,7 @@ export default function About() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <motion.span variants={fadeUp} custom={0} className="section-tag mb-5">Our Story</motion.span>
-              <motion.h2 variants={fadeUp} custom={1} className="text-3xl font-black text-white mb-6">
+              <motion.h2 variants={fadeUp} custom={1} className="text-3xl font-black text-navy-primary mb-6">
                 Purpose-built for<br /><span className="gradient-text">the AI era</span>
               </motion.h2>
               <div className="space-y-4 text-slate-400 text-base leading-relaxed">
@@ -172,7 +172,7 @@ export default function About() {
                   <v.icon className="text-primary-400" size={18} />
                 </div>
                 <div>
-                  <h3 className="text-white font-bold text-base mb-1.5">{v.title}</h3>
+                  <h3 className="text-navy-primary font-bold text-base mb-1.5">{v.title}</h3>
                   <p className="text-slate-400 text-sm leading-relaxed">{v.desc}</p>
                 </div>
               </motion.div>
@@ -200,7 +200,7 @@ export default function About() {
                     <div className={`w-10 h-10 rounded-xl ${c.bg} flex items-center justify-center`}>
                       <Icon className={c.icon} size={18} />
                     </div>
-                    <h3 className="text-white font-bold text-base">{area.category}</h3>
+                    <h3 className="text-navy-primary font-bold text-base">{area.category}</h3>
                   </div>
                   <ul className="space-y-2">
                     {area.items.map(item => (

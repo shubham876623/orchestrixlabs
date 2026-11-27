@@ -55,7 +55,7 @@ export default function AbstractCover({ tone = 'fullstack', title, className = '
         }}
       />
       <div className="relative flex h-full min-h-[10rem] flex-col justify-end p-5 sm:p-6">
-        <p className="max-w-[18rem] font-display text-lg font-semibold leading-snug text-white/90 sm:text-xl">
+        <p className="max-w-[18rem] font-display text-lg font-semibold leading-snug text-navy-primary/90 sm:text-xl">
           {title}
         </p>
       </div>

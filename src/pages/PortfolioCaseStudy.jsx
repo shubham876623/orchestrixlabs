@@ -28,7 +28,7 @@ function Section({ title, children, id }) {
       id={id}
       className="scroll-mt-28 border-t border-line py-8 first:border-t-0 first:pt-0"
     >
-      <h2 className="font-display text-xl font-semibold tracking-tight text-white">
+      <h2 className="font-display text-xl font-semibold tracking-tight text-navy-primary">
         {title}
       </h2>
       <div className="mt-3 text-sm leading-relaxed text-copy sm:text-base">
@@ -41,7 +41,7 @@ function Section({ title, children, id }) {
 function PendingBlock({ title, note }) {
   return (
     <div className="border border-dashed border-slate-300 bg-slate-50 p-5 dark:border-white/10 dark:bg-white/[0.02]">
-      <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">{title}</h2>
+      <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-navy-primary">{title}</h2>
       <p className="mt-2 text-sm leading-relaxed text-slate-500 dark:text-slate-400">{note}</p>
     </div>
   )
@@ -77,7 +77,7 @@ export default function PortfolioCaseStudy() {
         />
         <DraftPreviewBanner />
         <section className="container py-32 text-center">
-          <h1 className="font-display text-3xl font-semibold text-slate-900 dark:text-white">
+          <h1 className="font-display text-3xl font-semibold text-slate-900 dark:text-navy-primary">
             Case study not found
           </h1>
           <p className="mt-3 text-slate-600 dark:text-slate-400">
@@ -149,7 +149,7 @@ export default function PortfolioCaseStudy() {
           <div className="container pb-10">
             <Link
               to="/portfolio"
-              className="inline-flex min-h-[44px] items-center gap-2 text-sm text-slate-500 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 dark:text-slate-400 dark:hover:text-white"
+              className="inline-flex min-h-[44px] items-center gap-2 text-sm text-slate-500 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 dark:text-slate-400 dark:hover:text-navy-primary"
             >
               <FiArrowLeft /> All projects
             </Link>
@@ -180,7 +180,7 @@ export default function PortfolioCaseStudy() {
                     </span>
                   )}
                 </div>
-                <h1 className="font-display text-3xl font-semibold leading-tight text-slate-900 dark:text-white sm:text-4xl lg:text-5xl">
+                <h1 className="font-display text-3xl font-semibold leading-tight text-slate-900 dark:text-navy-primary sm:text-4xl lg:text-5xl">
                   {project.title}
                 </h1>
                 {project.subtitle && (
@@ -253,7 +253,7 @@ export default function PortfolioCaseStudy() {
                   <a
                     key={item.id}
                     href={`#${item.id}`}
-                    className="shrink-0 py-1 text-sm text-mute transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 lg:-ml-px lg:border-l lg:border-transparent lg:py-1.5 lg:pl-4 lg:hover:border-cyan-300"
+                    className="shrink-0 py-1 text-sm text-mute transition-colors hover:text-navy-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 lg:-ml-px lg:border-l lg:border-transparent lg:py-1.5 lg:pl-4 lg:hover:border-cyan-300"
                   >
                     {item.label}
                   </a>
@@ -283,7 +283,7 @@ export default function PortfolioCaseStudy() {
                             className="border border-slate-200 bg-slate-50 p-4 dark:border-white/[0.06] dark:bg-white/[0.02]"
                           >
                             <div className="flex flex-wrap items-center gap-2">
-                              <span className="font-display text-sm font-semibold text-slate-900 dark:text-white">
+                              <span className="font-display text-sm font-semibold text-slate-900 dark:text-navy-primary">
                                 {mod.id}. {mod.title}
                               </span>
                               <span className="border border-cyan-600/25 bg-cyan-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-cyan-800 dark:border-cyan-400/20 dark:text-cyan-200">
@@ -420,7 +420,7 @@ export default function PortfolioCaseStudy() {
                 <p className="font-display text-xs font-semibold uppercase tracking-[0.2em] text-cyan-800 dark:text-cyan-300/80">
                   Related work
                 </p>
-                <h2 className="mt-2 font-display text-2xl font-semibold text-slate-900 dark:text-white">
+                <h2 className="mt-2 font-display text-2xl font-semibold text-slate-900 dark:text-navy-primary">
                   Related projects
                 </h2>
               </div>

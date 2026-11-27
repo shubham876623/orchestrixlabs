@@ -36,7 +36,7 @@ function SectionHeading({ id, number, children }) {
   return (
     <h2
       id={id}
-      className="scroll-mt-28 font-display text-xl font-semibold text-white sm:text-2xl"
+      className="scroll-mt-28 font-display text-xl font-semibold text-navy-primary sm:text-2xl"
     >
       <span className="mr-2 text-cyan-400/90">{String(number).padStart(2, '0')}.</span>
       {children}
@@ -95,7 +95,7 @@ export default function PrivacyPolicy() {
                     <li key={section.id}>
                       <a
                         href={`#${section.id}`}
-                        className="block rounded-lg px-2 py-1.5 text-slate-400 transition-colors hover:bg-white/[0.04] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+                        className="block rounded-lg px-2 py-1.5 text-slate-400 transition-colors hover:bg-white/[0.04] hover:text-navy-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
                       >
                         <span className="mr-1.5 text-slate-600">{String(index + 1).padStart(2, '0')}</span>
                         {section.title}
@@ -119,7 +119,7 @@ export default function PrivacyPolicy() {
                 </p>
                 <p>
                   This Privacy Policy applies to personal information we collect through{' '}
-                  <a href={SITE.url} className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                  <a href={SITE.url} className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
                     {SITE.url}
                   </a>
                   , our public business profiles, enquiry and lead forms (including Facebook and Instagram Instant
@@ -149,19 +149,19 @@ export default function PrivacyPolicy() {
                   </li>
                   <li>
                     <span className="text-slate-400">Website:</span>{' '}
-                    <a href={SITE.url} className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                    <a href={SITE.url} className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
                       {SITE.url}
                     </a>
                   </li>
                   <li>
                     <span className="text-slate-400">General enquiries:</span>{' '}
-                    <a href={`mailto:${SITE.email}`} className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                    <a href={`mailto:${SITE.email}`} className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
                       {SITE.email}
                     </a>
                   </li>
                   <li>
                     <span className="text-slate-400">Privacy requests:</span>{' '}
-                    <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                    <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
                       {SITE.privacyEmail}
                     </a>
                   </li>
@@ -184,21 +184,21 @@ export default function PrivacyPolicy() {
                 <p>Depending on how you interact with us, we may collect:</p>
                 <ul className="list-disc space-y-2 pl-5">
                   <li>
-                    <strong className="text-white font-medium">Identity and contact details</strong> — such as
+                    <strong className="text-navy-primary font-medium">Identity and contact details</strong> — such as
                     name, email address, phone or WhatsApp number (if you provide one), company name, job title,
                     and country or city.
                   </li>
                   <li>
-                    <strong className="text-white font-medium">Enquiry and project details</strong> — service
+                    <strong className="text-navy-primary font-medium">Enquiry and project details</strong> — service
                     interest, budget range (if provided), project description, requirements, files you choose to
                     send, and related business context.
                   </li>
                   <li>
-                    <strong className="text-white font-medium">Communication content</strong> — messages,
+                    <strong className="text-navy-primary font-medium">Communication content</strong> — messages,
                     emails, call notes, and follow-up correspondence.
                   </li>
                   <li>
-                    <strong className="text-white font-medium">Technical and usage data</strong> — when you opt in
+                    <strong className="text-navy-primary font-medium">Technical and usage data</strong> — when you opt in
                     to optional analytics: page paths (without query strings or fragments), sanitized referring
                     URL, coarse browser/device/OS category, screen size, language, and timezone. With the same
                     opt-in, Microsoft Clarity may also process interaction data on public pages. Separately, when
@@ -206,7 +206,7 @@ export default function PrivacyPolicy() {
                     prevention (not as optional marketing analytics).
                   </li>
                   <li>
-                    <strong className="text-white font-medium">Preference data</strong> — for example a theme
+                    <strong className="text-navy-primary font-medium">Preference data</strong> — for example a theme
                     preference stored locally in your browser.
                   </li>
                 </ul>
@@ -235,7 +235,7 @@ export default function PrivacyPolicy() {
                   Website enquiries and contact forms
                 </SectionHeading>
                 <p>
-                  Our <Link to="/contact" className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">Request Consultation</Link>{' '}
+                  Our <Link to="/contact" className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">Request Consultation</Link>{' '}
                   form may collect your name, email address, selected service, optional budget range, and message.
                   Submissions are sent to our backend systems, stored so we can respond and manage the enquiry, and
                   may trigger an internal email notification to our team.
@@ -254,12 +254,12 @@ export default function PrivacyPolicy() {
                 <p>
                   When you submit a Facebook or Instagram lead form promoting Orchestrix Labs, Meta collects the
                   information you enter and makes that lead available to us. Our Instant Forms are configured to
-                  collect: <strong className="font-medium text-white">name</strong>,{' '}
-                  <strong className="font-medium text-white">email</strong>,{' '}
-                  <strong className="font-medium text-white">company information</strong>,{' '}
-                  <strong className="font-medium text-white">project requirements</strong>,{' '}
-                  <strong className="font-medium text-white">budget</strong>, and{' '}
-                  <strong className="font-medium text-white">timeline</strong>. If a particular form variant also
+                  collect: <strong className="font-medium text-navy-primary">name</strong>,{' '}
+                  <strong className="font-medium text-navy-primary">email</strong>,{' '}
+                  <strong className="font-medium text-navy-primary">company information</strong>,{' '}
+                  <strong className="font-medium text-navy-primary">project requirements</strong>,{' '}
+                  <strong className="font-medium text-navy-primary">budget</strong>, and{' '}
+                  <strong className="font-medium text-navy-primary">timeline</strong>. If a particular form variant also
                   asks for phone number or other optional business details, we will use those only to respond to
                   the same enquiry.
                 </p>
@@ -280,7 +280,7 @@ export default function PrivacyPolicy() {
                   Meta also processes information under its own terms and policies. Review Meta&apos;s privacy
                   materials for how Meta handles Instant Form data on its platform. You can request correction or
                   deletion of lead information we hold by emailing{' '}
-                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
                     {SITE.privacyEmail}
                   </a>
                   .
@@ -378,7 +378,7 @@ export default function PrivacyPolicy() {
                   authorised internal users.
                 </p>
                 <p>
-                  With the same opt-in consent, we may also use <strong className="text-white font-medium">Microsoft Clarity</strong>{' '}
+                  With the same opt-in consent, we may also use <strong className="text-navy-primary font-medium">Microsoft Clarity</strong>{' '}
                   (session analytics and heatmaps; Clarity project configured for this site) on public marketing
                   pages. Clarity may set cookies or similar technologies and process interaction data such as clicks,
                   scrolls, and page views. Clarity is not initialised on the private admin dashboard. If you navigate
@@ -390,7 +390,7 @@ export default function PrivacyPolicy() {
                 </p>
                 <p>
                   You can accept or decline optional analytics on first visit, and change or withdraw that choice
-                  anytime using the persistent <strong className="text-white font-medium">Cookie Settings</strong>{' '}
+                  anytime using the persistent <strong className="text-navy-primary font-medium">Cookie Settings</strong>{' '}
                   control in the site footer. Withdrawing consent persists your denial, signals denied analytics
                   storage to Clarity, stops collection where supported, clears Clarity cookies we can remove from
                   this browser, and reloads the page when Clarity was previously active so it cannot re-initialise
@@ -423,30 +423,30 @@ export default function PrivacyPolicy() {
                 <p>We may share personal information with:</p>
                 <ul className="list-disc space-y-2 pl-5">
                   <li>
-                    <strong className="text-white font-medium">Infrastructure and hosting providers</strong> that
+                    <strong className="text-navy-primary font-medium">Infrastructure and hosting providers</strong> that
                     host our website frontend, backend APIs, and databases
                   </li>
                   <li>
-                    <strong className="text-white font-medium">Microsoft Clarity</strong> (Microsoft Corporation /
+                    <strong className="text-navy-primary font-medium">Microsoft Clarity</strong> (Microsoft Corporation /
                     Microsoft services), which processes session analytics and heatmap data when you opt in to
                     optional analytics on public marketing pages. Microsoft may process data in the United States
                     and other locations where Microsoft operates, subject to Microsoft&apos;s terms and privacy
                     documentation
                   </li>
                   <li>
-                    <strong className="text-white font-medium">Email delivery providers</strong> used to send
+                    <strong className="text-navy-primary font-medium">Email delivery providers</strong> used to send
                     internal enquiry notifications or business email
                   </li>
                   <li>
-                    <strong className="text-white font-medium">Meta Platforms</strong> when you interact with our
+                    <strong className="text-navy-primary font-medium">Meta Platforms</strong> when you interact with our
                     Facebook or Instagram pages or lead forms
                   </li>
                   <li>
-                    <strong className="text-white font-medium">Professional advisers</strong> such as legal or
+                    <strong className="text-navy-primary font-medium">Professional advisers</strong> such as legal or
                     accounting advisers, where needed
                   </li>
                   <li>
-                    <strong className="text-white font-medium">Authorities</strong> when required by law or to
+                    <strong className="text-navy-primary font-medium">Authorities</strong> when required by law or to
                     protect rights, safety, and security
                   </li>
                 </ul>
@@ -504,7 +504,7 @@ export default function PrivacyPolicy() {
                 </p>
                 <p>
                   You may request deletion or correction of personal information we hold about you by contacting{' '}
-                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
                     {SITE.privacyEmail}
                   </a>
                   . We may retain limited information where we have a lawful need to do so (for example to complete
@@ -525,7 +525,7 @@ export default function PrivacyPolicy() {
                 </p>
                 <p>
                   To exercise available rights regarding information Orchestrix Labs controls, email{' '}
-                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
                     {SITE.privacyEmail}
                   </a>
                   . We may need to verify your identity before fulfilling a request. If we process data only as a
@@ -601,17 +601,17 @@ export default function PrivacyPolicy() {
                   contact:
                 </p>
                 <p>
-                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
                     {SITE.privacyEmail}
                   </a>
                 </p>
                 <p>
                   General project enquiries can continue to use{' '}
-                  <Link to="/contact" className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                  <Link to="/contact" className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
                     our contact form
                   </Link>{' '}
                   or{' '}
-                  <a href={`mailto:${SITE.email}`} className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                  <a href={`mailto:${SITE.email}`} className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
                     {SITE.email}
                   </a>
                   .

@@ -52,46 +52,26 @@ function Hero() {
           </Link>
         </div>
 
-        {/* Workflow diagram placeholder - will be real diagram later */}
-        <div className="mt-16 p-8 bg-paper-elevated border border-border rounded-lg">
-          <div className="flex items-center justify-between gap-4 overflow-x-auto">
-            <div className="flex flex-col items-center min-w-[140px]">
-              <div className="w-12 h-12 rounded-full bg-cyan-subtle flex items-center justify-center mb-3">
-                <span className="text-2xl font-semibold text-cyan-accent">1</span>
-              </div>
-              <span className="text-sm font-medium text-navy-primary text-center">Discovery</span>
-              <span className="text-xs text-navy-secondary text-center mt-1">Requirements & Planning</span>
-            </div>
-            
-            <div className="text-cyan-accent flex-shrink-0" aria-hidden="true">→</div>
-            
-            <div className="flex flex-col items-center min-w-[140px]">
-              <div className="w-12 h-12 rounded-full bg-cyan-subtle flex items-center justify-center mb-3">
-                <span className="text-2xl font-semibold text-cyan-accent">2</span>
-              </div>
-              <span className="text-sm font-medium text-navy-primary text-center">Architecture</span>
-              <span className="text-xs text-navy-secondary text-center mt-1">System Design & APIs</span>
-            </div>
-            
-            <div className="text-cyan-accent flex-shrink-0" aria-hidden="true">→</div>
-            
-            <div className="flex flex-col items-center min-w-[140px]">
-              <div className="w-12 h-12 rounded-full bg-cyan-subtle flex items-center justify-center mb-3">
-                <span className="text-2xl font-semibold text-cyan-accent">3</span>
-              </div>
-              <span className="text-sm font-medium text-navy-primary text-center">Development</span>
-              <span className="text-xs text-navy-secondary text-center mt-1">Build & Integration</span>
-            </div>
-            
-            <div className="text-cyan-accent flex-shrink-0" aria-hidden="true">→</div>
-            
-            <div className="flex flex-col items-center min-w-[140px]">
-              <div className="w-12 h-12 rounded-full bg-cyan-subtle flex items-center justify-center mb-3">
-                <span className="text-2xl font-semibold text-cyan-accent">4</span>
-              </div>
-              <span className="text-sm font-medium text-navy-primary text-center">Deploy</span>
-              <span className="text-xs text-navy-secondary text-center mt-1">Testing & Launch</span>
-            </div>
+        {/* Production pipeline - shows shipping process visually */}
+        <div className="mt-16 border-l-2 border-cyan-accent pl-8 space-y-6">
+          <div className="relative">
+            <h3 className="text-base font-semibold text-navy-primary mb-1">Discovery & Planning</h3>
+            <p className="text-sm text-navy-secondary">We map your workflow, identify constraints, and scope what ships first.</p>
+          </div>
+          
+          <div className="relative">
+            <h3 className="text-base font-semibold text-navy-primary mb-1">Architecture & Design</h3>
+            <p className="text-sm text-navy-secondary">System design, API contracts, and integration points locked in.</p>
+          </div>
+          
+          <div className="relative">
+            <h3 className="text-base font-semibold text-navy-primary mb-1">Development & Integration</h3>
+            <p className="text-sm text-navy-secondary">We build, test, and integrate with your existing systems.</p>
+          </div>
+          
+          <div className="relative">
+            <h3 className="text-base font-semibold text-navy-primary mb-1">Testing & Deployment</h3>
+            <p className="text-sm text-navy-secondary">Launch to production with monitoring, documentation, and handoff.</p>
           </div>
         </div>
       </div>
@@ -102,9 +82,9 @@ function Hero() {
 function SectionHead({ title, to, linkLabel }) {
   return (
     <div className="mb-8 flex items-end justify-between gap-4">
-      <h2 className="font-display text-2xl font-semibold tracking-tight text-white sm:text-3xl">{title}</h2>
+      <h2 className="text-2xl font-semibold tracking-tight text-navy-primary sm:text-3xl">{title}</h2>
       {to && (
-        <Link to={to} className="inline-flex items-center gap-2 text-sm font-semibold text-cyan-300 hover:text-cyan-200">
+        <Link to={to} className="inline-flex items-center gap-2 text-sm font-semibold text-cyan-accent hover:text-cyan-hover">
           {linkLabel} <FiArrowRight aria-hidden="true" />
         </Link>
       )}
@@ -124,9 +104,9 @@ function ServicesPreview() {
                 to="/services"
                 className="group grid gap-2 py-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 md:grid-cols-[18rem_1fr_auto] md:items-baseline md:gap-8"
               >
-                <h3 className="text-lg font-semibold text-white group-hover:text-cyan-200">{svc.title}</h3>
-                <p className="text-sm leading-relaxed text-copy">{svc.tagline}</p>
-                <FiArrowRight className="hidden text-mute group-hover:text-cyan-300 md:block" aria-hidden="true" />
+                <h3 className="text-lg font-semibold text-navy-primary group-hover:text-cyan-accent">{svc.title}</h3>
+                <p className="text-sm leading-relaxed text-navy-body">{svc.tagline}</p>
+                <FiArrowRight className="hidden text-navy-secondary group-hover:text-cyan-accent md:block" aria-hidden="true" />
               </Link>
             </li>
           ))}
@@ -191,14 +171,14 @@ function Testimonials() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {fallbackTestimonials.map((testimonial) => (
             <figure key={testimonial.client_role} className="card p-6">
-              <div className="mb-3 flex gap-0.5" role="img" aria-label={`${t.rating} star rating`}>
-                {[...Array(t.rating)].map((_, j) => (
+              <div className="mb-3 flex gap-0.5" role="img" aria-label={`${testimonial.rating} star rating`}>
+                {[...Array(testimonial.rating)].map((_, j) => (
                   <FiStar key={j} className="text-amber-400" style={{ fill: '#FBBF24' }} size={13} aria-hidden="true" />
                 ))}
               </div>
-              <blockquote className="flex-1 text-sm leading-relaxed text-copy">“{t.quote}”</blockquote>
-              <figcaption className="mt-4 text-xs text-mute">
-                <span className="font-semibold text-white">{t.client_name}</span> · {t.client_role} · Upwork
+              <blockquote className="flex-1 text-sm leading-relaxed text-navy-body">“{testimonial.quote}”</blockquote>
+              <figcaption className="mt-4 text-xs text-navy-secondary">
+                <span className="font-semibold text-navy-primary">{testimonial.client_name}</span> · {testimonial.client_role} · Upwork
               </figcaption>
             </figure>
           ))}

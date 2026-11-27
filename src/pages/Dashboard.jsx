@@ -33,7 +33,7 @@ function StatCard({ icon: Icon, label, value, sub, color = 'primary' }) {
       </div>
       <div>
         <p className="text-slate-500 text-xs mb-0.5">{label}</p>
-        <p className="text-white font-bold text-2xl leading-none">{value ?? '—'}</p>
+        <p className="text-navy-primary font-bold text-2xl leading-none">{value ?? '—'}</p>
         {sub && <p className="text-slate-500 text-xs mt-1">{sub}</p>}
       </div>
     </div>
@@ -65,7 +65,7 @@ function ContactRow({ contact, onStatusChange }) {
       >
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-white font-semibold text-sm">{contact.name}</span>
+            <span className="text-navy-primary font-semibold text-sm">{contact.name}</span>
             <span className="text-slate-500 text-xs">{contact.email}</span>
             {contact.service && (
               <span className="px-2 py-0.5 rounded bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs">
@@ -97,8 +97,8 @@ function ContactRow({ contact, onStatusChange }) {
                 onClick={() => onStatusChange(contact.id, s)}
                 className={`px-3 py-1.5 rounded-lg border text-xs font-medium transition-all ${
                   contact.status === s
-                    ? 'bg-primary-500 border-primary-500 text-white'
-                    : 'border-white/[0.1] text-slate-400 hover:text-white hover:border-white/[0.2]'
+                    ? 'bg-primary-500 border-primary-500 text-navy-primary'
+                    : 'border-white/[0.1] text-slate-400 hover:text-navy-primary hover:border-white/[0.2]'
                 }`}
               >
                 {contactStatusLabels[s]}
@@ -147,18 +147,18 @@ function SiteStatsEditor() {
   return (
     <div className="border border-line bg-panel rounded-md p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-white font-semibold text-base">Public Site Stats</h3>
+        <h3 className="text-navy-primary font-semibold text-base">Public Site Stats</h3>
         {editing ? (
           <div className="flex gap-2">
-            <button onClick={() => setEditing(false)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-400 hover:text-white border border-white/[0.1] text-xs transition-colors">
+            <button onClick={() => setEditing(false)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-400 hover:text-navy-primary border border-white/[0.1] text-xs transition-colors">
               <FiX size={12} /> Cancel
             </button>
-            <button onClick={save} disabled={saving} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs transition-colors disabled:opacity-60">
+            <button onClick={save} disabled={saving} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-navy-primary text-xs transition-colors disabled:opacity-60">
               <FiSave size={12} /> {saving ? 'Saving...' : 'Save'}
             </button>
           </div>
         ) : (
-          <button onClick={() => setEditing(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-400 hover:text-white border border-white/[0.1] text-xs transition-colors">
+          <button onClick={() => setEditing(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-400 hover:text-navy-primary border border-white/[0.1] text-xs transition-colors">
             <FiEdit2 size={12} /> Edit
           </button>
         )}
@@ -172,10 +172,10 @@ function SiteStatsEditor() {
                 type={type}
                 value={form[key] ?? ''}
                 onChange={e => setForm(f => ({ ...f, [key]: type === 'number' ? Number(e.target.value) : e.target.value }))}
-                className="w-full bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-primary-500/60 transition-colors"
+                className="w-full bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-navy-primary text-sm outline-none focus:border-primary-500/60 transition-colors"
               />
             ) : (
-              <p className="text-white font-semibold text-lg">{stats[key]}</p>
+              <p className="text-navy-primary font-semibold text-lg">{stats[key]}</p>
             )}
           </div>
         ))}
@@ -263,15 +263,15 @@ function ProjectFormModal({ project, onClose, onSave }) {
     } finally { setSaving(false) }
   }
 
-  const inputCls = 'w-full bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-primary-500/60 transition-colors'
+  const inputCls = 'w-full bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-navy-primary text-sm outline-none focus:border-primary-500/60 transition-colors'
   const labelCls = 'text-slate-400 text-xs font-medium mb-1 block'
 
   return (
     <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-start justify-center p-4 overflow-y-auto" onClick={onClose}>
       <div className="bg-panel border border-line rounded-md w-full max-w-3xl my-8" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between p-6 border-b border-white/[0.06]">
-          <h2 className="text-white font-bold text-lg">{isEdit ? 'Edit Project' : 'Add New Project'}</h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-white p-1"><FiX size={20} /></button>
+          <h2 className="text-navy-primary font-bold text-lg">{isEdit ? 'Edit Project' : 'Add New Project'}</h2>
+          <button onClick={onClose} className="text-slate-400 hover:text-navy-primary p-1"><FiX size={20} /></button>
         </div>
 
         <div className="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
@@ -410,8 +410,8 @@ function ProjectFormModal({ project, onClose, onSave }) {
         </div>
 
         <div className="flex items-center justify-end gap-3 p-6 border-t border-white/[0.06]">
-          <button onClick={onClose} className="px-4 py-2 rounded-lg text-slate-400 hover:text-white border border-white/[0.1] text-sm transition-colors">Cancel</button>
-          <button onClick={handleSave} disabled={saving} className="px-6 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium transition-colors disabled:opacity-60">
+          <button onClick={onClose} className="px-4 py-2 rounded-lg text-slate-400 hover:text-navy-primary border border-white/[0.1] text-sm transition-colors">Cancel</button>
+          <button onClick={handleSave} disabled={saving} className="px-6 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-navy-primary text-sm font-medium transition-colors disabled:opacity-60">
             {saving ? 'Saving...' : isEdit ? 'Update Project' : 'Create Project'}
           </button>
         </div>
@@ -429,7 +429,7 @@ function ArrayField({ label, items, input, setInput, onAdd, onRemove, placeholde
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), onAdd())}
-          className="flex-1 bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-primary-500/60 transition-colors"
+          className="flex-1 bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-navy-primary text-sm outline-none focus:border-primary-500/60 transition-colors"
           placeholder={placeholder}
         />
         <button type="button" onClick={onAdd} className="px-3 py-2 rounded-lg bg-primary-500/20 text-primary-400 text-sm hover:bg-primary-500/30 transition-colors">
@@ -500,12 +500,12 @@ function ProjectManager() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-white font-bold text-xl">Projects</h2>
+          <h2 className="text-navy-primary font-bold text-xl">Projects</h2>
           <p className="text-slate-500 text-sm">{projects.length} total · {inProgress} in progress · {completed} completed</p>
         </div>
         <button
           onClick={() => { setEditProject(null); setShowForm(true) }}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium transition-colors"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary-500 hover:bg-primary-600 text-navy-primary text-sm font-medium transition-colors"
         >
           <FiPlus size={16} /> Add Project
         </button>
@@ -522,7 +522,7 @@ function ProjectManager() {
             key={t.id}
             onClick={() => setFilter(t.id)}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-t-lg text-sm font-medium transition-colors ${
-              filter === t.id ? 'text-white border-b-2 border-primary-500' : 'text-slate-500 hover:text-white'
+              filter === t.id ? 'text-navy-primary border-b-2 border-primary-500' : 'text-slate-500 hover:text-navy-primary'
             }`}
           >
             {t.label}
@@ -550,7 +550,7 @@ function ProjectManager() {
               <div className="flex items-start gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-1">
-                    <h3 className="text-white font-semibold text-sm">{project.title}</h3>
+                    <h3 className="text-navy-primary font-semibold text-sm">{project.title}</h3>
                     {project.featured && <FiStar size={12} className="text-amber-400" />}
                     <span className={`px-2 py-0.5 rounded-full border text-xs font-medium ${
                       project.status === 'completed'
@@ -582,7 +582,7 @@ function ProjectManager() {
                   )}
                   <button
                     onClick={() => { setEditProject(project); setShowForm(true) }}
-                    className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors"
+                    className="p-2 rounded-lg text-slate-400 hover:text-navy-primary hover:bg-white/[0.06] transition-colors"
                   >
                     <FiEdit2 size={14} />
                   </button>
@@ -659,7 +659,7 @@ function LoginScreen({ onLogin }) {
           <div className="flex justify-center mb-4">
             <BrandLogo variant="mark" link={false} imgClassName="h-12 w-12" />
           </div>
-          <h1 className="text-white font-bold text-xl">Dashboard</h1>
+          <h1 className="text-navy-primary font-bold text-xl">Dashboard</h1>
           <p className="text-slate-500 text-sm mt-1">Orchestrix Labs — Admin</p>
         </div>
         <div className="border border-line bg-panel rounded-md p-6">
@@ -670,7 +670,7 @@ function LoginScreen({ onLogin }) {
             onChange={e => setPassword(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && attempt()}
             placeholder="Enter dashboard password"
-            className="w-full bg-dark-950 border border-white/[0.1] rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-primary-500/60 transition-colors mb-3"
+            className="w-full bg-dark-950 border border-white/[0.1] rounded-xl px-4 py-3 text-navy-primary text-sm outline-none focus:border-primary-500/60 transition-colors mb-3"
             autoFocus
             data-clarity-mask="true"
           />
@@ -678,7 +678,7 @@ function LoginScreen({ onLogin }) {
           <button
             onClick={attempt}
             disabled={loading || !password}
-            className="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 rounded-xl text-sm transition-colors disabled:opacity-60"
+            className="w-full bg-primary-500 hover:bg-primary-600 text-navy-primary font-semibold py-3 rounded-xl text-sm transition-colors disabled:opacity-60"
           >
             {loading ? 'Checking...' : 'Sign In'}
           </button>
@@ -735,14 +735,14 @@ function CrudSection({ title, endpoint, fields, emptyItem, renderRow }) {
     } catch { /* ignore */ }
   }
 
-  const inputCls = 'w-full bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-primary-500/60 transition-colors'
+  const inputCls = 'w-full bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-navy-primary text-sm outline-none focus:border-primary-500/60 transition-colors'
   const labelCls = 'text-slate-400 text-xs font-medium mb-1 block'
 
   return (
     <div className="border border-line bg-panel rounded-md p-6">
       <div className="flex items-center justify-between mb-5">
-        <h3 className="text-white font-semibold text-base">{title}</h3>
-        <button onClick={startNew} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs transition-colors">
+        <h3 className="text-navy-primary font-semibold text-base">{title}</h3>
+        <button onClick={startNew} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-navy-primary text-xs transition-colors">
           <FiPlus size={12} /> Add
         </button>
       </div>
@@ -789,10 +789,10 @@ function CrudSection({ title, endpoint, fields, emptyItem, renderRow }) {
             </div>
           ))}
           <div className="flex gap-2 pt-2">
-            <button onClick={save} disabled={saving} className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs transition-colors disabled:opacity-60">
+            <button onClick={save} disabled={saving} className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-navy-primary text-xs transition-colors disabled:opacity-60">
               <FiSave size={12} /> {saving ? 'Saving...' : 'Save'}
             </button>
-            <button onClick={cancel} className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-white/[0.1] text-slate-400 hover:text-white text-xs transition-colors">
+            <button onClick={cancel} className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-white/[0.1] text-slate-400 hover:text-navy-primary text-xs transition-colors">
               <FiX size={12} /> Cancel
             </button>
           </div>
@@ -813,7 +813,7 @@ function CrudSection({ title, endpoint, fields, emptyItem, renderRow }) {
                 {renderRow(item)}
               </div>
               <div className="flex items-center gap-1 flex-shrink-0">
-                <button onClick={() => startEdit(item)} className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors">
+                <button onClick={() => startEdit(item)} className="p-1.5 rounded-lg text-slate-400 hover:text-navy-primary hover:bg-white/[0.06] transition-colors">
                   <FiEdit2 size={13} />
                 </button>
                 <button onClick={() => remove(item.id)} className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-white/[0.06] transition-colors">
@@ -851,9 +851,9 @@ function TagsInput({ value, onChange }) {
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), add())}
           placeholder="Add tag..."
-          className="flex-1 bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-1.5 text-white text-xs outline-none focus:border-primary-500/60 transition-colors"
+          className="flex-1 bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-1.5 text-navy-primary text-xs outline-none focus:border-primary-500/60 transition-colors"
         />
-        <button onClick={add} className="px-3 py-1.5 rounded-lg bg-white/[0.06] text-slate-400 hover:text-white text-xs transition-colors">Add</button>
+        <button onClick={add} className="px-3 py-1.5 rounded-lg bg-white/[0.06] text-slate-400 hover:text-navy-primary text-xs transition-colors">Add</button>
       </div>
     </div>
   )
@@ -883,7 +883,7 @@ function SiteContentEditor() {
 
   if (!content) return <div className="text-slate-500 text-sm p-6">Loading...</div>
 
-  const inputCls = 'w-full bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-primary-500/60 transition-colors'
+  const inputCls = 'w-full bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-navy-primary text-sm outline-none focus:border-primary-500/60 transition-colors'
   const labelCls = 'text-slate-400 text-xs font-medium mb-1 block'
 
   const sections = [
@@ -930,18 +930,18 @@ function SiteContentEditor() {
   return (
     <div className="border border-line bg-panel rounded-md p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-white font-semibold text-base">Page Content & Settings</h3>
+        <h3 className="text-navy-primary font-semibold text-base">Page Content & Settings</h3>
         {editing ? (
           <div className="flex gap-2">
-            <button onClick={() => { setEditing(false); setForm(content) }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-400 hover:text-white border border-white/[0.1] text-xs transition-colors">
+            <button onClick={() => { setEditing(false); setForm(content) }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-400 hover:text-navy-primary border border-white/[0.1] text-xs transition-colors">
               <FiX size={12} /> Cancel
             </button>
-            <button onClick={save} disabled={saving} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs transition-colors disabled:opacity-60">
+            <button onClick={save} disabled={saving} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-navy-primary text-xs transition-colors disabled:opacity-60">
               <FiSave size={12} /> {saving ? 'Saving...' : 'Save All'}
             </button>
           </div>
         ) : (
-          <button onClick={() => setEditing(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-400 hover:text-white border border-white/[0.1] text-xs transition-colors">
+          <button onClick={() => setEditing(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-400 hover:text-navy-primary border border-white/[0.1] text-xs transition-colors">
             <FiEdit2 size={12} /> Edit
           </button>
         )}
@@ -995,7 +995,7 @@ function ContentManager() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-white font-bold text-xl">Content Management</h2>
+      <h2 className="text-navy-primary font-bold text-xl">Content Management</h2>
 
       <div className="flex items-center gap-1 border-b border-white/[0.06] pb-1 overflow-x-auto">
         {tabs.map(t => (
@@ -1003,7 +1003,7 @@ function ContentManager() {
             key={t.id}
             onClick={() => setTab(t.id)}
             className={`px-4 py-2 rounded-t-lg text-sm font-medium transition-colors flex-shrink-0 ${
-              tab === t.id ? 'text-white border-b-2 border-primary-500' : 'text-slate-500 hover:text-white'
+              tab === t.id ? 'text-navy-primary border-b-2 border-primary-500' : 'text-slate-500 hover:text-navy-primary'
             }`}
           >
             {t.label}
@@ -1030,7 +1030,7 @@ function ContentManager() {
           renderRow={item => (
             <div>
               <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-white text-sm font-medium">{item.client_name}</span>
+                <span className="text-navy-primary text-sm font-medium">{item.client_name}</span>
                 <span className="text-slate-500 text-xs">— {item.client_role}</span>
                 <span className="text-amber-400 text-xs flex items-center gap-0.5"><FiStar size={10} /> {item.rating}</span>
                 {!item.is_active && <span className="text-rose-400 text-xs">(hidden)</span>}
@@ -1054,7 +1054,7 @@ function ContentManager() {
           ]}
           renderRow={item => (
             <div>
-              <p className="text-white text-sm font-medium">{item.question}</p>
+              <p className="text-navy-primary text-sm font-medium">{item.question}</p>
               <p className="text-slate-400 text-xs truncate mt-0.5">{item.answer}</p>
               {!item.is_active && <span className="text-rose-400 text-xs">(hidden)</span>}
             </div>
@@ -1075,7 +1075,7 @@ function ContentManager() {
           ]}
           renderRow={item => (
             <div className="flex items-center gap-3">
-              <span className="text-white text-sm font-medium">{item.label}</span>
+              <span className="text-navy-primary text-sm font-medium">{item.label}</span>
               <span className="px-2 py-0.5 rounded-full bg-primary-500/10 text-primary-400 text-xs font-bold">{item.count}</span>
               {!item.is_active && <span className="text-rose-400 text-xs">(hidden)</span>}
             </div>
@@ -1136,7 +1136,7 @@ function VisitorAnalytics({ stats }) {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-white font-bold text-xl">Visitor Analytics</h2>
+          <h2 className="text-navy-primary font-bold text-xl">Visitor Analytics</h2>
           <p className="text-slate-500 text-sm">{total.toLocaleString()} total page views tracked</p>
         </div>
       </div>
@@ -1146,28 +1146,28 @@ function VisitorAnalytics({ stats }) {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="border border-line bg-panel rounded-md p-4">
             <p className="text-slate-500 text-xs mb-0.5">Today</p>
-            <p className="text-white font-bold text-xl">{stats.visits.today}</p>
+            <p className="text-navy-primary font-bold text-xl">{stats.visits.today}</p>
             {typeof stats.visits.unique_today === 'number' && (
               <p className="text-slate-600 text-xs mt-0.5">{stats.visits.unique_today} unique</p>
             )}
           </div>
           <div className="border border-line bg-panel rounded-md p-4">
             <p className="text-slate-500 text-xs mb-0.5">This Week</p>
-            <p className="text-white font-bold text-xl">{stats.visits.this_week}</p>
+            <p className="text-navy-primary font-bold text-xl">{stats.visits.this_week}</p>
             {typeof stats.visits.unique_week === 'number' && (
               <p className="text-slate-600 text-xs mt-0.5">{stats.visits.unique_week} unique</p>
             )}
           </div>
           <div className="border border-line bg-panel rounded-md p-4">
             <p className="text-slate-500 text-xs mb-0.5">This Month</p>
-            <p className="text-white font-bold text-xl">{stats.visits.this_month}</p>
+            <p className="text-navy-primary font-bold text-xl">{stats.visits.this_month}</p>
             {typeof stats.visits.unique_month === 'number' && (
               <p className="text-slate-600 text-xs mt-0.5">{stats.visits.unique_month} unique</p>
             )}
           </div>
           <div className="border border-line bg-panel rounded-md p-4">
             <p className="text-slate-500 text-xs mb-0.5">All Time</p>
-            <p className="text-white font-bold text-xl">{stats.visits.total}</p>
+            <p className="text-navy-primary font-bold text-xl">{stats.visits.total}</p>
           </div>
         </div>
       )}
@@ -1189,7 +1189,7 @@ function VisitorAnalytics({ stats }) {
                     <Icon size={12} className="text-slate-500 flex-shrink-0" />
                     <span className="text-slate-300 text-xs capitalize flex-1">{d.device_type}</span>
                     <span className="text-slate-500 text-xs">{pct}%</span>
-                    <span className="text-white text-xs font-semibold w-8 text-right">{d.count}</span>
+                    <span className="text-navy-primary text-xs font-semibold w-8 text-right">{d.count}</span>
                   </div>
                 )
               })}
@@ -1207,7 +1207,7 @@ function VisitorAnalytics({ stats }) {
               {browsers.map(b => (
                 <div key={b.browser} className="flex items-center gap-2">
                   <span className="text-slate-300 text-xs flex-1 truncate">{b.browser}</span>
-                  <span className="text-white text-xs font-semibold">{b.count}</span>
+                  <span className="text-navy-primary text-xs font-semibold">{b.count}</span>
                 </div>
               ))}
             </div>
@@ -1224,7 +1224,7 @@ function VisitorAnalytics({ stats }) {
               {countries.map(c => (
                 <div key={c.country} className="flex items-center gap-2">
                   <span className="text-slate-300 text-xs flex-1 truncate">{c.country}</span>
-                  <span className="text-white text-xs font-semibold">{c.count}</span>
+                  <span className="text-navy-primary text-xs font-semibold">{c.count}</span>
                 </div>
               ))}
             </div>
@@ -1244,7 +1244,7 @@ function VisitorAnalytics({ stats }) {
                 return (
                   <div key={r.referrer} className="flex items-center gap-2">
                     <span className="text-slate-300 text-xs flex-1 truncate" title={r.referrer}>{display}</span>
-                    <span className="text-white text-xs font-semibold">{r.count}</span>
+                    <span className="text-navy-primary text-xs font-semibold">{r.count}</span>
                   </div>
                 )
               })}
@@ -1263,7 +1263,7 @@ function VisitorAnalytics({ stats }) {
               onChange={e => setSearch(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && applySearch()}
               placeholder="Search by page path..."
-              className="w-full bg-dark-900 border border-white/[0.1] rounded-xl pl-9 pr-3 py-2.5 text-white text-sm outline-none focus:border-primary-500/60 transition-colors"
+              className="w-full bg-dark-900 border border-white/[0.1] rounded-xl pl-9 pr-3 py-2.5 text-navy-primary text-sm outline-none focus:border-primary-500/60 transition-colors"
             />
           </div>
           <button onClick={applySearch} className="px-4 py-2.5 rounded-xl bg-primary-500/20 text-primary-400 text-sm hover:bg-primary-500/30 transition-colors">
@@ -1273,7 +1273,7 @@ function VisitorAnalytics({ stats }) {
         <button
           onClick={() => setShowFilters(f => !f)}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm transition-colors ${
-            showFilters ? 'border-primary-500/40 text-primary-400 bg-primary-500/10' : 'border-white/[0.1] text-slate-400 hover:text-white'
+            showFilters ? 'border-primary-500/40 text-primary-400 bg-primary-500/10' : 'border-white/[0.1] text-slate-400 hover:text-navy-primary'
           }`}
         >
           <FiFilter size={14} /> Filters
@@ -1288,7 +1288,7 @@ function VisitorAnalytics({ stats }) {
               value={filters.country}
               onChange={e => setFilters(f => ({ ...f, country: e.target.value }))}
               placeholder="e.g. India"
-              className="bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-primary-500/60 transition-colors w-40"
+              className="bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-navy-primary text-sm outline-none focus:border-primary-500/60 transition-colors w-40"
             />
           </div>
           <div>
@@ -1296,7 +1296,7 @@ function VisitorAnalytics({ stats }) {
             <select
               value={filters.device}
               onChange={e => setFilters(f => ({ ...f, device: e.target.value }))}
-              className="bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-primary-500/60 transition-colors w-36 cursor-pointer"
+              className="bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-navy-primary text-sm outline-none focus:border-primary-500/60 transition-colors w-36 cursor-pointer"
             >
               <option value="" className="bg-dark-900">All</option>
               <option value="desktop" className="bg-dark-900">Desktop</option>
@@ -1308,7 +1308,7 @@ function VisitorAnalytics({ stats }) {
           <div className="flex items-end">
             <button
               onClick={() => { setFilters({ path: '', country: '', device: '' }); setSearch('') }}
-              className="px-3 py-2 rounded-lg text-slate-400 hover:text-white border border-white/[0.1] text-xs transition-colors"
+              className="px-3 py-2 rounded-lg text-slate-400 hover:text-navy-primary border border-white/[0.1] text-xs transition-colors"
             >
               Clear All
             </button>
@@ -1361,7 +1361,7 @@ function VisitorAnalytics({ stats }) {
                         <span className="text-slate-300 text-xs whitespace-nowrap">{timeStr}</span>
                       </td>
                       <td className="px-3 py-2">
-                        <span className="text-white text-xs font-mono">{v.path}</span>
+                        <span className="text-navy-primary text-xs font-mono">{v.path}</span>
                       </td>
                       <td className="px-3 py-2 hidden md:table-cell">
                         <div className="text-slate-300 text-xs">
@@ -1407,7 +1407,7 @@ function VisitorAnalytics({ stats }) {
               <button
                 onClick={() => load(page - 1)}
                 disabled={page <= 1}
-                className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="p-2 rounded-lg text-slate-400 hover:text-navy-primary hover:bg-white/[0.06] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <FiChevronLeft size={14} />
               </button>
@@ -1423,7 +1423,7 @@ function VisitorAnalytics({ stats }) {
                     key={pg}
                     onClick={() => load(pg)}
                     className={`w-8 h-8 rounded-lg text-xs font-medium transition-colors ${
-                      pg === page ? 'bg-primary-500 text-white' : 'text-slate-400 hover:text-white hover:bg-white/[0.06]'
+                      pg === page ? 'bg-primary-500 text-navy-primary' : 'text-slate-400 hover:text-navy-primary hover:bg-white/[0.06]'
                     }`}
                   >
                     {pg}
@@ -1433,7 +1433,7 @@ function VisitorAnalytics({ stats }) {
               <button
                 onClick={() => load(page + 1)}
                 disabled={page >= totalPages}
-                className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="p-2 rounded-lg text-slate-400 hover:text-navy-primary hover:bg-white/[0.06] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <FiChevronRight size={14} />
               </button>
@@ -1553,7 +1553,7 @@ export default function Dashboard() {
 
   return (
     <div
-      className="min-h-screen bg-ink text-white flex"
+      className="min-h-screen bg-ink text-navy-primary flex"
       data-clarity-mask="true"
     >
       {/* Sidebar - Desktop */}
@@ -1562,7 +1562,7 @@ export default function Dashboard() {
           <div className="flex items-center gap-3">
             <BrandLogo variant="mark" link={false} imgClassName="h-8 w-8" />
             <div>
-              <p className="text-white font-semibold text-sm">Orchestrix Labs</p>
+              <p className="text-navy-primary font-semibold text-sm">Orchestrix Labs</p>
               <p className="text-slate-500 text-xs">Admin Dashboard</p>
             </div>
           </div>
@@ -1575,7 +1575,7 @@ export default function Dashboard() {
               className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors border-l-2 ${
                 page === p.id
                   ? 'text-cyan-400 bg-transparent border-cyan-500'
-                  : 'text-slate-400 hover:text-white hover:bg-white/[0.04] border-transparent'
+                  : 'text-slate-400 hover:text-navy-primary hover:bg-white/[0.04] border-transparent'
               }`}
             >
               <p.icon size={16} />
@@ -1601,7 +1601,7 @@ export default function Dashboard() {
             <div className="p-4 border-b border-line">
               <div className="flex items-center gap-3">
                 <BrandLogo variant="mark" link={false} imgClassName="h-8 w-8" />
-                <p className="text-white font-semibold text-sm">Dashboard</p>
+                <p className="text-navy-primary font-semibold text-sm">Dashboard</p>
               </div>
             </div>
             <nav className="flex-1 p-3 space-y-1">
@@ -1610,7 +1610,7 @@ export default function Dashboard() {
                   key={p.id}
                   onClick={() => { setPage(p.id); setSidebarOpen(false) }}
                   className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors border-l-2 ${
-                    page === p.id ? 'text-cyan-400 bg-transparent border-cyan-500' : 'text-slate-400 hover:text-white hover:bg-white/[0.04] border-transparent'
+                    page === p.id ? 'text-cyan-400 bg-transparent border-cyan-500' : 'text-slate-400 hover:text-navy-primary hover:bg-white/[0.04] border-transparent'
                   }`}
                 >
                   <p.icon size={16} />
@@ -1633,15 +1633,15 @@ export default function Dashboard() {
         <header className="border-b border-line bg-ink sticky top-0 z-30">
           <div className="flex items-center justify-between h-14 px-4 sm:px-6">
             <div className="flex items-center gap-3">
-              <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-slate-400 hover:text-white p-1">
+              <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-slate-400 hover:text-navy-primary p-1">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12h18M3 6h18M3 18h18" /></svg>
               </button>
-              <h1 className="text-white font-semibold text-sm">{PAGES.find(p => p.id === page)?.label}</h1>
+              <h1 className="text-navy-primary font-semibold text-sm">{PAGES.find(p => p.id === page)?.label}</h1>
             </div>
             <button
               onClick={loadAll}
               disabled={refreshing}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-slate-400 hover:text-white border border-line text-xs transition-colors disabled:opacity-50"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-slate-400 hover:text-navy-primary border border-line text-xs transition-colors disabled:opacity-50"
             >
               <FiRefreshCw size={12} className={refreshing ? 'animate-spin' : ''} /> Refresh
             </button>
@@ -1696,7 +1696,7 @@ export default function Dashboard() {
                   {/* Daily views bar chart */}
                   {(stats.visits.daily?.length || 0) > 0 && (
                     <div className="border border-line bg-panel rounded-md p-6">
-                      <h3 className="text-white font-semibold text-base mb-4 flex items-center gap-2">
+                      <h3 className="text-navy-primary font-semibold text-base mb-4 flex items-center gap-2">
                         <FiTrendingUp size={16} className="text-emerald-400" /> Daily Views (Last 7 Days)
                       </h3>
                       <div className="flex items-end gap-2 h-32">
@@ -1706,7 +1706,7 @@ export default function Dashboard() {
                           const dayLabel = new Date(d.date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short' })
                           return (
                             <div key={d.date} className="flex-1 flex flex-col items-center gap-1">
-                              <span className="text-white text-xs font-semibold">{d.count}</span>
+                              <span className="text-navy-primary text-xs font-semibold">{d.count}</span>
                               <div className="w-full bg-primary-500/60 rounded-t-lg transition-all" style={{ height: `${h}%` }} />
                               <span className="text-slate-500 text-xs">{dayLabel}</span>
                             </div>
@@ -1719,7 +1719,7 @@ export default function Dashboard() {
                   {/* Top Pages */}
                   {(stats.top_pages?.length || 0) > 0 && (
                     <div className="border border-line bg-panel rounded-md p-6">
-                      <h3 className="text-white font-semibold text-base mb-4 flex items-center gap-2">
+                      <h3 className="text-navy-primary font-semibold text-base mb-4 flex items-center gap-2">
                         <FiEye size={16} className="text-primary-400" /> Top Pages
                       </h3>
                       <div className="space-y-2">
@@ -1745,7 +1745,7 @@ export default function Dashboard() {
               {newContacts.length > 0 && (
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-white font-semibold text-base">New Leads</h3>
+                    <h3 className="text-navy-primary font-semibold text-base">New Leads</h3>
                     <button onClick={() => setPage('contacts')} className="text-primary-400 text-xs hover:underline">View all</button>
                   </div>
                   <div className="space-y-3">
@@ -1767,14 +1767,14 @@ export default function Dashboard() {
           {/* ── Contacts / Leads Page ── */}
           {page === 'contacts' && (
             <div className="space-y-6">
-              <h2 className="text-white font-bold text-xl">Leads & Contacts</h2>
+              <h2 className="text-navy-primary font-bold text-xl">Leads & Contacts</h2>
               <div className="flex items-center gap-1 border-b border-white/[0.06] pb-1 overflow-x-auto">
                 {contactTabs.map(t => (
                   <button
                     key={t.id}
                     onClick={() => setContactTab(t.id)}
                     className={`flex items-center gap-1.5 px-4 py-2 rounded-t-lg text-sm font-medium transition-colors flex-shrink-0 ${
-                      contactTab === t.id ? 'text-white border-b-2 border-primary-500' : 'text-slate-500 hover:text-white'
+                      contactTab === t.id ? 'text-navy-primary border-b-2 border-primary-500' : 'text-slate-500 hover:text-navy-primary'
                     }`}
                   >
                     {t.label}
@@ -1807,7 +1807,7 @@ export default function Dashboard() {
           {/* ── Settings Page ── */}
           {page === 'settings' && (
             <div className="space-y-6">
-              <h2 className="text-white font-bold text-xl">Settings</h2>
+              <h2 className="text-navy-primary font-bold text-xl">Settings</h2>
               <SiteStatsEditor />
             </div>
           )}

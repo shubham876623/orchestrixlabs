@@ -82,14 +82,14 @@ export default function AnalyticsConsentBanner() {
       <div className="pointer-events-auto mx-auto flex max-w-3xl flex-col gap-4 rounded-2xl border border-white/10 bg-dark-950/95 p-4 shadow-[0_-8px_40px_rgba(0,0,0,0.45)] backdrop-blur-md sm:p-5">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-sm font-semibold text-white">Cookie Settings</p>
+            <p className="text-sm font-semibold text-navy-primary">Cookie Settings</p>
             <p className="mt-1 text-sm leading-relaxed text-slate-300">{statusLabel}</p>
           </div>
           {hasAnalyticsConsentDecision() && (
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="rounded-lg px-2 py-1 text-xs text-slate-400 hover:text-white"
+              className="rounded-lg px-2 py-1 text-xs text-slate-400 hover:text-navy-primary"
               aria-label="Close cookie settings"
             >
               Close
@@ -101,7 +101,7 @@ export default function AnalyticsConsentBanner() {
           only. Decline anytime — see our{' '}
           <Link
             to="/privacy-policy#cookies-analytics"
-            className="text-cyan-300 underline-offset-2 hover:text-white hover:underline"
+            className="text-cyan-300 underline-offset-2 hover:text-navy-primary hover:underline"
             onClick={() => setOpen(false)}
           >
             Privacy Policy
@@ -112,7 +112,7 @@ export default function AnalyticsConsentBanner() {
           <button
             type="button"
             onClick={() => choose('denied')}
-            className="rounded-xl border border-white/10 px-4 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:border-white/25 hover:text-white"
+            className="rounded-xl border border-white/10 px-4 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:border-white/25 hover:text-navy-primary"
           >
             {consent === 'granted' ? 'Withdraw analytics' : 'Decline'}
           </button>

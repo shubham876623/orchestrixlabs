@@ -22,7 +22,7 @@ export default function ProjectCard({ project, variant = 'grid' }) {
               {isDemo ? ' · Interactive demo' : ''}
               {project.flagshipRank === 1 ? ' · Flagship' : ''}
             </p>
-            <h3 className="font-display text-lg font-semibold leading-snug text-white">
+            <h3 className="font-display text-lg font-semibold leading-snug text-navy-primary">
               <Link
                 to={detailTo}
                 aria-label={`${detailLabel}: ${project.title}`}
@@ -53,7 +53,7 @@ export default function ProjectCard({ project, variant = 'grid' }) {
             </Link>
             <Link
               to={consultTo}
-              className="inline-flex min-h-[44px] items-center text-sm text-mute transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+              className="inline-flex min-h-[44px] items-center text-sm text-mute transition-colors hover:text-navy-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
             >
               {consultLabel}
             </Link>
@@ -129,7 +129,7 @@ export default function ProjectCard({ project, variant = 'grid' }) {
         </div>
 
         <h3
-          className={`font-display font-semibold leading-snug text-slate-900 dark:text-white ${
+          className={`font-display font-semibold leading-snug text-slate-900 dark:text-navy-primary ${
             featured ? 'text-2xl sm:text-[1.65rem]' : 'text-xl'
           }`}
         >

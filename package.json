@@ -24,7 +24,11 @@
     "indexnow:dry-run": "node scripts/submit-indexnow.mjs --dry-run",
     "indexnow:submit": "node scripts/submit-indexnow.mjs",
     "indexnow:force": "node scripts/submit-indexnow.mjs --force",
-    "postdeploy:indexnow": "node scripts/submit-indexnow.mjs"
+    "postdeploy:indexnow": "node scripts/submit-indexnow.mjs",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:report": "playwright show-report"
   },
   "imports": {
     "#portfolio-draft-loader": "./src/data/portfolioDraftLoader.review.js"
@@ -40,6 +44,7 @@
     "react-router-dom": "^6.22.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.17",
     "playwright": "^1.49.1",

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { FiArrowRight, FiSearch } from 'react-icons/fi'
@@ -149,7 +149,7 @@ export default function Portfolio() {
         <div className="container">
           <motion.h1
             {...fade(0.04)}
-            className="max-w-3xl font-display text-[2rem] font-semibold leading-[1.12] text-white sm:text-5xl"
+            className="max-w-3xl font-display text-[2rem] font-semibold leading-[1.12] text-navy-primary sm:text-5xl"
           >
             Engineering case studies for AI systems that ship
           </motion.h1>
@@ -174,7 +174,7 @@ export default function Portfolio() {
             className="mt-8 flex flex-wrap gap-x-6 gap-y-2 border-t border-border pt-5 text-sm text-navy-secondary"
           >
             <p>
-              <span className="font-semibold text-white">Founder credentials</span>
+              <span className="font-semibold text-navy-primary">Founder credentials</span>
               {' '}({SITE.founder}) — Top Rated on Upwork · {STATS.jss} Job Success · {SITE.founderExperienceYears}+ years engineering experience
             </p>
             <a
@@ -193,7 +193,7 @@ export default function Portfolio() {
         <section className="border-b border-border py-8 sm:py-10">
           <div className="container">
             <div className="mb-2 flex flex-wrap items-end justify-between gap-3">
-              <h2 className="font-display text-xl font-semibold text-white">Featured case study</h2>
+              <h2 className="font-display text-xl font-semibold text-navy-primary">Featured case study</h2>
               <button
                 type="button"
                 className="text-sm font-semibold text-cyan-300 hover:text-cyan-200"
@@ -245,7 +245,7 @@ export default function Portfolio() {
                       'min-h-[40px] border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition-colors',
                       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500',
                       selected
-                        ? 'border-slate-900 bg-slate-900 text-white dark:border-white dark:bg-white dark:text-slate-900'
+                        ? 'border-slate-900 bg-slate-900 text-navy-primary dark:border-white dark:bg-white dark:text-slate-900'
                         : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 dark:border-white/10 dark:bg-white/[0.02] dark:text-slate-300',
                     ].join(' ')}
                   >
@@ -280,7 +280,7 @@ export default function Portfolio() {
 
           {filtered.length === 0 ? (
             <div className="border border-dashed border-slate-200 bg-slate-50 px-6 py-16 text-center dark:border-white/10 dark:bg-dark-900/40">
-              <p className="font-display text-xl text-slate-900 dark:text-white">No projects in this view</p>
+              <p className="font-display text-xl text-slate-900 dark:text-navy-primary">No projects in this view</p>
               <button
                 type="button"
                 className="btn-outline mt-6"

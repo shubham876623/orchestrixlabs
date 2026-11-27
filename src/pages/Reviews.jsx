@@ -108,7 +108,7 @@ export default function Reviews() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.1 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-white mb-5"
+            className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-navy-primary mb-5"
           >
             Trusted by clients{' '}
             <span className="gradient-text">worldwide</span>
@@ -137,10 +137,10 @@ export default function Reviews() {
             </div>
             <div className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-primary-500/10 border border-primary-500/20">
               <FiCheckCircle className="text-primary-400" size={16} />
-              <span className="text-white font-bold text-sm">100% Job Success</span>
+              <span className="text-navy-primary font-bold text-sm">100% Job Success</span>
             </div>
             <div className="px-5 py-3 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
-              <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.years_experience}+</span> Years Experience</span>
+              <span className="text-slate-300 text-sm"><span className="font-bold text-navy-primary">{siteStats.years_experience}+</span> Years Experience</span>
             </div>
           </motion.div>
 
@@ -204,7 +204,7 @@ export default function Reviews() {
                     </span>
                   </div>
                   <div>
-                    <p className="text-white font-semibold text-xs">{t.client_name || t.name}</p>
+                    <p className="text-navy-primary font-semibold text-xs">{t.client_name || t.name}</p>
                     <p className="text-slate-500 text-xs mt-0.5">{t.client_role || t.role} · {t.source || 'Upwork'}</p>
                   </div>
                 </div>

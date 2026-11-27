@@ -132,7 +132,7 @@ export default function Contact() {
   }
 
   const inputClass = (field) =>
-    `w-full bg-paper-elevated border ${errors[field] ? 'border-red-500/50' : 'border-border'} rounded-md px-4 py-3 text-white placeholder-slate-600 text-sm outline-none focus:border-primary-500 transition-colors duration-200`
+    `w-full bg-paper-elevated border ${errors[field] ? 'border-red-500/50' : 'border-border'} rounded-md px-4 py-3 text-navy-primary placeholder-slate-600 text-sm outline-none focus:border-primary-500 transition-colors duration-200`
 
   return (
     <>
@@ -181,7 +181,7 @@ export default function Contact() {
                     <div className="w-16 h-16 rounded-full bg-emerald-500/15 flex items-center justify-center mx-auto mb-4">
                       <FiCheckCircle className="text-emerald-400" size={32} />
                     </div>
-                    <h3 className="text-white font-bold text-xl mb-2">Consultation request received</h3>
+                    <h3 className="text-navy-primary font-bold text-xl mb-2">Consultation request received</h3>
                     <p className="text-slate-400 text-sm max-w-md mx-auto mb-6 leading-relaxed">
                       Thank you. Your brief is with the Orchestrix Labs team. We aim to respond within{' '}
                       {SITE.responseTime} with clear next steps.
@@ -193,7 +193,7 @@ export default function Contact() {
                       <button
                         type="button"
                         onClick={() => setStatus('idle')}
-                        className="text-slate-400 text-sm underline-offset-2 hover:text-white hover:underline"
+                        className="text-slate-400 text-sm underline-offset-2 hover:text-navy-primary hover:underline"
                       >
                         Send another message
                       </button>
@@ -207,7 +207,7 @@ export default function Contact() {
                     className="space-y-5 relative"
                     data-clarity-mask="true"
                   >
-                    <h2 className="text-white font-bold text-xl mb-2">Request Consultation</h2>
+                    <h2 className="text-navy-primary font-bold text-xl mb-2">Request Consultation</h2>
                     <p className="text-slate-500 text-sm mb-6">Required fields take about two minutes.</p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -331,7 +331,7 @@ export default function Contact() {
 
             <div className="lg:col-span-2 space-y-5">
               <motion.div variants={fadeUp} custom={1} className="bg-paper-subtle border border-border rounded-md p-6">
-                <h3 className="text-white font-bold text-base mb-5">Get in touch</h3>
+                <h3 className="text-navy-primary font-bold text-base mb-5">Get in touch</h3>
                 <div className="space-y-4">
                   {contactInfo.map(({ icon: Icon, label, value, href }) => {
                     const inner = (
@@ -341,7 +341,7 @@ export default function Contact() {
                         </div>
                         <div>
                           <p className="text-slate-500 text-xs">{label}</p>
-                          <p className="text-slate-300 text-sm group-hover:text-white transition-colors leading-snug">{value}</p>
+                          <p className="text-slate-300 text-sm group-hover:text-navy-primary transition-colors leading-snug">{value}</p>
                         </div>
                       </>
                     )
@@ -363,14 +363,14 @@ export default function Contact() {
                   <span className="w-2 h-2 rounded-full bg-emerald-400" />
                   <span className="text-emerald-400 text-xs font-semibold">Quick Response</span>
                 </div>
-                <p className="text-white font-semibold text-base mb-1">{SITE.responseTime} typical response</p>
+                <p className="text-navy-primary font-semibold text-base mb-1">{SITE.responseTime} typical response</p>
                 <p className="text-slate-400 text-sm leading-relaxed">
                   We review every message personally and always respond with a clear, honest assessment — no auto-replies.
                 </p>
               </motion.div>
 
               <motion.div variants={fadeUp} custom={3} className="bg-paper-subtle border border-border rounded-md p-6">
-                <h3 className="text-white font-bold text-sm mb-4">What happens next?</h3>
+                <h3 className="text-navy-primary font-bold text-sm mb-4">What happens next?</h3>
                 <ol className="space-y-3">
                   {[
                     `We review your message within ${SITE.responseTime}`,

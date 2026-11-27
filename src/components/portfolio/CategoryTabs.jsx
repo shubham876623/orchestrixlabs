@@ -55,7 +55,7 @@ export default function CategoryTabs({ categories, active, counts, onChange }) {
                   ? 'cursor-not-allowed border-slate-200 text-slate-400 dark:border-white/5 dark:text-slate-600'
                   : selected
                     ? 'border-cyan-600/40 bg-cyan-50 text-cyan-900 dark:border-cyan-400/40 dark:bg-cyan-400/10 dark:text-cyan-200'
-                    : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:text-slate-900 dark:border-white/10 dark:bg-white/[0.02] dark:text-slate-300 dark:hover:border-white/20 dark:hover:text-white',
+                    : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:text-slate-900 dark:border-white/10 dark:bg-white/[0.02] dark:text-slate-300 dark:hover:border-white/20 dark:hover:text-navy-primary',
               ].join(' ')}
             >
               {category}

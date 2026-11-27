@@ -11,7 +11,7 @@ function FaqItem({ item, open, onToggle }) {
         className="flex w-full items-center justify-between gap-4 py-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
         aria-expanded={open}
       >
-        <span className="text-sm font-semibold text-white sm:text-base">{item.q}</span>
+        <span className="text-sm font-semibold text-navy-primary sm:text-base">{item.q}</span>
         <FiChevronDown
           className={`flex-shrink-0 text-mute transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
           size={18}
@@ -31,7 +31,7 @@ export default function FAQSection({ items = defaultFaq, className = 'section-sh
   return (
     <section className={className}>
       <div className="container max-w-3xl">
-        <h2 className="mb-8 font-display text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+        <h2 className="mb-8 font-display text-2xl font-semibold tracking-tight text-navy-primary sm:text-3xl">
           Common questions
         </h2>
         <ul className="border-b border-line">
