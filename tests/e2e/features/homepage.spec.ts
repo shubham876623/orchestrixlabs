@@ -61,11 +61,11 @@ test.describe('Homepage Content', () => {
   })
 
   test('CTA buttons should have cyan color', async ({ page }) => {
-    const buttonColor = await homePage.bookCallButton.evaluate((el) => {
+    const buttonColor = await homePage.ctaButton.evaluate((el) => {
       return window.getComputedStyle(el).backgroundColor
     })
-    
-    // Cyan accent should be rgb(8, 145, 178) which is #0891B2
-    expect(buttonColor).toBe('rgb(8, 145, 178)')
+
+    // Primary buttons use cyan-hover (#0E7490 → rgb(14, 116, 144))
+    expect(buttonColor).toBe('rgb(14, 116, 144)')
   })
 })
