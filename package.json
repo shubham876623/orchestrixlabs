@@ -34,7 +34,9 @@
     "test:site-search": "node scripts/test-site-search.mjs",
     "test:nav-search-browser": "node scripts/test-nav-search-browser.mjs",
     "test:contact-browser": "node scripts/test-contact-form-browser.mjs",
-    "test:csp-browser": "node scripts/test-csp-browser.mjs"
+    "test:csp-browser": "node scripts/test-csp-browser.mjs",
+    "test:edge-middleware": "node scripts/test-edge-middleware.mjs",
+    "test:dashboard-auth-errors": "node scripts/test-dashboard-auth-errors.mjs"
   },
   "imports": {
     "#portfolio-draft-loader": "./src/data/portfolioDraftLoader.review.js"

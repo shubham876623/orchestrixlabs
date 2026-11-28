@@ -9,6 +9,7 @@ import {
   FiMonitor, FiSmartphone, FiTablet, FiGlobe,
   FiChevronLeft, FiChevronRight, FiSearch, FiFilter,
 } from 'react-icons/fi'
+import { signInErrorMessage } from '../lib/dashboardAuthErrors.js'
 
 const STORAGE_KEY = 'orchestrix_dash_secret'
 // The dashboard secret is a master credential: keep it only for this tab (sessionStorage) and
@@ -645,12 +646,8 @@ function LoginScreen({ onLogin }) {
     } catch (err) {
       if (!err?.response) {
         setError('Cannot reach the API. Check that the backend is available.')
-      } else if (err.response.status === 401 || err.response.status === 403) {
-        setError('Incorrect password — or this IP is temporarily locked after too many failed attempts. Wait 15 minutes, then retry with DASHBOARD_SECRET from Railway.')
-      } else if (err.response.status === 502) {
-        setError('API proxy is down (HTML instead of JSON). Wait for redeploy, then hard-refresh.')
       } else {
-        setError(`Sign-in failed (${err.response.status}). Try again.`)
+        setError(signInErrorMessage(err.response.status, err.response.headers?.['retry-after']))
       }
     } finally { setLoading(false) }
   }
