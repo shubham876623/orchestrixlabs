@@ -45,9 +45,13 @@ try {
     const thanks = page.getByText(/Our team will contact you soon/)
     await thanks.waitFor({ timeout: 15000 }).catch(() => {})
     check(`${label}: thank-you message shown`, await thanks.isVisible())
-    check(`${label}: thank-you is on screen and focused`, await thanks.isVisible() && (await page.evaluate(() => {
-      const r = document.activeElement?.getBoundingClientRect(); return document.activeElement?.tagName === 'H2' && r && r.top >= 0 && r.bottom <= innerHeight
-    })))
+    // The confirmation scrolls smoothly into view; wait for it to settle (fails if it never does).
+    const settled = await page.waitForFunction(() => {
+      const el = document.activeElement
+      const r = el?.getBoundingClientRect()
+      return el?.tagName === 'H2' && /Thank you/.test(el.textContent) && r.top >= 0 && r.bottom <= innerHeight
+    }, null, { timeout: 3000 }).then(() => true, () => false)
+    check(`${label}: thank-you is on screen and focused`, settled)
     check(`${label}: receipt names the file`, await page.getByText(`brief-${label}.pdf`).isVisible())
     if (SHOTS) await page.screenshot({ path: join(SHOTS, `contact-${label}-thanks.png`), fullPage: false })
     check(`${label}: no page errors`, errors.length === 0, errors.join(' | '))
