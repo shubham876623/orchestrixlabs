@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 
 const ASSETS = {
-  wordmark: '/brand/logo-wordmark-dark.svg',
+  wordmark: '/brand/logo-wordmark-light.svg',
   mark: '/brand/logo-mark-dark.svg',
 }
 

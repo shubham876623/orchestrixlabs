@@ -39,7 +39,7 @@ function SectionHeading({ id, number, children }) {
       id={id}
       className="scroll-mt-28 font-display text-xl font-semibold text-navy-primary sm:text-2xl"
     >
-      <span className="mr-2 text-cyan-400/90">{String(number).padStart(2, '0')}.</span>
+      <span className="mr-2 text-cyan-hover">{String(number).padStart(2, '0')}.</span>
       {children}
     </h2>
   )
@@ -62,19 +62,19 @@ export default function PrivacyPolicy() {
         <div className="container relative z-10">
           <p className="section-tag mb-5">Legal</p>
           <h1 className="section-heading mb-4 max-w-3xl">Privacy Policy</h1>
-          <p className="max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg">
+          <p className="max-w-2xl text-base leading-relaxed text-navy-secondary sm:text-lg">
             This Privacy Policy explains how Orchestrix Labs handles personal information when you visit
             our website, submit an enquiry, respond to our Meta lead forms, or engage us for technology
             services.
           </p>
-          <dl className="mt-6 flex flex-wrap gap-x-8 gap-y-2 text-sm text-slate-400">
+          <dl className="mt-6 flex flex-wrap gap-x-8 gap-y-2 text-sm text-navy-secondary">
             <div>
-              <dt className="inline text-slate-500">Effective date:&nbsp;</dt>
-              <dd className="inline text-slate-300">{EFFECTIVE_DATE}</dd>
+              <dt className="inline text-navy-muted">Effective date:&nbsp;</dt>
+              <dd className="inline text-navy-body">{EFFECTIVE_DATE}</dd>
             </div>
             <div>
-              <dt className="inline text-slate-500">Last updated:&nbsp;</dt>
-              <dd className="inline text-slate-300">{LAST_UPDATED}</dd>
+              <dt className="inline text-navy-muted">Last updated:&nbsp;</dt>
+              <dd className="inline text-navy-body">{LAST_UPDATED}</dd>
             </div>
           </dl>
         </div>
@@ -88,7 +88,7 @@ export default function PrivacyPolicy() {
                 aria-label="Privacy Policy contents"
                 className="rounded-2xl border border-border bg-paper-subtle p-5 max-lg:max-h-48 max-lg:overflow-y-auto"
               >
-                <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-navy-muted">
                   Contents
                 </p>
                 <ol className="max-h-[70vh] space-y-1.5 overflow-y-auto pr-1 text-sm">
@@ -96,7 +96,7 @@ export default function PrivacyPolicy() {
                     <li key={section.id}>
                       <a
                         href={`#${section.id}`}
-                        className="block rounded-lg px-2 py-1.5 text-slate-400 transition-colors hover:bg-white/[0.04] hover:text-navy-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+                        className="block rounded-lg px-2 py-1.5 text-navy-secondary transition-colors hover:bg-paper-subtle hover:text-navy-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
                       >
                         <span className="mr-1.5 text-slate-600">{String(index + 1).padStart(2, '0')}</span>
                         {section.title}
@@ -107,7 +107,7 @@ export default function PrivacyPolicy() {
               </nav>
             </aside>
 
-            <article className="max-w-3xl space-y-12 text-[15px] leading-relaxed text-slate-300 sm:text-base">
+            <article className="max-w-3xl space-y-12 text-[15px] leading-relaxed text-navy-body sm:text-base">
               <section className="space-y-4" aria-labelledby="introduction">
                 <SectionHeading id="introduction" number={1}>
                   Introduction and scope
@@ -120,7 +120,7 @@ export default function PrivacyPolicy() {
                 </p>
                 <p>
                   This Privacy Policy applies to personal information we collect through{' '}
-                  <a href={SITE.url} className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
+                  <a href={SITE.url} className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                     {SITE.url}
                   </a>
                   , our public business profiles, enquiry and lead forms (including Facebook and Instagram Instant
@@ -144,41 +144,41 @@ export default function PrivacyPolicy() {
                 <SectionHeading id="who-we-are" number={2}>
                   Who we are and how to contact us
                 </SectionHeading>
-                <ul className="list-disc space-y-2 pl-5 text-slate-300">
+                <ul className="list-disc space-y-2 pl-5 text-navy-body">
                   <li>
-                    <span className="text-slate-400">Brand / trading name:</span> Orchestrix Labs
+                    <span className="text-navy-secondary">Brand / trading name:</span> Orchestrix Labs
                   </li>
                   <li>
-                    <span className="text-slate-400">Website:</span>{' '}
-                    <a href={SITE.url} className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
+                    <span className="text-navy-secondary">Website:</span>{' '}
+                    <a href={SITE.url} className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                       {SITE.url}
                     </a>
                   </li>
                   <li>
-                    <span className="text-slate-400">General enquiries:</span>{' '}
-                    <a href={`mailto:${SITE.email}`} className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
+                    <span className="text-navy-secondary">General enquiries:</span>{' '}
+                    <a href={`mailto:${SITE.email}`} className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                       {SITE.email}
                     </a>
                   </li>
                   <li>
-                    <span className="text-slate-400">Privacy requests:</span>{' '}
-                    <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
+                    <span className="text-navy-secondary">Privacy requests:</span>{' '}
+                    <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                       {SITE.privacyEmail}
                     </a>
                   </li>
                   <li>
-                    <span className="text-slate-400">Operations location (public contact address):</span>{' '}
+                    <span className="text-navy-secondary">Operations location (public contact address):</span>{' '}
                     <a
                       href={mapsOpenUrl()}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline"
+                      className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline"
                     >
                       {SITE.address.formatted}
                     </a>
                   </li>
                 </ul>
-                <p className="rounded-xl border border-amber-500/20 bg-amber-500/5 px-4 py-3 text-sm text-amber-100/90">
+                <p className="rounded-xl border border-status-warning/40 bg-status-warning-bg px-4 py-3 text-sm text-status-warning">
                   Registered legal entity name, company registration number, and registered office status are
                   subject to confirmation and are not stated as final facts in this Policy. If you need formal
                   contracting details, contact us before relying on this page for incorporation status.
@@ -247,7 +247,7 @@ export default function PrivacyPolicy() {
                   Website enquiries and contact forms
                 </SectionHeading>
                 <p>
-                  Our <Link to="/contact" className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">Request Consultation</Link>{' '}
+                  Our <Link to="/contact" className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">Request Consultation</Link>{' '}
                   form may collect your name, email address, selected service, optional budget range, and message.
                   Submissions are sent to our backend systems, stored so we can respond and manage the enquiry, and
                   may trigger an internal email notification to our team.
@@ -330,7 +330,7 @@ export default function PrivacyPolicy() {
                   Meta also processes information under its own terms and policies. Review Meta&apos;s privacy
                   materials for how Meta handles Instant Form data on its platform. You can request correction or
                   deletion of lead information we hold by emailing{' '}
-                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
+                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                     {SITE.privacyEmail}
                   </a>
                   .
@@ -566,7 +566,7 @@ export default function PrivacyPolicy() {
                 </p>
                 <p>
                   You may request deletion or correction of personal information we hold about you by contacting{' '}
-                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
+                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                     {SITE.privacyEmail}
                   </a>
                   . We may retain limited information where we have a lawful need to do so (for example to complete
@@ -587,7 +587,7 @@ export default function PrivacyPolicy() {
                 </p>
                 <p>
                   To exercise available rights regarding information Orchestrix Labs controls, email{' '}
-                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
+                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                     {SITE.privacyEmail}
                   </a>
                   . We may need to verify your identity before fulfilling a request. If we process data only as a
@@ -676,7 +676,7 @@ export default function PrivacyPolicy() {
                     href="https://cal.com/privacy"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline"
+                    className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline"
                   >
                     Cal.com
                   </a>{' '}
@@ -707,24 +707,24 @@ export default function PrivacyPolicy() {
                   contact:
                 </p>
                 <p>
-                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
+                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                     {SITE.privacyEmail}
                   </a>
                 </p>
                 <p>
                   General project enquiries can continue to use{' '}
-                  <Link to="/contact" className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
+                  <Link to="/contact" className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                     our contact form
                   </Link>{' '}
                   or{' '}
-                  <a href={`mailto:${SITE.email}`} className="text-cyan-300 hover:text-navy-primary underline-offset-2 hover:underline">
+                  <a href={`mailto:${SITE.email}`} className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                     {SITE.email}
                   </a>
                   .
                 </p>
               </section>
 
-              <p className="border-t border-white/[0.06] pt-8 text-sm text-slate-500">
+              <p className="border-t border-border pt-8 text-sm text-navy-muted">
                 This page is provided for transparency and Meta lead-generation use. It is not legal advice. Formal
                 compliance assessment for specific jurisdictions should be completed with qualified counsel before
                 relying on any compliance representation.

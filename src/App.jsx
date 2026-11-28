@@ -26,7 +26,7 @@ const StaffEditorial = lazy(() => import('./pages/StaffEditorial'))
 function RouteFallback() {
   return (
     <div className="min-h-[50vh] flex items-center justify-center" role="status" aria-live="polite">
-      <div className="w-8 h-8 rounded-full border-2 border-primary-500/30 border-t-primary-400 animate-spin" />
+      <div className="w-8 h-8 rounded-full border-2 border-border border-t-cyan-accent animate-spin" />
       <span className="sr-only">Loading page</span>
     </div>
   )

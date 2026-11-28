@@ -1,5 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  // Paper theme only: dark: variants apply only under an explicit .dark class (never set),
+  // instead of following the visitor's OS setting.
+  darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
@@ -33,9 +36,9 @@ export default {
         },
         // Status colors
         status: {
-          success: '#059669',
+          success: '#047857', // AA on light backgrounds
           'success-bg': '#D1FAE5',
-          warning: '#D97706',
+          warning: '#B45309', // AA on light backgrounds
           'warning-bg': '#FEF3C7',
           error: '#DC2626',
           'error-bg': '#FEE2E2',
@@ -51,6 +54,7 @@ export default {
       },
       fontFamily: {
         sans: ['IBM Plex Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'system-ui', 'sans-serif'],
+        display: ['IBM Plex Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'system-ui', 'sans-serif'],
         mono: ['IBM Plex Mono', 'SF Mono', 'Monaco', 'Courier New', 'monospace'],
       },
       fontSize: {

@@ -109,6 +109,20 @@
     .btn-primary, .btn-secondary, .btn-outline { @apply transition-none active:translate-y-0; }
   }
 
+  /* Legacy page-structure classes still used by several pages, restyled for the paper theme. */
+  .section-tag {
+    @apply inline-flex items-center gap-2 text-sm font-medium text-cyan-hover;
+  }
+  .section-sub {
+    @apply max-w-2xl text-lg leading-relaxed text-navy-secondary;
+  }
+  .section-shell {
+    @apply py-16 sm:py-20;
+  }
+  .gradient-text {
+    @apply text-navy-primary;
+  }
+
   /* Cards */
   .card {
     @apply bg-paper-elevated 

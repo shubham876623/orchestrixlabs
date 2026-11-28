@@ -47,11 +47,11 @@ function StarRating({ rating, size = 14 }) {
         <FiStar
           key={i}
           size={size}
-          className={i < Math.round(r) ? 'text-amber-400' : 'text-slate-700'}
+          className={i < Math.round(r) ? 'text-status-warning' : 'text-slate-700'}
           style={i < Math.round(r) ? { fill: 'currentColor' } : {}}
         />
       ))}
-      <span className="text-slate-300 text-sm font-semibold ml-1">{r.toFixed(1)}</span>
+      <span className="text-navy-body text-sm font-semibold ml-1">{r.toFixed(1)}</span>
     </div>
   )
 }
@@ -94,41 +94,41 @@ function ProjectDetailModal({ project, onClose }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.3 }}
-          className="bg-dark-900 border border-white/[0.08] rounded-2xl max-w-3xl w-full my-8"
+          className="bg-paper-elevated border border-border rounded-2xl max-w-3xl w-full my-8"
           onClick={e => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="p-6 sm:p-8 border-b border-white/[0.06]">
+          <div className="p-6 sm:p-8 border-b border-border">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
                 <h2 className="text-navy-primary font-bold text-xl sm:text-2xl leading-tight mb-3">{project.title}</h2>
                 <div className="flex items-center gap-3 flex-wrap">
                   {project.rating && <StarRating rating={project.rating} />}
                   {project.category && (
-                    <span className="px-2.5 py-0.5 rounded-full bg-primary-500/10 border border-primary-500/25 text-primary-400 text-xs font-medium">
+                    <span className="px-2.5 py-0.5 rounded-full bg-cyan-subtle border border-cyan-accent text-cyan-hover text-xs font-medium">
                       {project.category}
                     </span>
                   )}
                   {project.status === 'completed' && (
-                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-medium flex items-center gap-1">
+                    <span className="px-2.5 py-0.5 rounded-full bg-status-success-bg border border-status-success/40 text-status-success text-xs font-medium flex items-center gap-1">
                       <FiCheck size={10} /> Completed
                     </span>
                   )}
                   {project.status === 'in_progress' && (
-                    <span className="px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-400 text-xs font-medium flex items-center gap-1">
+                    <span className="px-2.5 py-0.5 rounded-full bg-status-warning-bg border border-status-warning/40 text-status-warning text-xs font-medium flex items-center gap-1">
                       <FiClock size={10} /> In Progress
                     </span>
                   )}
                 </div>
               </div>
-              <button onClick={onClose} className="p-2 rounded-lg text-slate-400 hover:text-navy-primary hover:bg-white/[0.06] transition-colors flex-shrink-0 ml-4">
+              <button onClick={onClose} className="p-2 rounded-lg text-navy-secondary hover:text-navy-primary hover:bg-paper-subtle transition-colors flex-shrink-0 ml-4">
                 <FiX size={20} />
               </button>
             </div>
 
             {/* Date + Duration info bar */}
             {(dateRange || durationText) && (
-              <div className="flex items-center gap-4 mt-2 text-sm text-slate-500">
+              <div className="flex items-center gap-4 mt-2 text-sm text-navy-muted">
                 {dateRange && <span>{dateRange}</span>}
                 {durationText && (
                   <>
@@ -141,9 +141,9 @@ function ProjectDetailModal({ project, onClose }) {
 
             {/* Client review */}
             {project.review && (
-              <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-4 mt-4">
+              <div className="bg-paper-subtle border border-border rounded-xl p-4 mt-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500/20 to-emerald-500/20 border border-white/[0.08] flex items-center justify-center text-xs font-bold text-primary-400">
+                  <div className="w-8 h-8 rounded-full bg-cyan-subtle border border-border flex items-center justify-center text-xs font-bold text-cyan-hover">
                     V
                   </div>
                   <div>
@@ -151,7 +151,7 @@ function ProjectDetailModal({ project, onClose }) {
                     {project.rating && <StarRating rating={project.rating} size={11} />}
                   </div>
                 </div>
-                <p className="text-slate-300 text-sm leading-relaxed italic">"{project.review}"</p>
+                <p className="text-navy-body text-sm leading-relaxed italic">"{project.review}"</p>
               </div>
             )}
 
@@ -159,7 +159,7 @@ function ProjectDetailModal({ project, onClose }) {
             {project.tags && project.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-4">
                 {project.tags.map(tag => (
-                  <span key={tag} className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+                  <span key={tag} className="px-3 py-1 rounded-full bg-status-success-bg border border-status-success/40 text-status-success text-xs font-medium">
                     {tag}
                   </span>
                 ))}
@@ -172,7 +172,7 @@ function ProjectDetailModal({ project, onClose }) {
             {/* Summary */}
             {project.summary && (
               <div>
-                <p className="text-slate-300 text-sm leading-relaxed">{project.summary}</p>
+                <p className="text-navy-body text-sm leading-relaxed">{project.summary}</p>
               </div>
             )}
 
@@ -180,10 +180,10 @@ function ProjectDetailModal({ project, onClose }) {
             {project.job_description && (
               <div>
                 <h3 className="text-navy-primary font-semibold text-sm mb-2 uppercase tracking-wider flex items-center gap-2">
-                  <span className="w-1 h-4 bg-primary-500 rounded-full" />
+                  <span className="w-1 h-4 bg-cyan-hover rounded-full" />
                   What the Client Needed
                 </h3>
-                <p className="text-slate-400 text-sm leading-relaxed whitespace-pre-line">{project.job_description}</p>
+                <p className="text-navy-secondary text-sm leading-relaxed whitespace-pre-line">{project.job_description}</p>
               </div>
             )}
 
@@ -194,7 +194,7 @@ function ProjectDetailModal({ project, onClose }) {
                   <span className="w-1 h-4 bg-emerald-500 rounded-full" />
                   What We Delivered
                 </h3>
-                <p className="text-slate-400 text-sm leading-relaxed whitespace-pre-line">{project.deliverables}</p>
+                <p className="text-navy-secondary text-sm leading-relaxed whitespace-pre-line">{project.deliverables}</p>
               </div>
             )}
 
@@ -202,7 +202,7 @@ function ProjectDetailModal({ project, onClose }) {
             {!project.job_description && !project.deliverables && project.description && (
               <div>
                 <h3 className="text-navy-primary font-semibold text-sm mb-2 uppercase tracking-wider">About This Project</h3>
-                <p className="text-slate-400 text-sm leading-relaxed">{project.description}</p>
+                <p className="text-navy-secondary text-sm leading-relaxed">{project.description}</p>
               </div>
             )}
 
@@ -212,8 +212,8 @@ function ProjectDetailModal({ project, onClose }) {
                 <h3 className="text-navy-primary font-semibold text-sm mb-3 uppercase tracking-wider">Key Deliverables</h3>
                 <ul className="space-y-2">
                   {project.highlights.map(h => (
-                    <li key={h} className="flex items-start gap-2.5 text-slate-300 text-sm">
-                      <FiCheck className="text-emerald-400 mt-0.5 flex-shrink-0" size={14} />
+                    <li key={h} className="flex items-start gap-2.5 text-navy-body text-sm">
+                      <FiCheck className="text-status-success mt-0.5 flex-shrink-0" size={14} />
                       {h}
                     </li>
                   ))}
@@ -227,9 +227,9 @@ function ProjectDetailModal({ project, onClose }) {
                 <h3 className="text-navy-primary font-semibold text-sm mb-3 uppercase tracking-wider">Impact</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {project.impact.map(imp => (
-                    <div key={imp} className="flex items-center gap-2 bg-emerald-500/5 border border-emerald-500/15 rounded-lg px-3 py-2">
+                    <div key={imp} className="flex items-center gap-2 bg-status-success-bg border border-status-success/40 rounded-lg px-3 py-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
-                      <span className="text-emerald-300 text-xs">{imp}</span>
+                      <span className="text-status-success text-xs">{imp}</span>
                     </div>
                   ))}
                 </div>
@@ -242,7 +242,7 @@ function ProjectDetailModal({ project, onClose }) {
                 <h3 className="text-navy-primary font-semibold text-sm mb-3 uppercase tracking-wider">Tech Stack</h3>
                 <div className="flex flex-wrap gap-2">
                   {project.tech.map(t => (
-                    <span key={t} className="px-3 py-1 bg-white/[0.04] border border-white/[0.08] rounded-lg text-slate-300 text-xs">
+                    <span key={t} className="px-3 py-1 bg-paper-subtle border border-border rounded-lg text-navy-body text-xs">
                       {t}
                     </span>
                   ))}
@@ -254,7 +254,7 @@ function ProjectDetailModal({ project, onClose }) {
             {getEmbedUrl(project.video_url) && (
               <div>
                 <h3 className="text-navy-primary font-semibold text-sm mb-3 uppercase tracking-wider">Demo Video</h3>
-                <div className="aspect-video rounded-xl overflow-hidden border border-white/[0.08]">
+                <div className="aspect-video rounded-xl overflow-hidden border border-border">
                   <iframe
                     src={getEmbedUrl(project.video_url)}
                     title={`${project.title} demo`}
@@ -274,7 +274,7 @@ function ProjectDetailModal({ project, onClose }) {
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {project.images.map((url, i) => (
-                    <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="block rounded-xl overflow-hidden border border-white/[0.08] hover:border-primary-500/40 transition-colors">
+                    <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="block rounded-xl overflow-hidden border border-border hover:border-cyan-accent transition-colors">
                       <img src={url} alt={`${project.title} screenshot ${i + 1}`} className="w-full h-auto" loading="lazy" />
                     </a>
                   ))}
@@ -285,29 +285,29 @@ function ProjectDetailModal({ project, onClose }) {
             {/* Attractive CTA ΓÇö when no rich content yet */}
             {!hasRichContent && !project.summary && !project.review && (
               <div className="text-center py-6">
-                <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary-500/20 to-emerald-500/20 border border-white/[0.08] flex items-center justify-center">
-                  <FiCheck className="text-emerald-400" size={24} />
+                <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-cyan-subtle border border-border flex items-center justify-center">
+                  <FiCheck className="text-status-success" size={24} />
                 </div>
                 <h3 className="text-navy-primary font-semibold text-lg mb-2">Successfully Delivered</h3>
-                <p className="text-slate-400 text-sm max-w-md mx-auto leading-relaxed mb-5">
+                <p className="text-navy-secondary text-sm max-w-md mx-auto leading-relaxed mb-5">
                   This {project.category || 'project'} was completed to the client's satisfaction.
                   Want something similar built for your business?
                 </p>
                 <Link
                   to="/contact"
                   onClick={onClose}
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-emerald-500 text-navy-primary text-sm font-semibold hover:shadow-lg hover:shadow-primary-500/25 transition-all"
+                  className="btn-primary"
                 >
-                  Get a Free Quote <FiArrowRight size={14} />
+                  Request a quote
                 </Link>
               </div>
             )}
           </div>
 
           {/* Footer buttons */}
-          <div className="p-6 sm:p-8 border-t border-white/[0.06] flex flex-col sm:flex-row gap-3">
+          <div className="p-6 sm:p-8 border-t border-border flex flex-col sm:flex-row gap-3">
             {project.live_url && (
-              <a href={project.live_url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-white/[0.1] text-slate-300 hover:text-navy-primary hover:border-white/[0.2] text-sm font-medium transition-all">
+              <a href={project.live_url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-border text-navy-body hover:text-navy-primary hover:border-border text-sm font-medium transition-all">
                 <FiGlobe size={14} /> View Live Project
               </a>
             )}
@@ -333,11 +333,11 @@ function JobRow({ project, onClick }) {
     : ''
 
   return (
-    <div className="border-b border-white/[0.06] hover:bg-white/[0.015] transition-colors">
+    <div className="border-b border-border hover:bg-paper-subtle transition-colors">
       <div className="p-5 sm:p-6">
         {/* Title */}
         <h3
-          className="text-primary-400 font-semibold text-base sm:text-lg cursor-pointer hover:text-primary-300 transition-colors mb-2 leading-snug"
+          className="text-cyan-hover font-semibold text-base sm:text-lg cursor-pointer hover:text-cyan-hover transition-colors mb-2 leading-snug"
           onClick={() => onClick(project)}
         >
           {project.title}
@@ -349,11 +349,11 @@ function JobRow({ project, onClick }) {
           {dateRange && (
             <>
               <span className="text-slate-600">|</span>
-              <span className="text-slate-500 text-sm">{dateRange}</span>
+              <span className="text-navy-muted text-sm">{dateRange}</span>
             </>
           )}
           {project.status === 'in_progress' && (
-            <span className="px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 text-xs font-medium flex items-center gap-1">
+            <span className="px-2 py-0.5 rounded-full bg-status-warning-bg border border-status-warning/40 text-status-warning text-xs font-medium flex items-center gap-1">
               <FiClock size={9} /> In Progress
             </span>
           )}
@@ -361,17 +361,17 @@ function JobRow({ project, onClick }) {
 
         {/* Summary or review preview */}
         {project.review ? (
-          <p className="text-slate-400 text-sm leading-relaxed mb-3 italic line-clamp-3">
+          <p className="text-navy-secondary text-sm leading-relaxed mb-3 italic line-clamp-3">
             "{project.review}"
           </p>
         ) : project.summary ? (
-          <p className="text-slate-400 text-sm leading-relaxed mb-3 line-clamp-3">
+          <p className="text-navy-secondary text-sm leading-relaxed mb-3 line-clamp-3">
             {project.summary}
           </p>
         ) : null}
 
         {project.category && (
-          <span className="inline-block mb-3 px-2.5 py-0.5 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs font-medium">
+          <span className="inline-block mb-3 px-2.5 py-0.5 rounded-full bg-cyan-subtle border border-cyan-accent text-cyan-hover text-xs font-medium">
             {project.category}
           </span>
         )}
@@ -380,7 +380,7 @@ function JobRow({ project, onClick }) {
         {project.tags && project.tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-3">
             {project.tags.map(tag => (
-              <span key={tag} className="px-2.5 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-400 text-xs font-medium">
+              <span key={tag} className="px-2.5 py-0.5 rounded-full bg-paper-subtle border border-border text-navy-secondary text-xs font-medium">
                 {tag}
               </span>
             ))}
@@ -410,7 +410,7 @@ function JobRow({ project, onClick }) {
           )}
           <Link
             to="/contact"
-            className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary-500/10 border border-primary-500/25 text-primary-400 hover:bg-primary-500/20 text-xs font-medium transition-all"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-cyan-subtle border border-cyan-accent text-cyan-hover hover:bg-cyan-subtle text-xs font-medium transition-all"
           >
             <FiArrowRight size={12} /> Build Something Similar
           </Link>
@@ -553,18 +553,18 @@ export default function PortfolioWorkHistory() {
       </section>
 
       {/* Insight Badges Bar */}
-      <section className="py-6 border-b border-white/[0.05]">
+      <section className="py-6 border-b border-border">
         <div className="container">
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="text-center mb-4">
-            <p className="text-slate-500 text-xs uppercase tracking-wider font-medium">Insights from completed jobs</p>
+            <p className="text-navy-muted text-xs uppercase tracking-wider font-medium">Insights from completed jobs</p>
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
             {insightBadges.map(badge => (
               <span
                 key={badge.label}
-                className="px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.08] text-slate-300 text-xs sm:text-sm font-medium hover:border-primary-500/30 hover:bg-primary-500/5 transition-all cursor-default"
+                className="px-3 py-1.5 rounded-full bg-paper-subtle border border-border text-navy-body text-xs sm:text-sm font-medium hover:border-cyan-accent hover:bg-cyan-subtle transition-all cursor-default"
               >
-                {badge.label} <span className="text-primary-400 font-bold ml-1">{badge.count}</span>
+                {badge.label} <span className="text-cyan-hover font-bold ml-1">{badge.count}</span>
               </span>
             ))}
           </motion.div>
@@ -575,13 +575,13 @@ export default function PortfolioWorkHistory() {
       <section className="py-12" ref={ref}>
         <div className="container max-w-4xl">
           {/* Tabs */}
-          <div className="flex items-center gap-0 border-b border-white/[0.08] mb-0">
+          <div className="flex items-center gap-0 border-b border-border mb-0">
             <button
               onClick={() => { setStatusFilter('completed'); setCurrentPage(1) }}
               className={`px-5 py-3 text-sm font-semibold transition-all border-b-2 ${
                 statusFilter === 'completed'
-                  ? 'text-navy-primary border-primary-500'
-                  : 'text-slate-500 border-transparent hover:text-navy-primary'
+                  ? 'text-navy-primary border-cyan-accent'
+                  : 'text-navy-muted border-transparent hover:text-navy-primary'
               }`}
             >
               Completed jobs ({loading ? '…' : completedProjects.length})
@@ -590,30 +590,30 @@ export default function PortfolioWorkHistory() {
               onClick={() => { setStatusFilter('in_progress'); setCurrentPage(1) }}
               className={`px-5 py-3 text-sm font-semibold transition-all border-b-2 ${
                 statusFilter === 'in_progress'
-                  ? 'text-navy-primary border-primary-500'
-                  : 'text-slate-500 border-transparent hover:text-navy-primary'
+                  ? 'text-navy-primary border-cyan-accent'
+                  : 'text-navy-muted border-transparent hover:text-navy-primary'
               }`}
             >
               In progress ({loading ? '…' : inProgressProjects.length})
             </button>
           </div>
           {loadError && (
-            <p className="text-xs text-amber-500/90 mt-2">
+            <p className="text-xs text-status-warning mt-2">
               Showing curated fallback while live work-history data refreshes.
             </p>
           )}
 
           {/* Category Filter + Search */}
-          <div className="py-4 space-y-3 border-b border-white/[0.06]">
+          <div className="py-4 space-y-3 border-b border-border">
             {/* Search */}
             <div className="relative">
-              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={14} />
+              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-navy-muted" size={14} />
               <input
                 type="text"
                 placeholder="Search projects..."
                 value={searchQuery}
                 onChange={e => { setSearchQuery(e.target.value); setCurrentPage(1) }}
-                className="w-full bg-white/[0.03] border border-white/[0.08] rounded-lg pl-9 pr-4 py-2 text-navy-primary text-sm outline-none focus:border-primary-500/50 placeholder:text-slate-600 transition-colors"
+                className="w-full bg-paper-subtle border border-border rounded-lg pl-9 pr-4 py-2 text-navy-primary text-sm outline-none focus:border-cyan-accent placeholder:text-slate-600 transition-colors"
               />
             </div>
             {/* Category pills */}
@@ -628,8 +628,8 @@ export default function PortfolioWorkHistory() {
                     onClick={() => { setCategoryFilter(cat); setCurrentPage(1) }}
                     className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                       categoryFilter === cat
-                        ? 'bg-primary-500/15 border border-primary-500/40 text-primary-400'
-                        : 'bg-white/[0.03] border border-white/[0.08] text-slate-400 hover:text-navy-primary hover:border-white/[0.15]'
+                        ? 'bg-cyan-subtle border border-cyan-accent text-cyan-hover'
+                        : 'bg-paper-subtle border border-border text-navy-secondary hover:text-navy-primary hover:border-border'
                     }`}
                   >
                     {cat} <span className="ml-1 opacity-60">{loading ? '…' : count}</span>
@@ -643,16 +643,16 @@ export default function PortfolioWorkHistory() {
           {loading ? (
             <div className="space-y-0">
               {[1, 2, 3, 4, 5].map(i => (
-                <div key={i} className="border-b border-white/[0.06] p-6 animate-pulse">
-                  <div className="h-5 bg-white/[0.06] rounded w-2/3 mb-3" />
-                  <div className="h-4 bg-white/[0.04] rounded w-1/3 mb-3" />
-                  <div className="h-4 bg-white/[0.04] rounded w-full mb-2" />
-                  <div className="h-4 bg-white/[0.04] rounded w-1/4" />
+                <div key={i} className="border-b border-border p-6 animate-pulse">
+                  <div className="h-5 bg-paper-subtle rounded w-2/3 mb-3" />
+                  <div className="h-4 bg-paper-subtle rounded w-1/3 mb-3" />
+                  <div className="h-4 bg-paper-subtle rounded w-full mb-2" />
+                  <div className="h-4 bg-paper-subtle rounded w-1/4" />
                 </div>
               ))}
             </div>
           ) : filtered.length === 0 ? (
-            <div className="text-center py-20 text-slate-500">
+            <div className="text-center py-20 text-navy-muted">
               <p className="text-sm">No {statusFilter === 'in_progress' ? 'in-progress' : 'completed'} projects to show yet.</p>
             </div>
           ) : (
@@ -673,7 +673,7 @@ export default function PortfolioWorkHistory() {
               <button
                 onClick={() => { setCurrentPage(p => Math.max(1, p - 1)); window.scrollTo({ top: 400, behavior: 'smooth' }) }}
                 disabled={currentPage === 1}
-                className="px-3 py-2 rounded-lg border border-white/[0.08] text-sm text-slate-400 hover:text-navy-primary hover:border-white/[0.15] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="px-3 py-2 rounded-lg border border-border text-sm text-navy-secondary hover:text-navy-primary hover:border-border disabled:opacity-30 disabled:cursor-not-allowed transition-all"
               >
                 Previous
               </button>
@@ -683,8 +683,8 @@ export default function PortfolioWorkHistory() {
                   onClick={() => { setCurrentPage(page); window.scrollTo({ top: 400, behavior: 'smooth' }) }}
                   className={`w-9 h-9 rounded-lg text-sm font-medium transition-all ${
                     page === currentPage
-                      ? 'bg-primary-500/20 border border-primary-500/40 text-primary-400'
-                      : 'border border-white/[0.08] text-slate-500 hover:text-navy-primary hover:border-white/[0.15]'
+                      ? 'bg-cyan-subtle border border-cyan-accent text-cyan-hover'
+                      : 'border border-border text-navy-muted hover:text-navy-primary hover:border-border'
                   }`}
                 >
                   {page}
@@ -693,7 +693,7 @@ export default function PortfolioWorkHistory() {
               <button
                 onClick={() => { setCurrentPage(p => Math.min(totalPages, p + 1)); window.scrollTo({ top: 400, behavior: 'smooth' }) }}
                 disabled={currentPage === totalPages}
-                className="px-3 py-2 rounded-lg border border-white/[0.08] text-sm text-slate-400 hover:text-navy-primary hover:border-white/[0.15] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="px-3 py-2 rounded-lg border border-border text-sm text-navy-secondary hover:text-navy-primary hover:border-border disabled:opacity-30 disabled:cursor-not-allowed transition-all"
               >
                 Next
               </button>
@@ -715,9 +715,9 @@ export default function PortfolioWorkHistory() {
       </section>
 
       {/* Verified Upwork credentials (founder/agency) — not inventing archive totals */}
-      <section className="py-16 bg-dark-900/40 border-y border-white/[0.05]">
+      <section className="py-16 bg-paper-subtle border-y border-border">
         <div className="container">
-          <p className="text-center text-slate-500 text-xs uppercase tracking-wider font-medium mb-8">
+          <p className="text-center text-navy-muted text-xs uppercase tracking-wider font-medium mb-8">
             Founder Upwork credentials (separate from archive list counts)
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center max-w-3xl mx-auto">
@@ -728,7 +728,7 @@ export default function PortfolioWorkHistory() {
             ].map(({ v, l }) => (
               <div key={l}>
                 <div className="text-3xl font-black gradient-text mb-1">{v}</div>
-                <p className="text-slate-500 text-sm">{l}</p>
+                <p className="text-navy-muted text-sm">{l}</p>
               </div>
             ))}
           </div>

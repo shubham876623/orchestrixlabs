@@ -27,10 +27,10 @@ function Hero() {
         {/* Wordmark on first screen — hidden on small viewports (nav already shows mark) */}
         <div className="mb-10 hidden sm:block">
           <img
-            src="/brand/logo-wordmark-dark.svg"
+            src="/brand/logo-wordmark-light.svg"
             alt="Orchestrix Labs"
             width={280}
-            height={64}
+            height={128}
             className="h-12 w-auto sm:h-14"
             decoding="async"
             fetchPriority="high"
@@ -96,9 +96,9 @@ function ServicesPreview() {
     <section className="section-shell">
       <div className="container">
         <SectionHead title="What we build" to="/services" linkLabel="All services" />
-        <ul className="border-b border-line">
+        <ul className="border-b border-border">
           {services.map((svc) => (
-            <li key={svc.id} className="border-t border-line">
+            <li key={svc.id} className="border-t border-border">
               <Link
                 to="/services"
                 className="group grid gap-2 py-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 md:grid-cols-[18rem_1fr_auto] md:items-baseline md:gap-8"
@@ -170,7 +170,7 @@ function Testimonials() {
             <figure key={testimonial.client_role} className="card p-6">
               <div className="mb-3 flex gap-0.5" role="img" aria-label={`${testimonial.rating} star rating`}>
                 {[...Array(testimonial.rating)].map((_, j) => (
-                  <FiStar key={j} className="text-amber-400" style={{ fill: '#FBBF24' }} size={13} aria-hidden="true" />
+                  <FiStar key={j} className="text-status-warning" style={{ fill: '#FBBF24' }} size={13} aria-hidden="true" />
                 ))}
               </div>
               <blockquote className="flex-1 text-sm leading-relaxed text-navy-body">“{testimonial.quote}”</blockquote>

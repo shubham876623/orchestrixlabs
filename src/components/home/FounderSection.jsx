@@ -5,13 +5,8 @@ export default function FounderSection() {
     <section className="section bg-paper-subtle">
       <div className="container">
         <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8 items-start">
-            {/* Founder photo placeholder */}
-            <div className="mx-auto md:mx-0">
-              <div className="w-48 h-48 rounded-lg bg-paper-elevated border border-border flex items-center justify-center">
-                <span className="text-sm text-navy-muted">Photo</span>
-              </div>
-            </div>
+          {/* Photo column returns once a real founder photo is added. */}
+          <div className="grid grid-cols-1 gap-8 items-start">
 
             {/* Content */}
             <div>
