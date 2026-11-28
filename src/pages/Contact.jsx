@@ -1,403 +1,130 @@
-import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { useInView } from 'react-intersection-observer'
 import {
-  FiMail, FiSend, FiCheckCircle, FiLinkedin, FiGithub,
-  FiInstagram, FiMapPin, FiClock, FiGlobe,
+  FiMail, FiLinkedin, FiGithub, FiInstagram, FiMapPin, FiClock, FiGlobe,
 } from 'react-icons/fi'
 import { SiUpwork } from 'react-icons/si'
-import api from '../lib/axios'
 import SEOHead from '../components/SEOHead'
-import { Link } from 'react-router-dom'
 import ContactFindUsSection from '../components/ContactFindUsSection'
-import { SITE, SOCIAL, BOOKING_PATH, hasCalComBooking, mapsOpenUrl } from '../lib/site'
+import ProjectBriefForm from '../components/contact/ProjectBriefForm'
+import { SITE, SOCIAL, mapsOpenUrl } from '../lib/site'
 import { getSeoPage } from '../lib/seoPages'
 import { getPublishedProjectBySlug } from '../data/publishedProjects'
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i = 0) => ({
-    opacity: 1, y: 0,
-    transition: { duration: 0.5, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] },
-  }),
-}
-function Section({ children, className = '' }) {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.08 })
-  return (
-    <motion.section ref={ref} initial="hidden" animate={inView ? 'visible' : 'hidden'} className={className}>
-      {children}
-    </motion.section>
-  )
-}
-
-const services = [
-  'Voice AI & Chatbots',
-  'Machine Learning & AI',
-  'Full-Stack Development',
-  'Web Scraping & Automation',
-  'Workflow Automation',
-  'Other / Not sure yet',
-]
 
 const contactInfo = [
   { icon: FiMail, label: 'Email', value: SITE.email, href: `mailto:${SITE.email}` },
   { icon: FiMapPin, label: 'Office', value: SITE.address.formatted, href: mapsOpenUrl() },
-  { icon: FiClock, label: 'Business Hours', value: `${SITE.businessHours} (${SITE.timezone})`, href: null },
-  { icon: FiGlobe, label: 'Serving', value: 'Clients worldwide — remote-first agency', href: null },
+  { icon: FiClock, label: 'Business hours', value: `${SITE.businessHours} (${SITE.timezone})`, href: null },
+  { icon: FiGlobe, label: 'Serving', value: 'Clients worldwide, remote-first', href: null },
   { icon: FiLinkedin, label: 'LinkedIn', value: 'linkedin.com/company/orchestrix-labs', href: SOCIAL.linkedin },
-  { icon: SiUpwork, label: 'Upwork', value: 'Top Rated Agency — 100% Job Success', href: SOCIAL.upwork },
+  { icon: SiUpwork, label: 'Upwork', value: 'Top Rated agency profile', href: SOCIAL.upwork },
   { icon: FiGithub, label: 'GitHub', value: 'github.com/orchestrixlabs', href: SOCIAL.github },
   { icon: FiInstagram, label: 'Instagram', value: SOCIAL.instagramHandle, href: SOCIAL.instagram },
 ]
 
-const initialForm = { name: '', email: '', service: '', budget: '', message: '', website: '' }
+const nextSteps = [
+  `We read your brief and reply within ${SITE.responseTime}.`,
+  'A 30-minute call to pin down scope and constraints.',
+  'A written proposal with timeline and cost.',
+  'Build starts once you approve it.',
+]
 
-/** Safe portfolio ?ref= handling — allowlist lookup only; length/charset gated. */
+/** Safe portfolio ?ref= handling: allowlist lookup only, length and charset gated. */
 function resolveSafeRefProject(raw) {
   if (!raw || typeof raw !== 'string') return null
-  const decoded = (() => {
-    try {
-      return decodeURIComponent(raw.trim())
-    } catch {
-      return ''
-    }
-  })()
-  if (!decoded || decoded.length > 80) return null
-  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(decoded)) return null
+  let decoded = ''
+  try {
+    decoded = decodeURIComponent(raw.trim())
+  } catch {
+    return null
+  }
+  if (!decoded || decoded.length > 80 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(decoded)) return null
   const project = getPublishedProjectBySlug(decoded)
-  if (!project || project.publicationApproved !== true) return null
-  return project
+  return project && project.publicationApproved === true ? project : null
 }
 
 export default function Contact() {
   const [searchParams] = useSearchParams()
   const refProject = resolveSafeRefProject(searchParams.get('ref') || '')
-  const [form, setForm] = useState(initialForm)
-  const [status, setStatus] = useState('idle')
-  const [errors, setErrors] = useState({})
-
-  useEffect(() => {
-    if (!refProject) return
-    const safeTitle = String(refProject.title || '')
-      .replace(/[<>`]/g, '')
-      .slice(0, 120)
-    if (!safeTitle) return
-    setForm((f) => {
-      if (f.message.trim()) return f
-      return {
-        ...f,
-        message: `I'm interested in a similar engagement to “${safeTitle}”.\n\nContext:\n`,
-      }
-    })
-  }, [refProject])
-
-  const validate = () => {
-    const e = {}
-    if (!form.name.trim()) e.name = 'Name is required'
-    if (!form.email.trim()) e.email = 'Email is required'
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Enter a valid email'
-    if (!form.service.trim()) e.service = 'Please select a service'
-    if (!form.message.trim() || form.message.trim().length < 20) {
-      e.message = 'Please describe your project (at least a short paragraph)'
-    }
-    return e
-  }
-
-  const handleChange = e => {
-    setForm(f => ({ ...f, [e.target.name]: e.target.value }))
-    if (errors[e.target.name]) setErrors(er => ({ ...er, [e.target.name]: '' }))
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    const errs = validate()
-    if (Object.keys(errs).length) { setErrors(errs); return }
-    setStatus('loading')
-    try {
-      await api.post('/api/contact/', form)
-      setStatus('success')
-      setForm(initialForm)
-    } catch (err) {
-      console.error('Contact form error:', err)
-      const apiErrors = err?.response?.data
-      if (apiErrors && typeof apiErrors === 'object' && !apiErrors.detail) {
-        const mapped = {}
-        for (const [key, val] of Object.entries(apiErrors)) {
-          mapped[key] = Array.isArray(val) ? val[0] : String(val)
-        }
-        setErrors(mapped)
-      }
-      setStatus('error')
-    }
-  }
-
-  const inputClass = (field) =>
-    `w-full bg-paper-elevated border ${errors[field] ? 'border-red-500/50' : 'border-border'} rounded-md px-4 py-3 text-navy-primary placeholder-slate-600 text-sm outline-none focus:border-primary-500 transition-colors duration-200`
+  const refTitle = refProject ? String(refProject.title || '').replace(/[<>`]/g, '').slice(0, 120) : ''
+  const initialMessage = refTitle ? `I'm interested in something similar to "${refTitle}".\n\nContext:\n` : ''
+  const seo = getSeoPage('/contact')
 
   return (
     <>
       <SEOHead
-        title={getSeoPage('/contact')?.title}
-        description={getSeoPage('/contact')?.description}
+        title={seo?.title}
+        description={seo?.description}
         path="/contact"
-        breadcrumbs={[
-          { name: 'Home', path: '/' },
-          { name: 'Contact', path: '/contact' },
-        ]}
+        breadcrumbs={[{ name: 'Home', path: '/' }, { name: 'Contact', path: '/contact' }]}
       />
 
-      <section className="pt-36 pb-10">
+      <section className="pb-10 pt-32 sm:pt-36">
         <div className="container">
-          <motion.span initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="section-tag mb-5 inline-flex">
-            Consultation
-          </motion.span>
-          <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="section-heading mb-4">
+          <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-navy-primary sm:text-5xl">
             Tell us what you need to ship next
-          </motion.h1>
-          <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="section-sub">
-            Share a short brief. We reply within {SITE.responseTime} with an assessment and a practical next step.
-          </motion.p>
-          {refProject && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.28 }}
-              className="mt-5 max-w-xl border border-border bg-paper-subtle rounded-md px-4 py-3 text-sm text-navy-body"
-            >
-              Context from portfolio: <span className="font-semibold">{refProject.title}</span>
-            </motion.p>
+          </h1>
+          <p className="mt-4 max-w-2xl text-lg text-navy-secondary">
+            Share a short brief. We reply within {SITE.responseTime} with an honest assessment and a practical next step.
+          </p>
+          {refTitle && (
+            <p className="mt-5 inline-block rounded-lg border border-border bg-paper-subtle px-4 py-2.5 text-sm text-navy-body">
+              Asking about: <span className="font-semibold text-navy-primary">{refTitle}</span>
+            </p>
           )}
         </div>
       </section>
 
-      <Section className="py-16">
-        <div className="container">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
-
-            <div className="lg:col-span-3">
-              <motion.div variants={fadeUp} custom={0} className="bg-paper-subtle border border-border rounded-md p-6">
-                {status === 'success' ? (
-                  <div className="text-center py-12 px-2">
-                    <div className="w-16 h-16 rounded-full bg-emerald-500/15 flex items-center justify-center mx-auto mb-4">
-                      <FiCheckCircle className="text-emerald-400" size={32} />
-                    </div>
-                    <h3 className="text-navy-primary font-bold text-xl mb-2">Consultation request received</h3>
-                    <p className="text-slate-400 text-sm max-w-md mx-auto mb-6 leading-relaxed">
-                      Thank you. Your brief is with the Orchestrix Labs team. We aim to respond within{' '}
-                      {SITE.responseTime} with clear next steps.
-                    </p>
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                      {hasCalComBooking() && (
-                        <Link to={BOOKING_PATH} className="btn-primary text-sm px-5 py-2.5">
-                          Pick a time on the calendar
-                        </Link>
-                      )}
-                      <a href={`mailto:${SITE.email}`} className="btn-outline text-sm px-5 py-2.5">
-                        Email {SITE.email}
-                      </a>
-                      <button
-                        type="button"
-                        onClick={() => setStatus('idle')}
-                        className="text-slate-400 text-sm underline-offset-2 hover:text-navy-primary hover:underline"
-                      >
-                        Send another message
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <form
-                    onSubmit={handleSubmit}
-                    action="#"
-                    noValidate
-                    className="space-y-5 relative"
-                    data-clarity-mask="true"
-                  >
-                    <h2 className="text-navy-primary font-bold text-xl mb-2">Request Consultation</h2>
-                    <p className="text-slate-500 text-sm mb-6">Required fields take about two minutes.</p>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label htmlFor="contact-name" className="text-slate-400 text-xs font-medium mb-1.5 block">
-                          Your Name <span className="text-red-400">*</span>
-                        </label>
-                        <input
-                          id="contact-name"
-                          type="text" name="name" autoComplete="name"
-                          value={form.name} onChange={handleChange}
-                          className={inputClass('name')}
-                        />
-                        {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
-                      </div>
-                      <div>
-                        <label htmlFor="contact-email" className="text-slate-400 text-xs font-medium mb-1.5 block">
-                          Email Address <span className="text-red-400">*</span>
-                        </label>
-                        <input
-                          id="contact-email"
-                          type="email" name="email" autoComplete="email"
-                          value={form.email} onChange={handleChange}
-                          className={inputClass('email')}
-                        />
-                        {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email}</p>}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label htmlFor="contact-service" className="text-slate-400 text-xs font-medium mb-1.5 block">
-                        Service Needed <span className="text-red-400">*</span>
-                      </label>
-                      <select
-                        id="contact-service"
-                        name="service" value={form.service} onChange={handleChange}
-                        className={`${inputClass('service')} appearance-none cursor-pointer`}
-                        required
-                      >
-                        <option value="" className="bg-paper-elevated">Select a service...</option>
-                        {services.map(s => (
-                          <option key={s} value={s} className="bg-paper-elevated">{s}</option>
-                        ))}
-                      </select>
-                      {errors.service && <p className="text-red-400 text-xs mt-1">{errors.service}</p>}
-                    </div>
-
-                    <div>
-                      <label htmlFor="contact-budget" className="text-slate-400 text-xs font-medium mb-1.5 block">Estimated Budget</label>
-                      <select
-                        id="contact-budget"
-                        name="budget" value={form.budget} onChange={handleChange}
-                        className={`${inputClass('budget')} appearance-none cursor-pointer`}
-                      >
-                        <option value="" className="bg-paper-elevated">Select budget range...</option>
-                        {['Under $1,000', '$1,000 – $5,000', '$5,000 – $15,000', '$15,000+', 'Not sure yet'].map(b => (
-                          <option key={b} value={b} className="bg-paper-elevated">{b}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label htmlFor="contact-message" className="text-slate-400 text-xs font-medium mb-1.5 block">
-                        Tell us about your project <span className="text-red-400">*</span>
-                      </label>
-                      <textarea
-                        id="contact-message"
-                        name="message" rows={5}
-                        value={form.message} onChange={handleChange}
-                        className={`${inputClass('message')} resize-none`}
-                        required
-                        minLength={20}
-                      />
-                      {errors.message && <p className="text-red-400 text-xs mt-1">{errors.message}</p>}
-                    </div>
-
-                    {/* Honeypot — hidden from users; bots that fill it are rejected */}
-                    <div className="absolute -left-[9999px] opacity-0 h-0 overflow-hidden" aria-hidden="true">
-                      <label htmlFor="contact-website">Website</label>
-                      <input
-                        id="contact-website"
-                        type="text"
-                        name="website"
-                        tabIndex={-1}
-                        autoComplete="off"
-                        value={form.website}
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    {status === 'error' && (
-                      <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3">
-                        Something went wrong. Please email us directly at{' '}
-                        <a href={`mailto:${SITE.email}`} className="underline">{SITE.email}</a>
-                      </p>
-                    )}
-
-                    <button
-                      type="submit"
-                      disabled={status === 'loading'}
-                      className="btn-primary w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed"
-                    >
-                      {status === 'loading' ? (
-                        <>
-                          <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                          Submitting…
-                        </>
-                      ) : (
-                        <><FiSend /> Request Consultation</>
-                      )}
-                    </button>
-
-                    <p className="text-slate-600 text-xs text-center">
-                      Encrypted in transit. We do not sell your information. Prefer email?{' '}
-                      <a href={`mailto:${SITE.email}`} className="text-slate-400 underline-offset-2 hover:underline">{SITE.email}</a>
-                    </p>
-                  </form>
-                )}
-              </motion.div>
-            </div>
-
-            <div className="lg:col-span-2 space-y-5">
-              <motion.div variants={fadeUp} custom={1} className="bg-paper-subtle border border-border rounded-md p-6">
-                <h3 className="text-navy-primary font-bold text-base mb-5">Get in touch</h3>
-                <div className="space-y-4">
-                  {contactInfo.map(({ icon: Icon, label, value, href }) => {
-                    const inner = (
-                      <>
-                        <div className="w-9 h-9 rounded-md border border-border flex items-center justify-center flex-shrink-0">
-                          <Icon className="text-primary-400" size={16} />
-                        </div>
-                        <div>
-                          <p className="text-slate-500 text-xs">{label}</p>
-                          <p className="text-slate-300 text-sm group-hover:text-navy-primary transition-colors leading-snug">{value}</p>
-                        </div>
-                      </>
-                    )
-                    return href ? (
-                      <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="flex items-start gap-3 group">
-                        {inner}
-                      </a>
-                    ) : (
-                      <div key={label} className="flex items-start gap-3">
-                        {inner}
-                      </div>
-                    )
-                  })}
-                </div>
-              </motion.div>
-
-              <motion.div variants={fadeUp} custom={2} className="bg-paper-subtle border border-border rounded-md p-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                  <span className="text-emerald-400 text-xs font-semibold">Quick Response</span>
-                </div>
-                <p className="text-navy-primary font-semibold text-base mb-1">{SITE.responseTime} typical response</p>
-                <p className="text-slate-400 text-sm leading-relaxed">
-                  We review every message personally and always respond with a clear, honest assessment — no auto-replies.
-                </p>
-              </motion.div>
-
-              <motion.div variants={fadeUp} custom={3} className="bg-paper-subtle border border-border rounded-md p-6">
-                <h3 className="text-navy-primary font-bold text-sm mb-4">What happens next?</h3>
-                <ol className="space-y-3">
-                  {[
-                    `We review your message within ${SITE.responseTime}`,
-                    'We schedule a 30-min discovery call',
-                    'You receive a detailed project proposal',
-                    'We start building',
-                  ].map((step, i) => (
-                    <li key={step} className="flex items-start gap-3">
-                      <span className="w-5 h-5 rounded-md border border-border text-navy-secondary text-xs font-semibold flex items-center justify-center flex-shrink-0 mt-0.5">
-                        {i + 1}
-                      </span>
-                      <span className="text-slate-400 text-sm">{step}</span>
-                    </li>
-                  ))}
-                </ol>
-              </motion.div>
-            </div>
+      <section className="pb-20">
+        <div className="container grid grid-cols-1 gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <ProjectBriefForm initialMessage={initialMessage} />
           </div>
+
+          <aside className="space-y-8 lg:col-span-5">
+            <div>
+              <h2 className="text-base font-semibold text-navy-primary">What happens next</h2>
+              <ol className="mt-4 space-y-4">
+                {nextSteps.map((step, i) => (
+                  <li key={step} className="flex gap-3">
+                    <span className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-border-strong text-xs font-semibold text-navy-secondary">
+                      {i + 1}
+                    </span>
+                    <span className="text-navy-body">{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div className="border-t border-border pt-8">
+              <h2 className="text-base font-semibold text-navy-primary">Other ways to reach us</h2>
+              <ul className="mt-4 space-y-3.5">
+                {contactInfo.map(({ icon: Icon, label, value, href }) => {
+                  const body = (
+                    <>
+                      <Icon className="mt-0.5 shrink-0 text-navy-muted" size={17} aria-hidden="true" />
+                      <span>
+                        <span className="block text-sm text-navy-muted">{label}</span>
+                        <span className="block text-navy-body group-hover:text-cyan-hover">{value}</span>
+                      </span>
+                    </>
+                  )
+                  return (
+                    <li key={label}>
+                      {href ? (
+                        <a href={href} target="_blank" rel="noopener noreferrer" className="group flex items-start gap-3">
+                          {body}
+                        </a>
+                      ) : (
+                        <div className="flex items-start gap-3">{body}</div>
+                      )}
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          </aside>
         </div>
-      </Section>
+      </section>
 
       <ContactFindUsSection />
     </>
