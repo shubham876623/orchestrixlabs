@@ -17,6 +17,7 @@ const PortfolioCaseStudy = lazy(() => import('./pages/PortfolioCaseStudy'))
 const PortfolioWorkHistory = lazy(() => import('./pages/PortfolioWorkHistory'))
 const About = lazy(() => import('./pages/About'))
 const Contact = lazy(() => import('./pages/Contact'))
+const Book = lazy(() => import('./pages/Book'))
 const Reviews = lazy(() => import('./pages/Reviews'))
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
@@ -25,7 +26,7 @@ const StaffEditorial = lazy(() => import('./pages/StaffEditorial'))
 function RouteFallback() {
   return (
     <div className="min-h-[50vh] flex items-center justify-center" role="status" aria-live="polite">
-      <div className="w-8 h-8 rounded-full border-2 border-primary-500/30 border-t-primary-400 animate-spin" />
+      <div className="w-8 h-8 rounded-full border-2 border-border border-t-cyan-accent animate-spin" />
       <span className="sr-only">Loading page</span>
     </div>
   )
@@ -61,6 +62,7 @@ function AppInner() {
             <Route path="/work-history" element={<PortfolioWorkHistory />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/book" element={<Book />} />
             <Route path="/reviews" element={<Reviews />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/dashboard" element={<Dashboard />} />

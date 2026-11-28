@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 
 const ASSETS = {
-  wordmark: '/brand/logo-wordmark-dark.svg',
+  wordmark: '/brand/logo-wordmark-light.svg',
   mark: '/brand/logo-mark-dark.svg',
 }
 
@@ -28,7 +28,7 @@ export default function BrandLogo({
       className={
         isMark
           ? `h-9 w-9 shrink-0 object-contain ${imgClassName}`
-          : `h-8 w-[7.25rem] sm:h-9 sm:w-[8.25rem] shrink-0 object-contain object-left ${imgClassName}`
+          : `h-11 w-auto sm:h-12 shrink-0 object-contain object-left ${imgClassName}`
       }
       decoding="async"
     />

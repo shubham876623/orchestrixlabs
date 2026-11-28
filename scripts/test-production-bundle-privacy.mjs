@@ -7,6 +7,7 @@ import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { spawnSync } from 'node:child_process'
 import { APPROVED_PUBLIC_PROJECTS } from '../src/data/portfolioApprovedProjects.js'
+import { privateList } from './lib/privateDenylist.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const distAssets = join(root, 'dist', 'assets')
@@ -17,14 +18,7 @@ const MUST_EXCLUDE = [
   'DRAFT_ONLY_PROJECTS',
   'portfolioExpandedCards',
   'EXPANDED_PORTFOLIO_CARDS',
-  'Hunter Jonasen',
-  'All Cleared Pty',
-  'FieldForge Partners',
-  'Choices Flooring',
-  'Matify Studio',
-  'ExecConnect',
-  'Code-evidenced freelance delivery',
-  'card-inv-017',
+  ...privateList('test-production-bundle-privacy#1'),
 ]
 
 console.log('Building approved_public production bundle…')

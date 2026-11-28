@@ -12,30 +12,36 @@ import {
 import { signInErrorMessage } from '../lib/dashboardAuthErrors.js'
 
 const STORAGE_KEY = 'orchestrix_dash_secret'
+// The dashboard secret is a master credential: keep it only for this tab (sessionStorage) and
+// wipe the copy older builds left in localStorage, where it survived browser restarts.
+const secretStore = typeof window !== 'undefined' ? window.sessionStorage : null
+if (typeof window !== 'undefined') {
+  try { window.localStorage.removeItem(STORAGE_KEY) } catch { /* storage unavailable */ }
+}
 
 function authHeader() {
-  const s = localStorage.getItem(STORAGE_KEY) || ''
+  const s = secretStore?.getItem(STORAGE_KEY) || ''
   return { Authorization: `Bearer ${s}` }
 }
 
 // ─── Stat Card ────────────────────────────────────────────────────────────────
 function StatCard({ icon: Icon, label, value, sub, color = 'primary' }) {
   const colors = {
-    primary: 'text-primary-400 bg-primary-500/10',
-    emerald: 'text-emerald-400 bg-emerald-500/10',
-    amber:   'text-amber-400   bg-amber-500/10',
-    rose:    'text-rose-400    bg-rose-500/10',
-    violet:  'text-violet-400  bg-violet-500/10',
+    primary: 'text-cyan-hover bg-cyan-subtle',
+    emerald: 'text-status-success bg-status-success-bg',
+    amber:   'text-status-warning   bg-status-warning-bg',
+    rose:    'text-status-error    bg-status-error-bg',
+    violet:  'text-violet-700  bg-violet-500/10',
   }
   return (
-    <div className="border border-line bg-panel rounded-md p-4 flex items-start gap-3">
+    <div className="border border-border bg-paper-elevated rounded-md p-4 flex items-start gap-3">
       <div className={`w-9 h-9 rounded-md flex items-center justify-center flex-shrink-0 ${colors[color]}`}>
         <Icon size={18} />
       </div>
       <div>
-        <p className="text-slate-500 text-xs mb-0.5">{label}</p>
-        <p className="text-white font-bold text-2xl leading-none">{value ?? '—'}</p>
-        {sub && <p className="text-slate-500 text-xs mt-1">{sub}</p>}
+        <p className="text-navy-muted text-xs mb-0.5">{label}</p>
+        <p className="text-navy-primary font-bold text-2xl leading-none">{value ?? '—'}</p>
+        {sub && <p className="text-navy-muted text-xs mt-1">{sub}</p>}
       </div>
     </div>
   )
@@ -44,12 +50,12 @@ function StatCard({ icon: Icon, label, value, sub, color = 'primary' }) {
 // ─── Contact Row ──────────────────────────────────────────────────────────────
 const CONTACT_STATUSES = ['new', 'discussion', 'in_progress', 'started_work', 'completed', 'archived']
 const contactStatusColors = {
-  new:          'bg-amber-500/15 text-amber-400 border-amber-500/30',
-  discussion:   'bg-blue-500/15 text-blue-400 border-blue-500/30',
-  in_progress:  'bg-violet-500/15 text-violet-400 border-violet-500/30',
-  started_work: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/30',
-  completed:    'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
-  archived:     'bg-rose-500/15 text-rose-400 border-rose-500/30',
+  new:          'bg-status-warning-bg text-status-warning border-status-warning/40',
+  discussion:   'bg-blue-500/15 text-blue-700 border-blue-500/30',
+  in_progress:  'bg-violet-500/15 text-violet-700 border-violet-500/30',
+  started_work: 'bg-cyan-subtle text-cyan-hover border-cyan-accent',
+  completed:    'bg-status-success-bg text-status-success border-status-success/40',
+  archived:     'bg-status-error-bg text-status-error border-status-error/40',
 }
 const contactStatusLabels = {
   new: 'New', discussion: 'Discussion', in_progress: 'In Progress',
@@ -59,23 +65,23 @@ const contactStatusLabels = {
 function ContactRow({ contact, onStatusChange }) {
   const [open, setOpen] = useState(false)
   return (
-    <div className="border border-line bg-panel rounded-md overflow-hidden">
+    <div className="border border-border bg-paper-elevated rounded-md overflow-hidden">
       <div
-        className="flex items-center gap-4 p-4 cursor-pointer hover:bg-white/[0.02] transition-colors"
+        className="flex items-center gap-4 p-4 cursor-pointer hover:bg-paper-subtle transition-colors"
         onClick={() => setOpen(o => !o)}
       >
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-white font-semibold text-sm">{contact.name}</span>
-            <span className="text-slate-500 text-xs">{contact.email}</span>
+            <span className="text-navy-primary font-semibold text-sm">{contact.name}</span>
+            <span className="text-navy-muted text-xs">{contact.email}</span>
             {contact.service && (
-              <span className="px-2 py-0.5 rounded bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs">
+              <span className="px-2 py-0.5 rounded bg-cyan-subtle border border-cyan-accent text-cyan-hover text-xs">
                 {contact.service}
               </span>
             )}
-            {contact.budget && <span className="text-slate-500 text-xs">{contact.budget}</span>}
+            {contact.budget && <span className="text-navy-muted text-xs">{contact.budget}</span>}
           </div>
-          <p className="text-slate-400 text-xs mt-0.5 truncate">{contact.message || '(no message)'}</p>
+          <p className="text-navy-secondary text-xs mt-0.5 truncate">{contact.message || '(no message)'}</p>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
           <span className={`px-2 py-0.5 rounded-full border text-xs font-medium ${contactStatusColors[contact.status] || contactStatusColors.new}`}>
@@ -88,18 +94,18 @@ function ContactRow({ contact, onStatusChange }) {
       </div>
 
       {open && (
-        <div className="border-t border-white/[0.05] p-4 bg-dark-950/50">
-          <p className="text-slate-300 text-sm leading-relaxed mb-4 whitespace-pre-wrap">{contact.message || '(no message)'}</p>
+        <div className="border-t border-border p-4 bg-paper-base">
+          <p className="text-navy-body text-sm leading-relaxed mb-4 whitespace-pre-wrap">{contact.message || '(no message)'}</p>
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-slate-500 text-xs mr-2">Status:</span>
+            <span className="text-navy-muted text-xs mr-2">Status:</span>
             {CONTACT_STATUSES.map(s => (
               <button
                 key={s}
                 onClick={() => onStatusChange(contact.id, s)}
                 className={`px-3 py-1.5 rounded-lg border text-xs font-medium transition-all ${
                   contact.status === s
-                    ? 'bg-primary-500 border-primary-500 text-white'
-                    : 'border-white/[0.1] text-slate-400 hover:text-white hover:border-white/[0.2]'
+                    ? 'bg-cyan-hover border-cyan-accent text-navy-primary'
+                    : 'border-border text-navy-secondary hover:text-navy-primary hover:border-border'
                 }`}
               >
                 {contactStatusLabels[s]}
@@ -135,7 +141,7 @@ function SiteStatsEditor() {
     } finally { setSaving(false) }
   }
 
-  if (!stats) return <div className="text-slate-500 text-sm p-6">Loading...</div>
+  if (!stats) return <div className="text-navy-muted text-sm p-6">Loading...</div>
 
   const fields = [
     { key: 'total_earnings', label: 'Total Earnings', type: 'text' },
@@ -146,20 +152,20 @@ function SiteStatsEditor() {
   ]
 
   return (
-    <div className="border border-line bg-panel rounded-md p-6">
+    <div className="border border-border bg-paper-elevated rounded-md p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-white font-semibold text-base">Public Site Stats</h3>
+        <h3 className="text-navy-primary font-semibold text-base">Public Site Stats</h3>
         {editing ? (
           <div className="flex gap-2">
-            <button onClick={() => setEditing(false)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-400 hover:text-white border border-white/[0.1] text-xs transition-colors">
+            <button onClick={() => setEditing(false)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-navy-secondary hover:text-navy-primary border border-border text-xs transition-colors">
               <FiX size={12} /> Cancel
             </button>
-            <button onClick={save} disabled={saving} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs transition-colors disabled:opacity-60">
+            <button onClick={save} disabled={saving} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-hover hover:bg-[#0B5F75] text-navy-primary text-xs transition-colors disabled:opacity-60">
               <FiSave size={12} /> {saving ? 'Saving...' : 'Save'}
             </button>
           </div>
         ) : (
-          <button onClick={() => setEditing(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-400 hover:text-white border border-white/[0.1] text-xs transition-colors">
+          <button onClick={() => setEditing(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-navy-secondary hover:text-navy-primary border border-border text-xs transition-colors">
             <FiEdit2 size={12} /> Edit
           </button>
         )}
@@ -167,16 +173,16 @@ function SiteStatsEditor() {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         {fields.map(({ key, label, type }) => (
           <div key={key}>
-            <label className="text-slate-500 text-xs mb-1 block">{label}</label>
+            <label className="text-navy-muted text-xs mb-1 block">{label}</label>
             {editing ? (
               <input
                 type={type}
                 value={form[key] ?? ''}
                 onChange={e => setForm(f => ({ ...f, [key]: type === 'number' ? Number(e.target.value) : e.target.value }))}
-                className="w-full bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-primary-500/60 transition-colors"
+                className="w-full bg-paper-base border border-border rounded-lg px-3 py-2 text-navy-primary text-sm outline-none focus:border-cyan-accent transition-colors"
               />
             ) : (
-              <p className="text-white font-semibold text-lg">{stats[key]}</p>
+              <p className="text-navy-primary font-semibold text-lg">{stats[key]}</p>
             )}
           </div>
         ))}
@@ -264,15 +270,15 @@ function ProjectFormModal({ project, onClose, onSave }) {
     } finally { setSaving(false) }
   }
 
-  const inputCls = 'w-full bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-primary-500/60 transition-colors'
-  const labelCls = 'text-slate-400 text-xs font-medium mb-1 block'
+  const inputCls = 'w-full bg-paper-base border border-border rounded-lg px-3 py-2 text-navy-primary text-sm outline-none focus:border-cyan-accent transition-colors'
+  const labelCls = 'text-navy-secondary text-xs font-medium mb-1 block'
 
   return (
     <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-start justify-center p-4 overflow-y-auto" onClick={onClose}>
-      <div className="bg-panel border border-line rounded-md w-full max-w-3xl my-8" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between p-6 border-b border-white/[0.06]">
-          <h2 className="text-white font-bold text-lg">{isEdit ? 'Edit Project' : 'Add New Project'}</h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-white p-1"><FiX size={20} /></button>
+      <div className="bg-paper-elevated border border-border rounded-md w-full max-w-3xl my-8" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between p-6 border-b border-border">
+          <h2 className="text-navy-primary font-bold text-lg">{isEdit ? 'Edit Project' : 'Add New Project'}</h2>
+          <button onClick={onClose} className="text-navy-secondary hover:text-navy-primary p-1"><FiX size={20} /></button>
         </div>
 
         <div className="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
@@ -285,7 +291,7 @@ function ProjectFormModal({ project, onClose, onSave }) {
             <div>
               <label className={labelCls}>Category</label>
               <select value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))} className={`${inputCls} cursor-pointer`}>
-                {CATEGORIES.map(c => <option key={c} value={c} className="bg-dark-900">{c}</option>)}
+                {CATEGORIES.map(c => <option key={c} value={c} className="bg-paper-elevated">{c}</option>)}
               </select>
             </div>
           </div>
@@ -295,8 +301,8 @@ function ProjectFormModal({ project, onClose, onSave }) {
             <div>
               <label className={labelCls}>Status</label>
               <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))} className={`${inputCls} cursor-pointer`}>
-                <option value="in_progress" className="bg-dark-900">In Progress</option>
-                <option value="completed" className="bg-dark-900">Completed</option>
+                <option value="in_progress" className="bg-paper-elevated">In Progress</option>
+                <option value="completed" className="bg-paper-elevated">Completed</option>
               </select>
             </div>
             <div>
@@ -309,7 +315,7 @@ function ProjectFormModal({ project, onClose, onSave }) {
                 type="button"
                 onClick={() => setForm(f => ({ ...f, featured: !f.featured }))}
                 className={`w-full px-3 py-2 rounded-lg border text-sm font-medium transition-all ${
-                  form.featured ? 'bg-amber-500/20 border-amber-500/40 text-amber-400' : 'bg-dark-950 border-white/[0.1] text-slate-400'
+                  form.featured ? 'bg-status-warning-bg border-status-warning/40 text-status-warning' : 'bg-paper-base border-border text-navy-secondary'
                 }`}
               >
                 {form.featured ? '★ Featured' : '☆ Not Featured'}
@@ -407,12 +413,12 @@ function ProjectFormModal({ project, onClose, onSave }) {
           <ArrayField label="Impact" items={form.impact} input={impactInput} setInput={setImpactInput} onAdd={() => addToArray('impact', impactInput, setImpactInput)} onRemove={i => removeFromArray('impact', i)} placeholder="Business impact..." />
           <ArrayField label="Tags (Badges)" items={form.tags} input={tagInput} setInput={setTagInput} onAdd={() => addToArray('tags', tagInput, setTagInput)} onRemove={i => removeFromArray('tags', i)} placeholder="e.g. Collaborative" />
 
-          {error && <p className="text-rose-400 text-sm bg-rose-500/10 border border-rose-500/20 rounded-lg px-4 py-3">{error}</p>}
+          {error && <p className="text-status-error text-sm bg-status-error-bg border border-status-error/40 rounded-lg px-4 py-3">{error}</p>}
         </div>
 
-        <div className="flex items-center justify-end gap-3 p-6 border-t border-white/[0.06]">
-          <button onClick={onClose} className="px-4 py-2 rounded-lg text-slate-400 hover:text-white border border-white/[0.1] text-sm transition-colors">Cancel</button>
-          <button onClick={handleSave} disabled={saving} className="px-6 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium transition-colors disabled:opacity-60">
+        <div className="flex items-center justify-end gap-3 p-6 border-t border-border">
+          <button onClick={onClose} className="px-4 py-2 rounded-lg text-navy-secondary hover:text-navy-primary border border-border text-sm transition-colors">Cancel</button>
+          <button onClick={handleSave} disabled={saving} className="px-6 py-2 rounded-lg bg-cyan-hover hover:bg-[#0B5F75] text-navy-primary text-sm font-medium transition-colors disabled:opacity-60">
             {saving ? 'Saving...' : isEdit ? 'Update Project' : 'Create Project'}
           </button>
         </div>
@@ -424,25 +430,25 @@ function ProjectFormModal({ project, onClose, onSave }) {
 function ArrayField({ label, items, input, setInput, onAdd, onRemove, placeholder }) {
   return (
     <div>
-      <label className="text-slate-400 text-xs font-medium mb-1 block">{label}</label>
+      <label className="text-navy-secondary text-xs font-medium mb-1 block">{label}</label>
       <div className="flex gap-2 mb-2">
         <input
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), onAdd())}
-          className="flex-1 bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-primary-500/60 transition-colors"
+          className="flex-1 bg-paper-base border border-border rounded-lg px-3 py-2 text-navy-primary text-sm outline-none focus:border-cyan-accent transition-colors"
           placeholder={placeholder}
         />
-        <button type="button" onClick={onAdd} className="px-3 py-2 rounded-lg bg-primary-500/20 text-primary-400 text-sm hover:bg-primary-500/30 transition-colors">
+        <button type="button" onClick={onAdd} className="px-3 py-2 rounded-lg bg-cyan-subtle text-cyan-hover text-sm hover:bg-cyan-subtle transition-colors">
           <FiPlus size={14} />
         </button>
       </div>
       {items.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
           {items.map((item, i) => (
-            <span key={i} className="flex items-center gap-1 px-2 py-1 bg-white/[0.04] border border-white/[0.08] rounded-lg text-slate-300 text-xs">
+            <span key={i} className="flex items-center gap-1 px-2 py-1 bg-paper-subtle border border-border rounded-lg text-navy-body text-xs">
               {item}
-              <button onClick={() => onRemove(i)} className="text-slate-500 hover:text-rose-400 ml-0.5"><FiX size={10} /></button>
+              <button onClick={() => onRemove(i)} className="text-navy-muted hover:text-status-error ml-0.5"><FiX size={10} /></button>
             </span>
           ))}
         </div>
@@ -501,34 +507,34 @@ function ProjectManager() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-white font-bold text-xl">Projects</h2>
-          <p className="text-slate-500 text-sm">{projects.length} total · {inProgress} in progress · {completed} completed</p>
+          <h2 className="text-navy-primary font-bold text-xl">Projects</h2>
+          <p className="text-navy-muted text-sm">{projects.length} total · {inProgress} in progress · {completed} completed</p>
         </div>
         <button
           onClick={() => { setEditProject(null); setShowForm(true) }}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium transition-colors"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cyan-hover hover:bg-[#0B5F75] text-navy-primary text-sm font-medium transition-colors"
         >
           <FiPlus size={16} /> Add Project
         </button>
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 border-b border-white/[0.06] pb-1">
+      <div className="flex items-center gap-1 border-b border-border pb-1">
         {[
           { id: 'all', label: 'All Projects', count: projects.length },
-          { id: 'in_progress', label: 'In Progress', count: inProgress, color: 'text-amber-400' },
-          { id: 'completed', label: 'Completed', count: completed, color: 'text-emerald-400' },
+          { id: 'in_progress', label: 'In Progress', count: inProgress, color: 'text-status-warning' },
+          { id: 'completed', label: 'Completed', count: completed, color: 'text-status-success' },
         ].map(t => (
           <button
             key={t.id}
             onClick={() => setFilter(t.id)}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-t-lg text-sm font-medium transition-colors ${
-              filter === t.id ? 'text-white border-b-2 border-primary-500' : 'text-slate-500 hover:text-white'
+              filter === t.id ? 'text-navy-primary border-b-2 border-cyan-accent' : 'text-navy-muted hover:text-navy-primary'
             }`}
           >
             {t.label}
             <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-              t.id === 'in_progress' && t.count > 0 ? 'bg-amber-500/20 text-amber-400' : 'bg-white/[0.06] text-slate-400'
+              t.id === 'in_progress' && t.count > 0 ? 'bg-status-warning-bg text-status-warning' : 'bg-paper-subtle text-navy-secondary'
             }`}>{t.count}</span>
           </button>
         ))}
@@ -537,37 +543,37 @@ function ProjectManager() {
       {/* Project List */}
       {loading ? (
         <div className="space-y-3">
-          {[1, 2, 3].map(i => <div key={i} className="border border-line bg-panel rounded-md p-5 animate-pulse h-24" />)}
+          {[1, 2, 3].map(i => <div key={i} className="border border-border bg-paper-elevated rounded-md p-5 animate-pulse h-24" />)}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-16 text-slate-500">
+        <div className="text-center py-16 text-navy-muted">
           <FiFolder size={32} className="mx-auto mb-3 opacity-40" />
           <p className="text-sm">No {filter === 'all' ? '' : filter.replace('_', ' ')} projects yet.</p>
         </div>
       ) : (
         <div className="space-y-3">
           {filtered.map(project => (
-            <div key={project.id} className="border border-line bg-panel rounded-md p-5">
+            <div key={project.id} className="border border-border bg-paper-elevated rounded-md p-5">
               <div className="flex items-start gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-1">
-                    <h3 className="text-white font-semibold text-sm">{project.title}</h3>
-                    {project.featured && <FiStar size={12} className="text-amber-400" />}
+                    <h3 className="text-navy-primary font-semibold text-sm">{project.title}</h3>
+                    {project.featured && <FiStar size={12} className="text-status-warning" />}
                     <span className={`px-2 py-0.5 rounded-full border text-xs font-medium ${
                       project.status === 'completed'
-                        ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
-                        : 'bg-amber-500/15 text-amber-400 border-amber-500/30'
+                        ? 'bg-status-success-bg text-status-success border-status-success/40'
+                        : 'bg-status-warning-bg text-status-warning border-status-warning/40'
                     }`}>
                       {project.status === 'completed' ? 'Completed' : 'In Progress'}
                     </span>
-                    <span className="px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.06] text-slate-500 text-xs">
+                    <span className="px-2 py-0.5 rounded bg-paper-subtle border border-border text-navy-muted text-xs">
                       {project.category}
                     </span>
                   </div>
-                  <p className="text-slate-400 text-xs truncate">{project.summary}</p>
-                  <div className="flex items-center gap-3 mt-2 text-xs text-slate-500">
+                  <p className="text-navy-secondary text-xs truncate">{project.summary}</p>
+                  <div className="flex items-center gap-3 mt-2 text-xs text-navy-muted">
                     {project.client_name && <span>Client: {project.client_name}</span>}
-                    {project.rating && <span className="flex items-center gap-0.5"><FiStar size={10} className="text-amber-400" /> {project.rating}</span>}
+                    {project.rating && <span className="flex items-center gap-0.5"><FiStar size={10} className="text-status-warning" /> {project.rating}</span>}
                     {project.project_value && <span>{project.project_value}</span>}
                     {project.hours_worked && <span>{project.hours_worked}h</span>}
                   </div>
@@ -576,14 +582,14 @@ function ProjectManager() {
                   {project.status === 'in_progress' && (
                     <button
                       onClick={() => handleMarkComplete(project)}
-                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-xs font-medium hover:bg-emerald-500/25 transition-colors"
+                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-status-success-bg text-status-success border border-status-success/40 text-xs font-medium hover:bg-status-success-bg transition-colors"
                     >
                       <FiCheckCircle size={12} /> Complete
                     </button>
                   )}
                   <button
                     onClick={() => { setEditProject(project); setShowForm(true) }}
-                    className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors"
+                    className="p-2 rounded-lg text-navy-secondary hover:text-navy-primary hover:bg-paper-subtle transition-colors"
                   >
                     <FiEdit2 size={14} />
                   </button>
@@ -591,8 +597,8 @@ function ProjectManager() {
                     onClick={() => handleDelete(project.id)}
                     className={`p-2 rounded-lg transition-colors ${
                       deleting === project.id
-                        ? 'text-rose-400 bg-rose-500/15 hover:bg-rose-500/25'
-                        : 'text-slate-400 hover:text-rose-400 hover:bg-white/[0.06]'
+                        ? 'text-status-error bg-status-error-bg hover:bg-status-error-bg'
+                        : 'text-navy-secondary hover:text-status-error hover:bg-paper-subtle'
                     }`}
                     title={deleting === project.id ? 'Click again to confirm' : 'Delete'}
                   >
@@ -635,7 +641,7 @@ function LoginScreen({ onLogin }) {
         setError('API did not return dashboard data. The site proxy may be misconfigured — try again after redeploy.')
         return
       }
-      localStorage.setItem(STORAGE_KEY, secret)
+      secretStore?.setItem(STORAGE_KEY, secret)
       onLogin()
     } catch (err) {
       if (!err?.response) {
@@ -648,7 +654,7 @@ function LoginScreen({ onLogin }) {
 
   return (
     <div
-      className="min-h-screen bg-ink flex items-center justify-center p-4"
+      className="min-h-screen bg-paper-base flex items-center justify-center p-4"
       data-clarity-mask="true"
     >
       <div className="w-full max-w-sm">
@@ -656,26 +662,26 @@ function LoginScreen({ onLogin }) {
           <div className="flex justify-center mb-4">
             <BrandLogo variant="mark" link={false} imgClassName="h-12 w-12" />
           </div>
-          <h1 className="text-white font-bold text-xl">Dashboard</h1>
-          <p className="text-slate-500 text-sm mt-1">Orchestrix Labs — Admin</p>
+          <h1 className="text-navy-primary font-bold text-xl">Dashboard</h1>
+          <p className="text-navy-muted text-sm mt-1">Orchestrix Labs — Admin</p>
         </div>
-        <div className="border border-line bg-panel rounded-md p-6">
-          <label className="text-slate-400 text-xs font-medium mb-1.5 block">Password</label>
+        <div className="border border-border bg-paper-elevated rounded-md p-6">
+          <label className="text-navy-secondary text-xs font-medium mb-1.5 block">Password</label>
           <input
             type="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && attempt()}
             placeholder="Enter dashboard password"
-            className="w-full bg-dark-950 border border-white/[0.1] rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-primary-500/60 transition-colors mb-3"
+            className="w-full bg-paper-base border border-border rounded-xl px-4 py-3 text-navy-primary text-sm outline-none focus:border-cyan-accent transition-colors mb-3"
             autoFocus
             data-clarity-mask="true"
           />
-          {error && <p className="text-rose-400 text-xs mb-3">{error}</p>}
+          {error && <p className="text-status-error text-xs mb-3">{error}</p>}
           <button
             onClick={attempt}
             disabled={loading || !password}
-            className="w-full bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 rounded-xl text-sm transition-colors disabled:opacity-60"
+            className="w-full bg-cyan-hover hover:bg-[#0B5F75] text-navy-primary font-semibold py-3 rounded-xl text-sm transition-colors disabled:opacity-60"
           >
             {loading ? 'Checking...' : 'Sign In'}
           </button>
@@ -732,21 +738,21 @@ function CrudSection({ title, endpoint, fields, emptyItem, renderRow }) {
     } catch { /* ignore */ }
   }
 
-  const inputCls = 'w-full bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-primary-500/60 transition-colors'
-  const labelCls = 'text-slate-400 text-xs font-medium mb-1 block'
+  const inputCls = 'w-full bg-paper-base border border-border rounded-lg px-3 py-2 text-navy-primary text-sm outline-none focus:border-cyan-accent transition-colors'
+  const labelCls = 'text-navy-secondary text-xs font-medium mb-1 block'
 
   return (
-    <div className="border border-line bg-panel rounded-md p-6">
+    <div className="border border-border bg-paper-elevated rounded-md p-6">
       <div className="flex items-center justify-between mb-5">
-        <h3 className="text-white font-semibold text-base">{title}</h3>
-        <button onClick={startNew} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs transition-colors">
+        <h3 className="text-navy-primary font-semibold text-base">{title}</h3>
+        <button onClick={startNew} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-hover hover:bg-[#0B5F75] text-navy-primary text-xs transition-colors">
           <FiPlus size={12} /> Add
         </button>
       </div>
 
       {/* Edit/Create form */}
       {editing && (
-        <div className="bg-dark-950/50 border border-white/[0.06] rounded-xl p-4 mb-5 space-y-3">
+        <div className="bg-paper-base border border-border rounded-xl p-4 mb-5 space-y-3">
           {fields.map(f => (
             <div key={f.key}>
               <label className={labelCls}>{f.label}</label>
@@ -765,7 +771,7 @@ function CrudSection({ title, endpoint, fields, emptyItem, renderRow }) {
                     onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.checked }))}
                     className="rounded"
                   />
-                  <span className="text-slate-300 text-sm">{f.checkLabel || 'Yes'}</span>
+                  <span className="text-navy-body text-sm">{f.checkLabel || 'Yes'}</span>
                 </label>
               ) : f.type === 'tags' ? (
                 <TagsInput
@@ -786,10 +792,10 @@ function CrudSection({ title, endpoint, fields, emptyItem, renderRow }) {
             </div>
           ))}
           <div className="flex gap-2 pt-2">
-            <button onClick={save} disabled={saving} className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs transition-colors disabled:opacity-60">
+            <button onClick={save} disabled={saving} className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-cyan-hover hover:bg-[#0B5F75] text-navy-primary text-xs transition-colors disabled:opacity-60">
               <FiSave size={12} /> {saving ? 'Saving...' : 'Save'}
             </button>
-            <button onClick={cancel} className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-white/[0.1] text-slate-400 hover:text-white text-xs transition-colors">
+            <button onClick={cancel} className="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-border text-navy-secondary hover:text-navy-primary text-xs transition-colors">
               <FiX size={12} /> Cancel
             </button>
           </div>
@@ -798,22 +804,22 @@ function CrudSection({ title, endpoint, fields, emptyItem, renderRow }) {
 
       {loading ? (
         <div className="space-y-2">
-          {[1, 2, 3].map(i => <div key={i} className="h-12 bg-white/[0.03] rounded-lg animate-pulse" />)}
+          {[1, 2, 3].map(i => <div key={i} className="h-12 bg-paper-subtle rounded-lg animate-pulse" />)}
         </div>
       ) : items.length === 0 ? (
-        <p className="text-slate-500 text-sm text-center py-8">No items yet. Click "Add" to create one.</p>
+        <p className="text-navy-muted text-sm text-center py-8">No items yet. Click "Add" to create one.</p>
       ) : (
         <div className="space-y-2">
           {items.map(item => (
-            <div key={item.id} className="flex items-center gap-3 p-3 rounded-xl bg-dark-950/30 border border-white/[0.04] hover:border-white/[0.08] transition-colors">
+            <div key={item.id} className="flex items-center gap-3 p-3 rounded-xl bg-paper-base border border-border hover:border-border transition-colors">
               <div className="flex-1 min-w-0">
                 {renderRow(item)}
               </div>
               <div className="flex items-center gap-1 flex-shrink-0">
-                <button onClick={() => startEdit(item)} className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors">
+                <button onClick={() => startEdit(item)} className="p-1.5 rounded-lg text-navy-secondary hover:text-navy-primary hover:bg-paper-subtle transition-colors">
                   <FiEdit2 size={13} />
                 </button>
-                <button onClick={() => remove(item.id)} className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-white/[0.06] transition-colors">
+                <button onClick={() => remove(item.id)} className="p-1.5 rounded-lg text-navy-secondary hover:text-status-error hover:bg-paper-subtle transition-colors">
                   <FiTrash2 size={13} />
                 </button>
               </div>
@@ -836,9 +842,9 @@ function TagsInput({ value, onChange }) {
     <div>
       <div className="flex flex-wrap gap-1.5 mb-2">
         {value.map((tag, i) => (
-          <span key={i} className="flex items-center gap-1 px-2 py-0.5 rounded bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs">
+          <span key={i} className="flex items-center gap-1 px-2 py-0.5 rounded bg-cyan-subtle border border-cyan-accent text-cyan-hover text-xs">
             {tag}
-            <button onClick={() => onChange(value.filter((_, j) => j !== i))} className="hover:text-rose-400"><FiX size={10} /></button>
+            <button onClick={() => onChange(value.filter((_, j) => j !== i))} className="hover:text-status-error"><FiX size={10} /></button>
           </span>
         ))}
       </div>
@@ -848,9 +854,9 @@ function TagsInput({ value, onChange }) {
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), add())}
           placeholder="Add tag..."
-          className="flex-1 bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-1.5 text-white text-xs outline-none focus:border-primary-500/60 transition-colors"
+          className="flex-1 bg-paper-base border border-border rounded-lg px-3 py-1.5 text-navy-primary text-xs outline-none focus:border-cyan-accent transition-colors"
         />
-        <button onClick={add} className="px-3 py-1.5 rounded-lg bg-white/[0.06] text-slate-400 hover:text-white text-xs transition-colors">Add</button>
+        <button onClick={add} className="px-3 py-1.5 rounded-lg bg-paper-subtle text-navy-secondary hover:text-navy-primary text-xs transition-colors">Add</button>
       </div>
     </div>
   )
@@ -878,10 +884,10 @@ function SiteContentEditor() {
     } finally { setSaving(false) }
   }
 
-  if (!content) return <div className="text-slate-500 text-sm p-6">Loading...</div>
+  if (!content) return <div className="text-navy-muted text-sm p-6">Loading...</div>
 
-  const inputCls = 'w-full bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-primary-500/60 transition-colors'
-  const labelCls = 'text-slate-400 text-xs font-medium mb-1 block'
+  const inputCls = 'w-full bg-paper-base border border-border rounded-lg px-3 py-2 text-navy-primary text-sm outline-none focus:border-cyan-accent transition-colors'
+  const labelCls = 'text-navy-secondary text-xs font-medium mb-1 block'
 
   const sections = [
     {
@@ -925,20 +931,20 @@ function SiteContentEditor() {
   ]
 
   return (
-    <div className="border border-line bg-panel rounded-md p-6">
+    <div className="border border-border bg-paper-elevated rounded-md p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-white font-semibold text-base">Page Content & Settings</h3>
+        <h3 className="text-navy-primary font-semibold text-base">Page Content & Settings</h3>
         {editing ? (
           <div className="flex gap-2">
-            <button onClick={() => { setEditing(false); setForm(content) }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-400 hover:text-white border border-white/[0.1] text-xs transition-colors">
+            <button onClick={() => { setEditing(false); setForm(content) }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-navy-secondary hover:text-navy-primary border border-border text-xs transition-colors">
               <FiX size={12} /> Cancel
             </button>
-            <button onClick={save} disabled={saving} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-white text-xs transition-colors disabled:opacity-60">
+            <button onClick={save} disabled={saving} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-hover hover:bg-[#0B5F75] text-navy-primary text-xs transition-colors disabled:opacity-60">
               <FiSave size={12} /> {saving ? 'Saving...' : 'Save All'}
             </button>
           </div>
         ) : (
-          <button onClick={() => setEditing(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-400 hover:text-white border border-white/[0.1] text-xs transition-colors">
+          <button onClick={() => setEditing(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-navy-secondary hover:text-navy-primary border border-border text-xs transition-colors">
             <FiEdit2 size={12} /> Edit
           </button>
         )}
@@ -947,7 +953,7 @@ function SiteContentEditor() {
       <div className="space-y-6">
         {sections.map(section => (
           <div key={section.title}>
-            <h4 className="text-slate-300 text-sm font-semibold mb-3 border-b border-white/[0.06] pb-2">{section.title}</h4>
+            <h4 className="text-navy-body text-sm font-semibold mb-3 border-b border-border pb-2">{section.title}</h4>
             <div className="space-y-3">
               {section.fields.map(f => (
                 <div key={f.key}>
@@ -968,7 +974,7 @@ function SiteContentEditor() {
                       />
                     )
                   ) : (
-                    <p className="text-slate-300 text-sm whitespace-pre-line">{content[f.key] || <span className="text-slate-600 italic">Not set</span>}</p>
+                    <p className="text-navy-body text-sm whitespace-pre-line">{content[f.key] || <span className="text-slate-600 italic">Not set</span>}</p>
                   )}
                 </div>
               ))}
@@ -992,15 +998,15 @@ function ContentManager() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-white font-bold text-xl">Content Management</h2>
+      <h2 className="text-navy-primary font-bold text-xl">Content Management</h2>
 
-      <div className="flex items-center gap-1 border-b border-white/[0.06] pb-1 overflow-x-auto">
+      <div className="flex items-center gap-1 border-b border-border pb-1 overflow-x-auto">
         {tabs.map(t => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
             className={`px-4 py-2 rounded-t-lg text-sm font-medium transition-colors flex-shrink-0 ${
-              tab === t.id ? 'text-white border-b-2 border-primary-500' : 'text-slate-500 hover:text-white'
+              tab === t.id ? 'text-navy-primary border-b-2 border-cyan-accent' : 'text-navy-muted hover:text-navy-primary'
             }`}
           >
             {t.label}
@@ -1027,12 +1033,12 @@ function ContentManager() {
           renderRow={item => (
             <div>
               <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-white text-sm font-medium">{item.client_name}</span>
-                <span className="text-slate-500 text-xs">— {item.client_role}</span>
-                <span className="text-amber-400 text-xs flex items-center gap-0.5"><FiStar size={10} /> {item.rating}</span>
-                {!item.is_active && <span className="text-rose-400 text-xs">(hidden)</span>}
+                <span className="text-navy-primary text-sm font-medium">{item.client_name}</span>
+                <span className="text-navy-muted text-xs">— {item.client_role}</span>
+                <span className="text-status-warning text-xs flex items-center gap-0.5"><FiStar size={10} /> {item.rating}</span>
+                {!item.is_active && <span className="text-status-error text-xs">(hidden)</span>}
               </div>
-              <p className="text-slate-400 text-xs truncate italic">"{item.quote}"</p>
+              <p className="text-navy-secondary text-xs truncate italic">"{item.quote}"</p>
             </div>
           )}
         />
@@ -1051,9 +1057,9 @@ function ContentManager() {
           ]}
           renderRow={item => (
             <div>
-              <p className="text-white text-sm font-medium">{item.question}</p>
-              <p className="text-slate-400 text-xs truncate mt-0.5">{item.answer}</p>
-              {!item.is_active && <span className="text-rose-400 text-xs">(hidden)</span>}
+              <p className="text-navy-primary text-sm font-medium">{item.question}</p>
+              <p className="text-navy-secondary text-xs truncate mt-0.5">{item.answer}</p>
+              {!item.is_active && <span className="text-status-error text-xs">(hidden)</span>}
             </div>
           )}
         />
@@ -1072,9 +1078,9 @@ function ContentManager() {
           ]}
           renderRow={item => (
             <div className="flex items-center gap-3">
-              <span className="text-white text-sm font-medium">{item.label}</span>
-              <span className="px-2 py-0.5 rounded-full bg-primary-500/10 text-primary-400 text-xs font-bold">{item.count}</span>
-              {!item.is_active && <span className="text-rose-400 text-xs">(hidden)</span>}
+              <span className="text-navy-primary text-sm font-medium">{item.label}</span>
+              <span className="px-2 py-0.5 rounded-full bg-cyan-subtle text-cyan-hover text-xs font-bold">{item.count}</span>
+              {!item.is_active && <span className="text-status-error text-xs">(hidden)</span>}
             </div>
           )}
         />
@@ -1133,38 +1139,38 @@ function VisitorAnalytics({ stats }) {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-white font-bold text-xl">Visitor Analytics</h2>
-          <p className="text-slate-500 text-sm">{total.toLocaleString()} total page views tracked</p>
+          <h2 className="text-navy-primary font-bold text-xl">Visitor Analytics</h2>
+          <p className="text-navy-muted text-sm">{total.toLocaleString()} total page views tracked</p>
         </div>
       </div>
 
       {/* Quick stats row */}
       {stats && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="border border-line bg-panel rounded-md p-4">
-            <p className="text-slate-500 text-xs mb-0.5">Today</p>
-            <p className="text-white font-bold text-xl">{stats.visits.today}</p>
+          <div className="border border-border bg-paper-elevated rounded-md p-4">
+            <p className="text-navy-muted text-xs mb-0.5">Today</p>
+            <p className="text-navy-primary font-bold text-xl">{stats.visits.today}</p>
             {typeof stats.visits.unique_today === 'number' && (
               <p className="text-slate-600 text-xs mt-0.5">{stats.visits.unique_today} unique</p>
             )}
           </div>
-          <div className="border border-line bg-panel rounded-md p-4">
-            <p className="text-slate-500 text-xs mb-0.5">This Week</p>
-            <p className="text-white font-bold text-xl">{stats.visits.this_week}</p>
+          <div className="border border-border bg-paper-elevated rounded-md p-4">
+            <p className="text-navy-muted text-xs mb-0.5">This Week</p>
+            <p className="text-navy-primary font-bold text-xl">{stats.visits.this_week}</p>
             {typeof stats.visits.unique_week === 'number' && (
               <p className="text-slate-600 text-xs mt-0.5">{stats.visits.unique_week} unique</p>
             )}
           </div>
-          <div className="border border-line bg-panel rounded-md p-4">
-            <p className="text-slate-500 text-xs mb-0.5">This Month</p>
-            <p className="text-white font-bold text-xl">{stats.visits.this_month}</p>
+          <div className="border border-border bg-paper-elevated rounded-md p-4">
+            <p className="text-navy-muted text-xs mb-0.5">This Month</p>
+            <p className="text-navy-primary font-bold text-xl">{stats.visits.this_month}</p>
             {typeof stats.visits.unique_month === 'number' && (
               <p className="text-slate-600 text-xs mt-0.5">{stats.visits.unique_month} unique</p>
             )}
           </div>
-          <div className="border border-line bg-panel rounded-md p-4">
-            <p className="text-slate-500 text-xs mb-0.5">All Time</p>
-            <p className="text-white font-bold text-xl">{stats.visits.total}</p>
+          <div className="border border-border bg-paper-elevated rounded-md p-4">
+            <p className="text-navy-muted text-xs mb-0.5">All Time</p>
+            <p className="text-navy-primary font-bold text-xl">{stats.visits.total}</p>
           </div>
         </div>
       )}
@@ -1172,8 +1178,8 @@ function VisitorAnalytics({ stats }) {
       {/* Breakdown cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Devices */}
-        <div className="border border-line bg-panel rounded-md p-4">
-          <h4 className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-1.5">
+        <div className="border border-border bg-paper-elevated rounded-md p-4">
+          <h4 className="text-navy-secondary text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-1.5">
             <FiMonitor size={12} /> Devices
           </h4>
           {devices.length > 0 ? (
@@ -1183,10 +1189,10 @@ function VisitorAnalytics({ stats }) {
                 const pct = stats.visits.this_month > 0 ? Math.round((d.count / stats.visits.this_month) * 100) : 0
                 return (
                   <div key={d.device_type} className="flex items-center gap-2">
-                    <Icon size={12} className="text-slate-500 flex-shrink-0" />
-                    <span className="text-slate-300 text-xs capitalize flex-1">{d.device_type}</span>
-                    <span className="text-slate-500 text-xs">{pct}%</span>
-                    <span className="text-white text-xs font-semibold w-8 text-right">{d.count}</span>
+                    <Icon size={12} className="text-navy-muted flex-shrink-0" />
+                    <span className="text-navy-body text-xs capitalize flex-1">{d.device_type}</span>
+                    <span className="text-navy-muted text-xs">{pct}%</span>
+                    <span className="text-navy-primary text-xs font-semibold w-8 text-right">{d.count}</span>
                   </div>
                 )
               })}
@@ -1195,16 +1201,16 @@ function VisitorAnalytics({ stats }) {
         </div>
 
         {/* Browsers */}
-        <div className="border border-line bg-panel rounded-md p-4">
-          <h4 className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-1.5">
+        <div className="border border-border bg-paper-elevated rounded-md p-4">
+          <h4 className="text-navy-secondary text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-1.5">
             <FiGlobe size={12} /> Browsers
           </h4>
           {browsers.length > 0 ? (
             <div className="space-y-2">
               {browsers.map(b => (
                 <div key={b.browser} className="flex items-center gap-2">
-                  <span className="text-slate-300 text-xs flex-1 truncate">{b.browser}</span>
-                  <span className="text-white text-xs font-semibold">{b.count}</span>
+                  <span className="text-navy-body text-xs flex-1 truncate">{b.browser}</span>
+                  <span className="text-navy-primary text-xs font-semibold">{b.count}</span>
                 </div>
               ))}
             </div>
@@ -1212,16 +1218,16 @@ function VisitorAnalytics({ stats }) {
         </div>
 
         {/* Countries */}
-        <div className="border border-line bg-panel rounded-md p-4">
-          <h4 className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-1.5">
+        <div className="border border-border bg-paper-elevated rounded-md p-4">
+          <h4 className="text-navy-secondary text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-1.5">
             <FiGlobe size={12} /> Countries
           </h4>
           {countries.length > 0 ? (
             <div className="space-y-2">
               {countries.map(c => (
                 <div key={c.country} className="flex items-center gap-2">
-                  <span className="text-slate-300 text-xs flex-1 truncate">{c.country}</span>
-                  <span className="text-white text-xs font-semibold">{c.count}</span>
+                  <span className="text-navy-body text-xs flex-1 truncate">{c.country}</span>
+                  <span className="text-navy-primary text-xs font-semibold">{c.count}</span>
                 </div>
               ))}
             </div>
@@ -1229,8 +1235,8 @@ function VisitorAnalytics({ stats }) {
         </div>
 
         {/* Referrers */}
-        <div className="border border-line bg-panel rounded-md p-4">
-          <h4 className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-1.5">
+        <div className="border border-border bg-paper-elevated rounded-md p-4">
+          <h4 className="text-navy-secondary text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-1.5">
             <FiTrendingUp size={12} /> Referrers
           </h4>
           {referrers.length > 0 ? (
@@ -1240,8 +1246,8 @@ function VisitorAnalytics({ stats }) {
                 try { display = new URL(r.referrer).hostname } catch {}
                 return (
                   <div key={r.referrer} className="flex items-center gap-2">
-                    <span className="text-slate-300 text-xs flex-1 truncate" title={r.referrer}>{display}</span>
-                    <span className="text-white text-xs font-semibold">{r.count}</span>
+                    <span className="text-navy-body text-xs flex-1 truncate" title={r.referrer}>{display}</span>
+                    <span className="text-navy-primary text-xs font-semibold">{r.count}</span>
                   </div>
                 )
               })}
@@ -1254,23 +1260,23 @@ function VisitorAnalytics({ stats }) {
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="flex-1 flex gap-2">
           <div className="relative flex-1">
-            <FiSearch size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+            <FiSearch size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-navy-muted" />
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && applySearch()}
               placeholder="Search by page path..."
-              className="w-full bg-dark-900 border border-white/[0.1] rounded-xl pl-9 pr-3 py-2.5 text-white text-sm outline-none focus:border-primary-500/60 transition-colors"
+              className="w-full bg-paper-elevated border border-border rounded-xl pl-9 pr-3 py-2.5 text-navy-primary text-sm outline-none focus:border-cyan-accent transition-colors"
             />
           </div>
-          <button onClick={applySearch} className="px-4 py-2.5 rounded-xl bg-primary-500/20 text-primary-400 text-sm hover:bg-primary-500/30 transition-colors">
+          <button onClick={applySearch} className="px-4 py-2.5 rounded-xl bg-cyan-subtle text-cyan-hover text-sm hover:bg-cyan-subtle transition-colors">
             Search
           </button>
         </div>
         <button
           onClick={() => setShowFilters(f => !f)}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm transition-colors ${
-            showFilters ? 'border-primary-500/40 text-primary-400 bg-primary-500/10' : 'border-white/[0.1] text-slate-400 hover:text-white'
+            showFilters ? 'border-cyan-accent text-cyan-hover bg-cyan-subtle' : 'border-border text-navy-secondary hover:text-navy-primary'
           }`}
         >
           <FiFilter size={14} /> Filters
@@ -1278,34 +1284,34 @@ function VisitorAnalytics({ stats }) {
       </div>
 
       {showFilters && (
-        <div className="flex flex-wrap gap-3 border border-line bg-panel rounded-md p-4">
+        <div className="flex flex-wrap gap-3 border border-border bg-paper-elevated rounded-md p-4">
           <div>
-            <label className="text-slate-500 text-xs block mb-1">Country</label>
+            <label className="text-navy-muted text-xs block mb-1">Country</label>
             <input
               value={filters.country}
               onChange={e => setFilters(f => ({ ...f, country: e.target.value }))}
               placeholder="e.g. India"
-              className="bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-primary-500/60 transition-colors w-40"
+              className="bg-paper-base border border-border rounded-lg px-3 py-2 text-navy-primary text-sm outline-none focus:border-cyan-accent transition-colors w-40"
             />
           </div>
           <div>
-            <label className="text-slate-500 text-xs block mb-1">Device</label>
+            <label className="text-navy-muted text-xs block mb-1">Device</label>
             <select
               value={filters.device}
               onChange={e => setFilters(f => ({ ...f, device: e.target.value }))}
-              className="bg-dark-950 border border-white/[0.1] rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-primary-500/60 transition-colors w-36 cursor-pointer"
+              className="bg-paper-base border border-border rounded-lg px-3 py-2 text-navy-primary text-sm outline-none focus:border-cyan-accent transition-colors w-36 cursor-pointer"
             >
-              <option value="" className="bg-dark-900">All</option>
-              <option value="desktop" className="bg-dark-900">Desktop</option>
-              <option value="mobile" className="bg-dark-900">Mobile</option>
-              <option value="tablet" className="bg-dark-900">Tablet</option>
-              <option value="bot" className="bg-dark-900">Bot</option>
+              <option value="" className="bg-paper-elevated">All</option>
+              <option value="desktop" className="bg-paper-elevated">Desktop</option>
+              <option value="mobile" className="bg-paper-elevated">Mobile</option>
+              <option value="tablet" className="bg-paper-elevated">Tablet</option>
+              <option value="bot" className="bg-paper-elevated">Bot</option>
             </select>
           </div>
           <div className="flex items-end">
             <button
               onClick={() => { setFilters({ path: '', country: '', device: '' }); setSearch('') }}
-              className="px-3 py-2 rounded-lg text-slate-400 hover:text-white border border-white/[0.1] text-xs transition-colors"
+              className="px-3 py-2 rounded-lg text-navy-secondary hover:text-navy-primary border border-border text-xs transition-colors"
             >
               Clear All
             </button>
@@ -1314,30 +1320,30 @@ function VisitorAnalytics({ stats }) {
       )}
 
       {/* Visitor Log Table */}
-      <div className="border border-line bg-panel rounded-md overflow-hidden">
+      <div className="border border-border bg-paper-elevated rounded-md overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="border-b border-line">
-                <th className="px-3 py-2 text-slate-500 text-xs font-semibold uppercase tracking-wide">Time</th>
-                <th className="px-3 py-2 text-slate-500 text-xs font-semibold uppercase tracking-wide">Page</th>
-                <th className="px-3 py-2 text-slate-500 text-xs font-semibold uppercase tracking-wide hidden md:table-cell">Location</th>
-                <th className="px-3 py-2 text-slate-500 text-xs font-semibold uppercase tracking-wide hidden lg:table-cell">Device</th>
-                <th className="px-3 py-2 text-slate-500 text-xs font-semibold uppercase tracking-wide hidden lg:table-cell">Browser / OS</th>
-                <th className="px-3 py-2 text-slate-500 text-xs font-semibold uppercase tracking-wide hidden xl:table-cell">Screen</th>
-                <th className="px-3 py-2 text-slate-500 text-xs font-semibold uppercase tracking-wide hidden xl:table-cell">Referrer</th>
+              <tr className="border-b border-border">
+                <th className="px-3 py-2 text-navy-muted text-xs font-semibold uppercase tracking-wide">Time</th>
+                <th className="px-3 py-2 text-navy-muted text-xs font-semibold uppercase tracking-wide">Page</th>
+                <th className="px-3 py-2 text-navy-muted text-xs font-semibold uppercase tracking-wide hidden md:table-cell">Location</th>
+                <th className="px-3 py-2 text-navy-muted text-xs font-semibold uppercase tracking-wide hidden lg:table-cell">Device</th>
+                <th className="px-3 py-2 text-navy-muted text-xs font-semibold uppercase tracking-wide hidden lg:table-cell">Browser / OS</th>
+                <th className="px-3 py-2 text-navy-muted text-xs font-semibold uppercase tracking-wide hidden xl:table-cell">Screen</th>
+                <th className="px-3 py-2 text-navy-muted text-xs font-semibold uppercase tracking-wide hidden xl:table-cell">Referrer</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 Array.from({ length: 8 }).map((_, i) => (
-                  <tr key={i} className="border-b border-white/[0.03]">
-                    <td colSpan={7} className="px-3 py-2"><div className="h-3.5 bg-white/[0.04] rounded animate-pulse" /></td>
+                  <tr key={i} className="border-b border-border">
+                    <td colSpan={7} className="px-3 py-2"><div className="h-3.5 bg-paper-subtle rounded animate-pulse" /></td>
                   </tr>
                 ))
               ) : filteredVisitors.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-4 py-12 text-center text-slate-500 text-sm">No visitor data found.</td>
+                  <td colSpan={7} className="px-4 py-12 text-center text-navy-muted text-sm">No visitor data found.</td>
                 </tr>
               ) : (
                 filteredVisitors.map(v => {
@@ -1353,36 +1359,36 @@ function VisitorAnalytics({ stats }) {
                   }
 
                   return (
-                    <tr key={v.id} className="border-b border-line/50 hover:bg-white/[0.02] transition-colors">
+                    <tr key={v.id} className="border-b border-border hover:bg-paper-subtle transition-colors">
                       <td className="px-3 py-2">
-                        <span className="text-slate-300 text-xs whitespace-nowrap">{timeStr}</span>
+                        <span className="text-navy-body text-xs whitespace-nowrap">{timeStr}</span>
                       </td>
                       <td className="px-3 py-2">
-                        <span className="text-white text-xs font-mono">{v.path}</span>
+                        <span className="text-navy-primary text-xs font-mono">{v.path}</span>
                       </td>
                       <td className="px-3 py-2 hidden md:table-cell">
-                        <div className="text-slate-300 text-xs">
+                        <div className="text-navy-body text-xs">
                           {v.city && v.country ? `${v.city}, ${v.country}` : v.country || <span className="text-slate-600">—</span>}
                         </div>
                         {v.ip_address && <p className="text-slate-600 text-xs font-mono mt-0.5">{v.ip_address}</p>}
                       </td>
                       <td className="px-3 py-2 hidden lg:table-cell">
                         <div className="flex items-center gap-1.5">
-                          <DeviceIcon size={12} className="text-slate-500" />
-                          <span className="text-slate-300 text-xs capitalize">{v.device_type || '—'}</span>
+                          <DeviceIcon size={12} className="text-navy-muted" />
+                          <span className="text-navy-body text-xs capitalize">{v.device_type || '—'}</span>
                         </div>
                       </td>
                       <td className="px-3 py-2 hidden lg:table-cell">
-                        <p className="text-slate-300 text-xs">{v.browser || '—'}</p>
+                        <p className="text-navy-body text-xs">{v.browser || '—'}</p>
                         <p className="text-slate-600 text-xs mt-0.5">{v.os || '—'}</p>
                       </td>
                       <td className="px-3 py-2 hidden xl:table-cell">
-                        <span className="text-slate-400 text-xs">
+                        <span className="text-navy-secondary text-xs">
                           {v.screen_width && v.screen_height ? `${v.screen_width}×${v.screen_height}` : '—'}
                         </span>
                       </td>
                       <td className="px-3 py-2 hidden xl:table-cell">
-                        <span className="text-slate-400 text-xs truncate max-w-[120px] block" title={v.referrer}>
+                        <span className="text-navy-secondary text-xs truncate max-w-[120px] block" title={v.referrer}>
                           {refDisplay || <span className="text-slate-600">Direct</span>}
                         </span>
                       </td>
@@ -1396,15 +1402,15 @@ function VisitorAnalytics({ stats }) {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between px-3 py-2 border-t border-line">
-            <span className="text-slate-500 text-xs">
+          <div className="flex items-center justify-between px-3 py-2 border-t border-border">
+            <span className="text-navy-muted text-xs">
               Page {page} of {totalPages} ({total.toLocaleString()} results)
             </span>
             <div className="flex items-center gap-1">
               <button
                 onClick={() => load(page - 1)}
                 disabled={page <= 1}
-                className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="p-2 rounded-lg text-navy-secondary hover:text-navy-primary hover:bg-paper-subtle transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <FiChevronLeft size={14} />
               </button>
@@ -1420,7 +1426,7 @@ function VisitorAnalytics({ stats }) {
                     key={pg}
                     onClick={() => load(pg)}
                     className={`w-8 h-8 rounded-lg text-xs font-medium transition-colors ${
-                      pg === page ? 'bg-primary-500 text-white' : 'text-slate-400 hover:text-white hover:bg-white/[0.06]'
+                      pg === page ? 'bg-cyan-hover text-navy-primary' : 'text-navy-secondary hover:text-navy-primary hover:bg-paper-subtle'
                     }`}
                   >
                     {pg}
@@ -1430,7 +1436,7 @@ function VisitorAnalytics({ stats }) {
               <button
                 onClick={() => load(page + 1)}
                 disabled={page >= totalPages}
-                className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="p-2 rounded-lg text-navy-secondary hover:text-navy-primary hover:bg-paper-subtle transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <FiChevronRight size={14} />
               </button>
@@ -1453,7 +1459,7 @@ const PAGES = [
 ]
 
 export default function Dashboard() {
-  const [authed, setAuthed] = useState(() => !!localStorage.getItem(STORAGE_KEY))
+  const [authed, setAuthed] = useState(() => !!secretStore?.getItem(STORAGE_KEY))
   const [stats, setStats] = useState(null)
   const [contacts, setContacts] = useState([])
   const [page, setPage] = useState('overview')
@@ -1463,7 +1469,7 @@ export default function Dashboard() {
   const [loadError, setLoadError] = useState('')
 
   const forceLogout = useCallback(() => {
-    localStorage.removeItem(STORAGE_KEY)
+    secretStore?.removeItem(STORAGE_KEY)
     setAuthed(false)
     setStats(null)
     setContacts([])
@@ -1550,17 +1556,17 @@ export default function Dashboard() {
 
   return (
     <div
-      className="min-h-screen bg-ink text-white flex"
+      className="min-h-screen bg-paper-base text-navy-primary flex"
       data-clarity-mask="true"
     >
       {/* Sidebar - Desktop */}
-      <aside className="hidden lg:flex flex-col w-60 bg-panel border-r border-line fixed inset-y-0 left-0 z-40">
-        <div className="p-4 border-b border-line">
+      <aside className="hidden lg:flex flex-col w-60 bg-paper-elevated border-r border-border fixed inset-y-0 left-0 z-40">
+        <div className="p-4 border-b border-border">
           <div className="flex items-center gap-3">
             <BrandLogo variant="mark" link={false} imgClassName="h-8 w-8" />
             <div>
-              <p className="text-white font-semibold text-sm">Orchestrix Labs</p>
-              <p className="text-slate-500 text-xs">Admin Dashboard</p>
+              <p className="text-navy-primary font-semibold text-sm">Orchestrix Labs</p>
+              <p className="text-navy-muted text-xs">Admin Dashboard</p>
             </div>
           </div>
         </div>
@@ -1571,20 +1577,20 @@ export default function Dashboard() {
               onClick={() => setPage(p.id)}
               className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors border-l-2 ${
                 page === p.id
-                  ? 'text-cyan-400 bg-transparent border-cyan-500'
-                  : 'text-slate-400 hover:text-white hover:bg-white/[0.04] border-transparent'
+                  ? 'text-cyan-hover bg-transparent border-cyan-accent'
+                  : 'text-navy-secondary hover:text-navy-primary hover:bg-paper-subtle border-transparent'
               }`}
             >
               <p.icon size={16} />
               {p.label}
               {p.id === 'contacts' && newContacts.length > 0 && (
-                <span className="ml-auto text-xs bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded-full">{newContacts.length}</span>
+                <span className="ml-auto text-xs bg-status-warning-bg text-status-warning px-1.5 py-0.5 rounded-full">{newContacts.length}</span>
               )}
             </button>
           ))}
         </nav>
-        <div className="p-3 border-t border-line">
-          <button onClick={logout} className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-400 hover:text-rose-400 hover:bg-white/[0.04] transition-colors">
+        <div className="p-3 border-t border-border">
+          <button onClick={logout} className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-navy-secondary hover:text-status-error hover:bg-paper-subtle transition-colors">
             <FiLogOut size={16} /> Logout
           </button>
         </div>
@@ -1594,11 +1600,11 @@ export default function Dashboard() {
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 lg:hidden" onClick={() => setSidebarOpen(false)}>
           <div className="absolute inset-0 bg-black/60" />
-          <aside className="absolute left-0 inset-y-0 w-60 bg-panel border-r border-line flex flex-col" onClick={e => e.stopPropagation()}>
-            <div className="p-4 border-b border-line">
+          <aside className="absolute left-0 inset-y-0 w-60 bg-paper-elevated border-r border-border flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="p-4 border-b border-border">
               <div className="flex items-center gap-3">
                 <BrandLogo variant="mark" link={false} imgClassName="h-8 w-8" />
-                <p className="text-white font-semibold text-sm">Dashboard</p>
+                <p className="text-navy-primary font-semibold text-sm">Dashboard</p>
               </div>
             </div>
             <nav className="flex-1 p-3 space-y-1">
@@ -1607,7 +1613,7 @@ export default function Dashboard() {
                   key={p.id}
                   onClick={() => { setPage(p.id); setSidebarOpen(false) }}
                   className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors border-l-2 ${
-                    page === p.id ? 'text-cyan-400 bg-transparent border-cyan-500' : 'text-slate-400 hover:text-white hover:bg-white/[0.04] border-transparent'
+                    page === p.id ? 'text-cyan-hover bg-transparent border-cyan-accent' : 'text-navy-secondary hover:text-navy-primary hover:bg-paper-subtle border-transparent'
                   }`}
                 >
                   <p.icon size={16} />
@@ -1615,8 +1621,8 @@ export default function Dashboard() {
                 </button>
               ))}
             </nav>
-            <div className="p-3 border-t border-line">
-              <button onClick={logout} className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-400 hover:text-rose-400 transition-colors">
+            <div className="p-3 border-t border-border">
+              <button onClick={logout} className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-navy-secondary hover:text-status-error transition-colors">
                 <FiLogOut size={16} /> Logout
               </button>
             </div>
@@ -1627,18 +1633,18 @@ export default function Dashboard() {
       {/* Main content */}
       <div className="flex-1 lg:ml-60">
         {/* Top bar */}
-        <header className="border-b border-line bg-ink sticky top-0 z-30">
+        <header className="border-b border-border bg-paper-base sticky top-0 z-30">
           <div className="flex items-center justify-between h-14 px-4 sm:px-6">
             <div className="flex items-center gap-3">
-              <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-slate-400 hover:text-white p-1">
+              <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-navy-secondary hover:text-navy-primary p-1">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12h18M3 6h18M3 18h18" /></svg>
               </button>
-              <h1 className="text-white font-semibold text-sm">{PAGES.find(p => p.id === page)?.label}</h1>
+              <h1 className="text-navy-primary font-semibold text-sm">{PAGES.find(p => p.id === page)?.label}</h1>
             </div>
             <button
               onClick={loadAll}
               disabled={refreshing}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-slate-400 hover:text-white border border-line text-xs transition-colors disabled:opacity-50"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-navy-secondary hover:text-navy-primary border border-border text-xs transition-colors disabled:opacity-50"
             >
               <FiRefreshCw size={12} className={refreshing ? 'animate-spin' : ''} /> Refresh
             </button>
@@ -1647,9 +1653,9 @@ export default function Dashboard() {
 
         <main className="p-4 sm:p-6 lg:p-8 max-w-6xl">
           {loadError && (
-            <div className="mb-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-amber-200 text-sm flex items-center justify-between gap-3">
+            <div className="mb-4 rounded-xl border border-status-warning/40 bg-status-warning-bg px-4 py-3 text-status-warning text-sm flex items-center justify-between gap-3">
               <span>{loadError}</span>
-              <button onClick={loadAll} className="shrink-0 text-amber-100 underline text-xs">Retry</button>
+              <button onClick={loadAll} className="shrink-0 text-status-warning underline text-xs">Retry</button>
             </div>
           )}
           {/* ── Overview Page ── */}
@@ -1683,7 +1689,7 @@ export default function Dashboard() {
                 </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {[1, 2, 3, 4].map(i => <div key={i} className="border border-line bg-panel rounded-md p-5 animate-pulse h-24" />)}
+                  {[1, 2, 3, 4].map(i => <div key={i} className="border border-border bg-paper-elevated rounded-md p-5 animate-pulse h-24" />)}
                 </div>
               )}
 
@@ -1692,9 +1698,9 @@ export default function Dashboard() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {/* Daily views bar chart */}
                   {(stats.visits.daily?.length || 0) > 0 && (
-                    <div className="border border-line bg-panel rounded-md p-6">
-                      <h3 className="text-white font-semibold text-base mb-4 flex items-center gap-2">
-                        <FiTrendingUp size={16} className="text-emerald-400" /> Daily Views (Last 7 Days)
+                    <div className="border border-border bg-paper-elevated rounded-md p-6">
+                      <h3 className="text-navy-primary font-semibold text-base mb-4 flex items-center gap-2">
+                        <FiTrendingUp size={16} className="text-status-success" /> Daily Views (Last 7 Days)
                       </h3>
                       <div className="flex items-end gap-2 h-32">
                         {stats.visits.daily.map(d => {
@@ -1703,9 +1709,9 @@ export default function Dashboard() {
                           const dayLabel = new Date(d.date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short' })
                           return (
                             <div key={d.date} className="flex-1 flex flex-col items-center gap-1">
-                              <span className="text-white text-xs font-semibold">{d.count}</span>
-                              <div className="w-full bg-primary-500/60 rounded-t-lg transition-all" style={{ height: `${h}%` }} />
-                              <span className="text-slate-500 text-xs">{dayLabel}</span>
+                              <span className="text-navy-primary text-xs font-semibold">{d.count}</span>
+                              <div className="w-full bg-cyan-subtle rounded-t-lg transition-all" style={{ height: `${h}%` }} />
+                              <span className="text-navy-muted text-xs">{dayLabel}</span>
                             </div>
                           )
                         })}
@@ -1715,20 +1721,20 @@ export default function Dashboard() {
 
                   {/* Top Pages */}
                   {(stats.top_pages?.length || 0) > 0 && (
-                    <div className="border border-line bg-panel rounded-md p-6">
-                      <h3 className="text-white font-semibold text-base mb-4 flex items-center gap-2">
-                        <FiEye size={16} className="text-primary-400" /> Top Pages
+                    <div className="border border-border bg-paper-elevated rounded-md p-6">
+                      <h3 className="text-navy-primary font-semibold text-base mb-4 flex items-center gap-2">
+                        <FiEye size={16} className="text-cyan-hover" /> Top Pages
                       </h3>
                       <div className="space-y-2">
                         {stats.top_pages.map(({ path, count }) => {
                           const max = stats.top_pages[0]?.count || 1
                           return (
                             <div key={path} className="flex items-center gap-3">
-                              <span className="text-slate-400 text-xs font-mono w-40 truncate flex-shrink-0">{path || '/'}</span>
-                              <div className="flex-1 bg-white/[0.04] rounded-full h-2 overflow-hidden">
-                                <div className="h-full bg-primary-500/60 rounded-full transition-all" style={{ width: `${(count / max) * 100}%` }} />
+                              <span className="text-navy-secondary text-xs font-mono w-40 truncate flex-shrink-0">{path || '/'}</span>
+                              <div className="flex-1 bg-paper-subtle rounded-full h-2 overflow-hidden">
+                                <div className="h-full bg-cyan-subtle rounded-full transition-all" style={{ width: `${(count / max) * 100}%` }} />
                               </div>
-                              <span className="text-slate-400 text-xs w-8 text-right flex-shrink-0">{count}</span>
+                              <span className="text-navy-secondary text-xs w-8 text-right flex-shrink-0">{count}</span>
                             </div>
                           )
                         })}
@@ -1742,8 +1748,8 @@ export default function Dashboard() {
               {newContacts.length > 0 && (
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-white font-semibold text-base">New Leads</h3>
-                    <button onClick={() => setPage('contacts')} className="text-primary-400 text-xs hover:underline">View all</button>
+                    <h3 className="text-navy-primary font-semibold text-base">New Leads</h3>
+                    <button onClick={() => setPage('contacts')} className="text-cyan-hover text-xs hover:underline">View all</button>
                   </div>
                   <div className="space-y-3">
                     {newContacts.slice(0, 3).map(c => (
@@ -1764,30 +1770,30 @@ export default function Dashboard() {
           {/* ── Contacts / Leads Page ── */}
           {page === 'contacts' && (
             <div className="space-y-6">
-              <h2 className="text-white font-bold text-xl">Leads & Contacts</h2>
-              <div className="flex items-center gap-1 border-b border-white/[0.06] pb-1 overflow-x-auto">
+              <h2 className="text-navy-primary font-bold text-xl">Leads & Contacts</h2>
+              <div className="flex items-center gap-1 border-b border-border pb-1 overflow-x-auto">
                 {contactTabs.map(t => (
                   <button
                     key={t.id}
                     onClick={() => setContactTab(t.id)}
                     className={`flex items-center gap-1.5 px-4 py-2 rounded-t-lg text-sm font-medium transition-colors flex-shrink-0 ${
-                      contactTab === t.id ? 'text-white border-b-2 border-primary-500' : 'text-slate-500 hover:text-white'
+                      contactTab === t.id ? 'text-navy-primary border-b-2 border-cyan-accent' : 'text-navy-muted hover:text-navy-primary'
                     }`}
                   >
                     {t.label}
                     {t.count > 0 && (
                       <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-                        t.color === 'amber' && t.count > 0 ? 'bg-amber-500/20 text-amber-400'
-                        : t.color === 'blue' && t.count > 0 ? 'bg-blue-500/20 text-blue-400'
-                        : 'bg-white/[0.06] text-slate-400'
+                        t.color === 'amber' && t.count > 0 ? 'bg-status-warning-bg text-status-warning'
+                        : t.color === 'blue' && t.count > 0 ? 'bg-blue-500/20 text-blue-700'
+                        : 'bg-paper-subtle text-navy-secondary'
                       }`}>{t.count}</span>
                     )}
                   </button>
                 ))}
               </div>
               {shownContacts.length === 0 ? (
-                <div className="text-center py-16 text-slate-500">
-                  <FiCheck size={32} className="mx-auto mb-3 text-emerald-500/50" />
+                <div className="text-center py-16 text-navy-muted">
+                  <FiCheck size={32} className="mx-auto mb-3 text-status-success" />
                   <p className="text-sm">{contactTab === 'new' ? 'No new leads!' : 'Nothing here.'}</p>
                 </div>
               ) : (
@@ -1804,7 +1810,7 @@ export default function Dashboard() {
           {/* ── Settings Page ── */}
           {page === 'settings' && (
             <div className="space-y-6">
-              <h2 className="text-white font-bold text-xl">Settings</h2>
+              <h2 className="text-navy-primary font-bold text-xl">Settings</h2>
               <SiteStatsEditor />
             </div>
           )}

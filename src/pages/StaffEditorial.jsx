@@ -22,7 +22,7 @@ const STATUSES = ['imported', 'reviewed', 'drafted', 'approved', 'published']
 
 function WarningBanner({ children }) {
   return (
-    <div className="mb-4 border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
+    <div className="mb-4 border border-status-warning/40 bg-status-warning-bg px-4 py-3 text-sm text-status-warning">
       {children}
     </div>
   )
@@ -50,33 +50,33 @@ function LoginPanel({ onLoggedIn }) {
 
   return (
     <div className="mx-auto max-w-md py-24">
-      <h1 className="font-display text-2xl font-semibold text-white">Editorial staff login</h1>
-      <p className="mt-2 text-sm text-slate-400">
+      <h1 className="font-display text-2xl font-semibold text-navy-primary">Editorial staff login</h1>
+      <p className="mt-2 text-sm text-navy-secondary">
         Session cookie auth (HttpOnly). Does not use DASHBOARD_SECRET.
       </p>
       <form onSubmit={submit} className="mt-8 space-y-4">
-        <label className="block text-sm text-slate-300">
+        <label className="block text-sm text-navy-body">
           Username
           <input
-            className="mt-1 w-full border border-white/10 bg-dark-900 px-3 py-2 text-white"
+            className="mt-1 w-full border border-border bg-paper-elevated px-3 py-2 text-navy-primary"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             autoComplete="username"
             required
           />
         </label>
-        <label className="block text-sm text-slate-300">
+        <label className="block text-sm text-navy-body">
           Password
           <input
             type="password"
-            className="mt-1 w-full border border-white/10 bg-dark-900 px-3 py-2 text-white"
+            className="mt-1 w-full border border-border bg-paper-elevated px-3 py-2 text-navy-primary"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             autoComplete="current-password"
             required
           />
         </label>
-        {error && <p className="text-sm text-rose-300">{error}</p>}
+        {error && <p className="text-sm text-status-error">{error}</p>}
         <button type="submit" className="btn-primary" disabled={busy}>
           {busy ? 'Signing in…' : 'Sign in'}
         </button>
@@ -144,12 +144,12 @@ export default function StaffEditorial() {
   }, [detail])
 
   if (boot) {
-    return <div className="py-32 text-center text-slate-400">Checking staff session…</div>
+    return <div className="py-32 text-center text-navy-secondary">Checking staff session…</div>
   }
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-dark-950 px-4">
+      <div className="min-h-screen bg-paper-base px-4">
         <LoginPanel onLoggedIn={setUser} />
       </div>
     )
@@ -219,13 +219,13 @@ export default function StaffEditorial() {
   }
 
   return (
-    <div className="min-h-screen bg-dark-950 text-slate-200">
-      <header className="border-b border-white/10 px-4 py-4 sm:px-6">
+    <div className="min-h-screen bg-paper-base text-navy-body">
+      <header className="border-b border-border px-4 py-4 sm:px-6">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-cyan-300/80">Orchestrix Labs</p>
-            <h1 className="font-display text-xl font-semibold text-white">Editorial portfolio dashboard</h1>
-            <p className="text-xs text-slate-500">Signed in as {user.username} · session auth</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-cyan-hover">Orchestrix Labs</p>
+            <h1 className="font-display text-xl font-semibold text-navy-primary">Editorial portfolio dashboard</h1>
+            <p className="text-xs text-navy-muted">Signed in as {user.username} · session auth</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <a href="/dashboard" className="btn-outline text-xs">
@@ -262,8 +262,8 @@ export default function StaffEditorial() {
               onClick={() => setTab(id)}
               className={`block w-full border px-3 py-2 text-left text-sm ${
                 tab === id
-                  ? 'border-cyan-400/40 bg-cyan-400/10 text-cyan-100'
-                  : 'border-white/10 text-slate-300'
+                  ? 'border-cyan-accent bg-cyan-subtle text-cyan-100'
+                  : 'border-border text-navy-body'
               }`}
             >
               {label}
@@ -276,7 +276,7 @@ export default function StaffEditorial() {
         </nav>
 
         <main>
-          {msg && <p className="mb-4 text-sm text-cyan-200">{msg}</p>}
+          {msg && <p className="mb-4 text-sm text-cyan-hover">{msg}</p>}
 
           {tab === 'contracts' && (
             <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
@@ -286,12 +286,12 @@ export default function StaffEditorial() {
                     value={q}
                     onChange={(e) => setQ(e.target.value)}
                     placeholder="Search title, id, client"
-                    className="min-h-[40px] flex-1 border border-white/10 bg-dark-900 px-3 text-sm"
+                    className="min-h-[40px] flex-1 border border-border bg-paper-elevated px-3 text-sm"
                   />
                   <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
-                    className="border border-white/10 bg-dark-900 px-2 text-sm"
+                    className="border border-border bg-paper-elevated px-2 text-sm"
                   >
                     <option value="">All statuses</option>
                     {STATUSES.map((s) => (
@@ -300,7 +300,7 @@ export default function StaffEditorial() {
                       </option>
                     ))}
                   </select>
-                  <label className="flex items-center gap-2 text-xs text-slate-400">
+                  <label className="flex items-center gap-2 text-xs text-navy-secondary">
                     <input
                       type="checkbox"
                       checked={privateOnly}
@@ -312,7 +312,7 @@ export default function StaffEditorial() {
                     Refresh
                   </button>
                 </div>
-                <ul className="max-h-[70vh] space-y-2 overflow-auto border border-white/10 p-2">
+                <ul className="max-h-[70vh] space-y-2 overflow-auto border border-border p-2">
                   {contracts.map((c) => (
                     <li key={c.contract_id}>
                       <button
@@ -320,12 +320,12 @@ export default function StaffEditorial() {
                         onClick={() => openContract(c.contract_id)}
                         className={`w-full border px-3 py-2 text-left text-sm ${
                           selectedId === c.contract_id
-                            ? 'border-cyan-400/40 bg-cyan-400/5'
-                            : 'border-transparent hover:border-white/10'
+                            ? 'border-cyan-accent bg-cyan-subtle'
+                            : 'border-transparent hover:border-border'
                         }`}
                       >
-                        <span className="font-medium text-white">{c.title || c.contract_id}</span>
-                        <span className="mt-1 block text-xs text-slate-500">
+                        <span className="font-medium text-navy-primary">{c.title || c.contract_id}</span>
+                        <span className="mt-1 block text-xs text-navy-muted">
                           {c.contract_id} · {c.editorial_status}
                           {c.is_private ? ' · PRIVATE' : ''}
                           {c.access_type && c.access_type !== 'PublicAccess' ? ` · ${c.access_type}` : ''}
@@ -336,24 +336,24 @@ export default function StaffEditorial() {
                 </ul>
               </section>
 
-              <section className="border border-white/10 p-4">
+              <section className="border border-border p-4">
                 {!detail ? (
-                  <p className="text-sm text-slate-500">Select a contract to review original staff-only detail.</p>
+                  <p className="text-sm text-navy-muted">Select a contract to review original staff-only detail.</p>
                 ) : (
                   <div className="space-y-4">
                     {restrictedWarning && <WarningBanner>{restrictedWarning}</WarningBanner>}
-                    <h2 className="font-display text-lg text-white">{detail.title}</h2>
-                    <p className="text-xs text-slate-500">{detail.contract_id}</p>
-                    <p className="text-sm text-slate-300 whitespace-pre-wrap">{detail.description}</p>
-                    <div className="grid gap-2 text-xs text-slate-400 sm:grid-cols-2">
+                    <h2 className="font-display text-lg text-navy-primary">{detail.title}</h2>
+                    <p className="text-xs text-navy-muted">{detail.contract_id}</p>
+                    <p className="text-sm text-navy-body whitespace-pre-wrap">{detail.description}</p>
+                    <div className="grid gap-2 text-xs text-navy-secondary sm:grid-cols-2">
                       <p>Client (staff only): {detail.client_name || '—'}</p>
                       <p>Access: {detail.access_type || '—'}</p>
                       <p>Website eligible: {String(detail.public_website_eligible)}</p>
                       <p>Testimonial eligible: {String(detail.public_testimonial_eligible)}</p>
                     </div>
-                    <details className="border border-white/10 p-3 text-xs">
-                      <summary className="cursor-pointer text-slate-300">original_record (staff only)</summary>
-                      <pre className="mt-2 max-h-64 overflow-auto text-[11px] text-slate-500">
+                    <details className="border border-border p-3 text-xs">
+                      <summary className="cursor-pointer text-navy-body">original_record (staff only)</summary>
+                      <pre className="mt-2 max-h-64 overflow-auto text-[11px] text-navy-muted">
                         {JSON.stringify(detail.original_record || {}, null, 2)}
                       </pre>
                     </details>
@@ -361,7 +361,7 @@ export default function StaffEditorial() {
                       <select
                         value={detail.editorial_status}
                         onChange={(e) => setDetail({ ...detail, editorial_status: e.target.value })}
-                        className="border border-white/10 bg-dark-900 px-2 py-1 text-sm"
+                        className="border border-border bg-paper-elevated px-2 py-1 text-sm"
                       >
                         {STATUSES.map((s) => (
                           <option key={s} value={s}>
@@ -395,7 +395,7 @@ export default function StaffEditorial() {
                       </label>
                     </div>
                     <textarea
-                      className="min-h-[80px] w-full border border-white/10 bg-dark-900 p-2 text-sm"
+                      className="min-h-[80px] w-full border border-border bg-paper-elevated p-2 text-sm"
                       value={detail.internal_notes || ''}
                       onChange={(e) => setDetail({ ...detail, internal_notes: e.target.value })}
                       placeholder="Internal notes"
@@ -417,10 +417,10 @@ export default function StaffEditorial() {
                     </button>
                     {detail.feedback_entries?.length > 0 && (
                       <div>
-                        <h3 className="text-sm font-semibold text-white">Feedback (review before testimonial approval)</h3>
-                        <ul className="mt-2 space-y-2 text-xs text-slate-400">
+                        <h3 className="text-sm font-semibold text-navy-primary">Feedback (review before testimonial approval)</h3>
+                        <ul className="mt-2 space-y-2 text-xs text-navy-secondary">
                           {detail.feedback_entries.map((f) => (
-                            <li key={f.id} className="border border-white/10 p-2">
+                            <li key={f.id} className="border border-border p-2">
                               <p>
                                 {f.direction} · rating {f.rating ?? '—'} · written={String(f.has_written_review)}
                               </p>
@@ -438,18 +438,18 @@ export default function StaffEditorial() {
 
           {tab === 'projects' && (
             <div className="space-y-6">
-              <section className="border border-white/10 p-4">
-                <h2 className="font-display text-lg text-white">Create editorial project</h2>
+              <section className="border border-border p-4">
+                <h2 className="font-display text-lg text-navy-primary">Create editorial project</h2>
                 <div className="mt-3 grid gap-2 sm:grid-cols-3">
                   <input
                     placeholder="slug"
-                    className="border border-white/10 bg-dark-900 px-2 py-2 text-sm"
+                    className="border border-border bg-paper-elevated px-2 py-2 text-sm"
                     value={newProject.slug}
                     onChange={(e) => setNewProject({ ...newProject, slug: e.target.value })}
                   />
                   <input
                     placeholder="title"
-                    className="border border-white/10 bg-dark-900 px-2 py-2 text-sm"
+                    className="border border-border bg-paper-elevated px-2 py-2 text-sm"
                     value={newProject.title}
                     onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
                   />
@@ -468,16 +468,16 @@ export default function StaffEditorial() {
               </section>
 
               <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
-                <ul className="max-h-[60vh] space-y-2 overflow-auto border border-white/10 p-2">
+                <ul className="max-h-[60vh] space-y-2 overflow-auto border border-border p-2">
                   {projects.map((p) => (
                     <li key={p.slug}>
                       <button
                         type="button"
-                        className="w-full border border-transparent px-3 py-2 text-left text-sm hover:border-white/10"
+                        className="w-full border border-transparent px-3 py-2 text-left text-sm hover:border-border"
                         onClick={() => openProject(p.slug)}
                       >
-                        <span className="text-white">{p.title}</span>
-                        <span className="block text-xs text-slate-500">
+                        <span className="text-navy-primary">{p.title}</span>
+                        <span className="block text-xs text-navy-muted">
                           {p.slug} · {p.editorial_status}
                         </span>
                       </button>
@@ -486,21 +486,21 @@ export default function StaffEditorial() {
                 </ul>
 
                 {project && (
-                  <section className="space-y-3 border border-white/10 p-4">
+                  <section className="space-y-3 border border-border p-4">
                     {(project.warnings || []).map((w) => (
                       <WarningBanner key={w}>{w}</WarningBanner>
                     ))}
                     <input
-                      className="w-full border border-white/10 bg-dark-900 px-3 py-2 text-lg text-white"
+                      className="w-full border border-border bg-paper-elevated px-3 py-2 text-lg text-navy-primary"
                       value={project.title}
                       onChange={(e) => setProject({ ...project, title: e.target.value })}
                     />
                     {['summary', 'problem', 'solution', 'engineering_approach', 'draft_notes', 'testimonial_draft'].map(
                       (field) => (
-                        <label key={field} className="block text-xs uppercase tracking-wide text-slate-500">
+                        <label key={field} className="block text-xs uppercase tracking-wide text-navy-muted">
                           {field.replaceAll('_', ' ')}
                           <textarea
-                            className="mt-1 min-h-[70px] w-full border border-white/10 bg-dark-900 p-2 text-sm normal-case text-slate-200"
+                            className="mt-1 min-h-[70px] w-full border border-border bg-paper-elevated p-2 text-sm normal-case text-navy-body"
                             value={project[field] || ''}
                             onChange={(e) => setProject({ ...project, [field]: e.target.value })}
                           />
@@ -511,7 +511,7 @@ export default function StaffEditorial() {
                       <select
                         value={project.editorial_status}
                         onChange={(e) => setProject({ ...project, editorial_status: e.target.value })}
-                        className="border border-white/10 bg-dark-900 px-2 py-1"
+                        className="border border-border bg-paper-elevated px-2 py-1"
                       >
                         {STATUSES.map((s) => (
                           <option key={s} value={s}>
@@ -566,12 +566,12 @@ export default function StaffEditorial() {
                       )}
                     </div>
                     {preview && (
-                      <pre className="max-h-80 overflow-auto border border-white/10 bg-black/40 p-3 text-[11px] text-slate-400">
+                      <pre className="max-h-80 overflow-auto border border-border bg-black/40 p-3 text-[11px] text-navy-secondary">
                         {JSON.stringify(preview, null, 2)}
                       </pre>
                     )}
                     {project.contract_links?.length > 0 && (
-                      <ul className="text-xs text-slate-400">
+                      <ul className="text-xs text-navy-secondary">
                         {project.contract_links.map((l) => (
                           <li key={l.id}>
                             {l.contract_id} {l.is_private ? '(PRIVATE)' : ''} {l.access_type}
@@ -595,15 +595,15 @@ export default function StaffEditorial() {
                 <button type="button" className="btn-outline text-xs" onClick={() => refreshGpt()}>
                   Refresh GPT profiles
                 </button>
-                <p className="text-xs text-slate-500 self-center">
+                <p className="text-xs text-navy-muted self-center">
                   Seed locally: <code>python manage.py sync_gpt_profiles_phase7</code> after building Phase 7
                   packs.
                 </p>
               </div>
               <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
-                <ul className="max-h-[70vh] space-y-2 overflow-auto border border-white/10 p-2">
+                <ul className="max-h-[70vh] space-y-2 overflow-auto border border-border p-2">
                   {gptProfiles.length === 0 && (
-                    <li className="p-3 text-xs text-slate-500">
+                    <li className="p-3 text-xs text-navy-muted">
                       No editorial GPT profiles yet. Run Phase 7 sync command after migrate (local only).
                     </li>
                   )}
@@ -613,13 +613,13 @@ export default function StaffEditorial() {
                         type="button"
                         className={`w-full border px-3 py-2 text-left text-sm ${
                           gptSelected?.slug === p.slug
-                            ? 'border-cyan-400/40 bg-cyan-400/5'
-                            : 'border-transparent hover:border-white/10'
+                            ? 'border-cyan-accent bg-cyan-subtle'
+                            : 'border-transparent hover:border-border'
                         }`}
                         onClick={() => setGptSelected(p)}
                       >
-                        <span className="text-white">{p.title}</span>
-                        <span className="mt-1 block text-xs text-slate-500">
+                        <span className="text-navy-primary">{p.title}</span>
+                        <span className="mt-1 block text-xs text-navy-muted">
                           {p.slug} · GPT {p.gpt_export_approved ? 'APPROVED' : 'pending'}
                           {p.gpt_export_stale ? ' · STALE' : ''}
                           {p.publication_approved ? ' · site-approved' : ''}
@@ -629,9 +629,9 @@ export default function StaffEditorial() {
                   ))}
                 </ul>
 
-                <section className="border border-white/10 p-4">
+                <section className="border border-border p-4">
                   {!gptSelected ? (
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-navy-muted">
                       Select a sanitized project profile to review for GPT export.
                     </p>
                   ) : (
@@ -639,19 +639,19 @@ export default function StaffEditorial() {
                       {(gptSelected.warnings || []).map((w) => (
                         <WarningBanner key={w}>{w}</WarningBanner>
                       ))}
-                      <h2 className="font-display text-lg text-white">{gptSelected.title}</h2>
-                      <p className="text-xs text-slate-500">
+                      <h2 className="font-display text-lg text-navy-primary">{gptSelected.title}</h2>
+                      <p className="text-xs text-navy-muted">
                         contentVersion: {gptSelected.gpt_content_version || '—'} · approvedVersion:{' '}
                         {gptSelected.gpt_approved_content_version || '—'}
                       </p>
-                      <p className="text-xs text-slate-400">
+                      <p className="text-xs text-navy-secondary">
                         Website publicationApproved: {String(gptSelected.publication_approved)} (independent)
                       </p>
-                      <pre className="max-h-80 overflow-auto border border-white/10 bg-black/40 p-3 text-[11px] text-slate-400">
+                      <pre className="max-h-80 overflow-auto border border-border bg-black/40 p-3 text-[11px] text-navy-secondary">
                         {JSON.stringify(gptSelected.gpt_profile_snapshot || {}, null, 2)}
                       </pre>
                       <textarea
-                        className="min-h-[60px] w-full border border-white/10 bg-dark-900 p-2 text-sm"
+                        className="min-h-[60px] w-full border border-border bg-paper-elevated p-2 text-sm"
                         placeholder="Approval note (optional)"
                         value={gptNote}
                         onChange={(e) => setGptNote(e.target.value)}
@@ -700,8 +700,8 @@ export default function StaffEditorial() {
                         </button>
                       </div>
                       <div>
-                        <h3 className="text-sm font-semibold text-white">Recent GPT decisions</h3>
-                        <ul className="mt-2 space-y-1 text-xs text-slate-400">
+                        <h3 className="text-sm font-semibold text-navy-primary">Recent GPT decisions</h3>
+                        <ul className="mt-2 space-y-1 text-xs text-navy-secondary">
                           {gptDecisions
                             .filter((d) => d.project_slug === gptSelected.slug)
                             .slice(0, 8)
@@ -722,9 +722,9 @@ export default function StaffEditorial() {
           )}
 
           {tab === 'audit' && (
-            <section className="border border-white/10">
+            <section className="border border-border">
               <table className="w-full text-left text-xs">
-                <thead className="border-b border-white/10 text-slate-500">
+                <thead className="border-b border-border text-navy-muted">
                   <tr>
                     <th className="p-2">When</th>
                     <th className="p-2">Action</th>
@@ -735,14 +735,14 @@ export default function StaffEditorial() {
                 </thead>
                 <tbody>
                   {audits.map((a) => (
-                    <tr key={a.id} className="border-b border-white/5">
-                      <td className="p-2 text-slate-500">{new Date(a.created_at).toLocaleString()}</td>
+                    <tr key={a.id} className="border-b border-border">
+                      <td className="p-2 text-navy-muted">{new Date(a.created_at).toLocaleString()}</td>
                       <td className="p-2">{a.action}</td>
                       <td className="p-2">
                         {a.object_type}:{a.object_id}
                       </td>
                       <td className="p-2">{a.actor_username || '—'}</td>
-                      <td className="p-2 text-slate-400">{a.summary}</td>
+                      <td className="p-2 text-navy-secondary">{a.summary}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -23,6 +23,8 @@ export default defineConfig(() => {
       },
     },
     server: {
+      port: 5174,
+      strictPort: false,
       proxy: {
         // Same-origin /api via Vite. Default to Railway so /dashboard works without local Django.
         // For a local backend: set VITE_PROXY_API=http://127.0.0.1:8000

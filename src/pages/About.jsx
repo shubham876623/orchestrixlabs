@@ -44,9 +44,9 @@ const expertise = [
 ]
 
 const colorMap = {
-  indigo:  { border: 'border-indigo-500/20',  icon: 'text-indigo-400',  bg: 'bg-indigo-500/10'  },
-  cyan:    { border: 'border-cyan-500/20',    icon: 'text-cyan-400',    bg: 'bg-cyan-500/10'    },
-  emerald: { border: 'border-emerald-500/20', icon: 'text-emerald-400', bg: 'bg-emerald-500/10' },
+  indigo:  { border: 'border-indigo-500/20',  icon: 'text-indigo-700',  bg: 'bg-indigo-500/10'  },
+  cyan:    { border: 'border-cyan-accent',    icon: 'text-cyan-hover',    bg: 'bg-cyan-subtle'    },
+  emerald: { border: 'border-status-success/40', icon: 'text-status-success', bg: 'bg-status-success-bg' },
   orange:  { border: 'border-orange-500/20',  icon: 'text-orange-400',  bg: 'bg-orange-500/10'  },
 }
 
@@ -97,7 +97,7 @@ export default function About() {
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-              className="text-slate-400 text-lg leading-relaxed"
+              className="text-navy-secondary text-lg leading-relaxed"
             >
               Orchestrix Labs is a boutique AI & software development company founded to bridge
               the gap between cutting-edge AI capabilities and practical business implementation.
@@ -114,10 +114,10 @@ export default function About() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <motion.span variants={fadeUp} custom={0} className="section-tag mb-5">Our Story</motion.span>
-              <motion.h2 variants={fadeUp} custom={1} className="text-3xl font-black text-white mb-6">
+              <motion.h2 variants={fadeUp} custom={1} className="text-3xl font-black text-navy-primary mb-6">
                 Purpose-built for<br /><span className="gradient-text">the AI era</span>
               </motion.h2>
-              <div className="space-y-4 text-slate-400 text-base leading-relaxed">
+              <div className="space-y-4 text-navy-secondary text-base leading-relaxed">
                 <motion.p variants={fadeUp} custom={2}>
                   Orchestrix Labs was founded with a single mission: make enterprise-grade AI
                   accessible to ambitious businesses of every size. We combine deep Python & AI
@@ -148,7 +148,7 @@ export default function About() {
               ].map(({ v, l }) => (
                 <div key={l} className="card text-center py-8">
                   <div className="text-4xl font-black gradient-text mb-2">{v}</div>
-                  <p className="text-slate-500 text-sm">{l}</p>
+                  <p className="text-navy-muted text-sm">{l}</p>
                 </div>
               ))}
             </motion.div>
@@ -157,7 +157,7 @@ export default function About() {
       </Section>
 
       {/* Values */}
-      <Section className="py-20 bg-dark-900/40">
+      <Section className="py-20 bg-paper-subtle">
         <div className="container">
           <div className="text-center mb-14">
             <motion.span variants={fadeUp} custom={0} className="section-tag mb-4">Our Values</motion.span>
@@ -168,12 +168,12 @@ export default function About() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {values.map((v, i) => (
               <motion.div key={v.title} custom={i} variants={fadeUp} className="card flex gap-4">
-                <div className="w-10 h-10 rounded-xl bg-primary-500/10 flex items-center justify-center flex-shrink-0">
-                  <v.icon className="text-primary-400" size={18} />
+                <div className="w-10 h-10 rounded-xl bg-cyan-subtle flex items-center justify-center flex-shrink-0">
+                  <v.icon className="text-cyan-hover" size={18} />
                 </div>
                 <div>
-                  <h3 className="text-white font-bold text-base mb-1.5">{v.title}</h3>
-                  <p className="text-slate-400 text-sm leading-relaxed">{v.desc}</p>
+                  <h3 className="text-navy-primary font-bold text-base mb-1.5">{v.title}</h3>
+                  <p className="text-navy-secondary text-sm leading-relaxed">{v.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -200,11 +200,11 @@ export default function About() {
                     <div className={`w-10 h-10 rounded-xl ${c.bg} flex items-center justify-center`}>
                       <Icon className={c.icon} size={18} />
                     </div>
-                    <h3 className="text-white font-bold text-base">{area.category}</h3>
+                    <h3 className="text-navy-primary font-bold text-base">{area.category}</h3>
                   </div>
                   <ul className="space-y-2">
                     {area.items.map(item => (
-                      <li key={item} className="flex items-center gap-2.5 text-slate-400 text-sm">
+                      <li key={item} className="flex items-center gap-2.5 text-navy-secondary text-sm">
                         <span className={`w-1.5 h-1.5 rounded-full ${c.bg.replace('/10', '/50')} flex-shrink-0`} />
                         {item}
                       </li>
@@ -218,7 +218,7 @@ export default function About() {
       </Section>
 
       {/* Tech Stack */}
-      <Section className="py-20 bg-dark-900/40">
+      <Section className="py-20 bg-paper-subtle">
         <div className="container">
           <div className="text-center mb-12">
             <motion.span variants={fadeUp} custom={0} className="section-tag mb-4">Tech Stack</motion.span>
@@ -228,9 +228,9 @@ export default function About() {
           </div>
           <motion.div variants={fadeUp} custom={2} className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-4">
             {stack.map(({ icon: Icon, label }) => (
-              <div key={label} className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/[0.03] border border-white/[0.05] hover:border-primary-500/30 hover:bg-primary-500/5 transition-all duration-200 group">
-                <Icon className="text-slate-400 group-hover:text-primary-400 transition-colors" size={28} />
-                <span className="text-slate-600 text-xs text-center group-hover:text-slate-400 transition-colors">{label}</span>
+              <div key={label} className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-paper-subtle border border-border hover:border-cyan-accent hover:bg-cyan-subtle transition-all duration-200 group">
+                <Icon className="text-navy-secondary group-hover:text-cyan-hover transition-colors" size={28} />
+                <span className="text-slate-600 text-xs text-center group-hover:text-navy-secondary transition-colors">{label}</span>
               </div>
             ))}
           </motion.div>

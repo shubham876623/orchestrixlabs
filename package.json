@@ -25,6 +25,16 @@
     "indexnow:submit": "node scripts/submit-indexnow.mjs",
     "indexnow:force": "node scripts/submit-indexnow.mjs --force",
     "postdeploy:indexnow": "node scripts/submit-indexnow.mjs",
+    "test:site-location-social": "node scripts/test-site-location-social.mjs",
+    "test:site-booking": "node scripts/test-site-booking.mjs",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:report": "playwright show-report",
+    "test:site-search": "node scripts/test-site-search.mjs",
+    "test:nav-search-browser": "node scripts/test-nav-search-browser.mjs",
+    "test:contact-browser": "node scripts/test-contact-form-browser.mjs",
+    "test:csp-browser": "node scripts/test-csp-browser.mjs",
     "test:edge-middleware": "node scripts/test-edge-middleware.mjs",
     "test:dashboard-auth-errors": "node scripts/test-dashboard-auth-errors.mjs"
   },
@@ -42,6 +52,7 @@
     "react-router-dom": "^6.22.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.17",
     "playwright": "^1.49.1",

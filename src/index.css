@@ -2,26 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-}
+/* ============================================================
+   BASE STYLES - Light Paper Theme
+   ============================================================ */
 
 @layer base {
-  :root {
-    --orch-ink: #070B12;
-    --orch-panel: #0E1520;
-    --orch-line: #1C2736;
-    --orch-copy: #C5D0DC;
-    --orch-mute: #7A8798;
-    --orch-signal: #06B6D4;
-  }
-
   * {
     box-sizing: border-box;
     margin: 0;
@@ -30,189 +15,253 @@
 
   html {
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    @apply bg-dark-950 text-copy font-sans antialiased;
+    @apply bg-paper-base text-navy-body font-sans;
     overflow-x: hidden;
   }
 
-  html:not(.dark) body {
-    @apply bg-slate-50 text-slate-900;
-  }
-
-  html:not(.dark) .bg-dark-950,
-  html:not(.dark) .bg-dark-950\/80,
-  html:not(.dark) .bg-dark-900\/30,
-  html:not(.dark) .bg-dark-900\/40,
-  html:not(.dark) .bg-dark-900\/60,
-  html:not(.dark) .bg-dark-900\/70 {
-    background-color: rgba(255, 255, 255, 0.92) !important;
-  }
-
-  html:not(.dark) .bg-dark-900,
-  html:not(.dark) .bg-dark-900\/80,
-  html:not(.dark) .bg-panel {
-    background-color: rgba(255, 255, 255, 0.92) !important;
-  }
-
-  html:not(.dark) .text-copy {
-    color: #0f172a !important;
-  }
-
-  html:not(.dark) .gradient-text {
-    color: #0f172a !important;
-  }
-
-  .dark .gradient-text {
-    color: #fff;
-  }
-
-  html:not(.dark) .text-white:not(.btn-primary):not(.btn-primary *) {
-    color: #0f172a !important;
-  }
-
-  html:not(.dark) .btn-primary,
-  html:not(.dark) .btn-primary * {
-    color: #fff !important;
-  }
-
-  html:not(.dark) .border-white\/\[0\.06\],
-  html:not(.dark) .border-white\/\[0\.08\],
-  html:not(.dark) .border-white\/10 {
-    border-color: rgba(15, 23, 42, 0.1) !important;
-  }
-
-  html:not(.dark) header {
-    background-color: rgba(248, 250, 252, 0.9);
-  }
-
+  /* Selection */
   ::selection {
-    background: rgba(6, 182, 212, 0.35);
-    color: #fff;
+    @apply bg-cyan-subtle text-navy-primary;
   }
 
-  html:not(.dark) ::selection {
-    color: #0f172a;
-  }
-
-  a {
-    @apply transition-colors duration-200;
-  }
-
+  /* Scrollbar - subtle */
   ::-webkit-scrollbar {
     width: 6px;
+    height: 6px;
   }
+  
   ::-webkit-scrollbar-track {
-    @apply bg-dark-950;
+    @apply bg-paper-subtle;
   }
+  
   ::-webkit-scrollbar-thumb {
-    @apply bg-dark-700 rounded-full;
+    @apply bg-border-strong rounded-full;
   }
+  
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-primary-500;
+    @apply bg-cyan-accent;
   }
 }
+
+/* ============================================================
+   COMPONENT UTILITIES
+   ============================================================ */
 
 @layer components {
+  /* Container */
   .container {
-    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-content mx-auto px-4 sm:px-6 lg:px-8;
   }
 
+  /* Buttons */
+  /* Buttons: solid for the one primary action per view, outlined for everything else.
+     Primary uses cyan-hover (#0E7490) as its base so white text meets WCAG AA (5.4:1). */
   .btn-primary {
-    @apply inline-flex items-center gap-2 px-6 py-3 bg-cyan-600
-           text-white font-semibold rounded-md hover:bg-cyan-500
-           transition-colors duration-150 cursor-pointer
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400
-           focus-visible:ring-offset-2 focus-visible:ring-offset-dark-950;
+    @apply relative inline-flex items-center justify-center gap-2
+           px-5 py-2.5 rounded-lg
+           bg-cyan-hover text-white text-[0.9375rem] font-semibold tracking-[-0.005em]
+           border border-[#0B5F75]
+           shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_1px_2px_rgba(15,23,42,0.18)]
+           transition-[background-color,box-shadow,transform] duration-150
+           hover:bg-[#0B5F75] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.18),0_4px_12px_-2px_rgba(14,116,144,0.45)]
+           active:translate-y-px active:shadow-[inset_0_1px_2px_rgba(15,23,42,0.25)]
+           focus-visible:outline-none focus-visible:ring-2
+           focus-visible:ring-cyan-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base
+           disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0;
   }
 
+  .btn-secondary,
   .btn-outline {
-    @apply inline-flex items-center gap-2 px-6 py-3 border border-line text-copy
-           font-semibold rounded-md hover:border-mute hover:bg-panel
-           transition-colors duration-150 cursor-pointer
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400
-           focus-visible:ring-offset-2 focus-visible:ring-offset-dark-950;
+    @apply relative inline-flex items-center justify-center gap-2
+           px-5 py-2.5 rounded-lg
+           bg-paper-elevated text-navy-primary text-[0.9375rem] font-semibold tracking-[-0.005em]
+           border border-border-strong
+           shadow-xs
+           transition-[border-color,color,box-shadow,transform] duration-150
+           hover:border-navy-primary hover:shadow-sm
+           active:translate-y-px
+           focus-visible:outline-none focus-visible:ring-2
+           focus-visible:ring-cyan-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper-base
+           disabled:opacity-60 disabled:cursor-not-allowed;
   }
 
-  .card {
-    @apply bg-dark-900/80 border border-white/[0.08] rounded-xl p-6
-           hover:border-cyan-500/25
-           transition-all duration-300;
+  .btn-lg {
+    @apply px-6 py-3 text-base;
   }
 
-  .glass {
-    @apply bg-white/[0.03] backdrop-blur-xl border border-white/[0.06] rounded-xl;
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2
+           px-4 py-2
+           bg-transparent text-navy-secondary
+           font-medium rounded-md
+           transition-colors duration-150
+           hover:text-navy-primary hover:bg-paper-subtle
+           focus-visible:outline-none focus-visible:ring-2
+           focus-visible:ring-cyan-accent focus-visible:ring-offset-2;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .btn-primary, .btn-secondary, .btn-outline { @apply transition-none active:translate-y-0; }
+  }
+
+  /* Legacy page-structure classes still used by several pages, restyled for the paper theme. */
   .section-tag {
-    @apply inline-flex items-center gap-2 text-mute text-xs font-medium;
+    @apply inline-flex items-center gap-2 text-sm font-medium text-cyan-hover;
   }
-
-  .gradient-text {
-    @apply text-white;
-  }
-
-  .section-heading {
-    @apply font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-white leading-tight tracking-tight;
-  }
-
   .section-sub {
-    @apply text-slate-400 text-lg leading-relaxed max-w-2xl;
+    @apply max-w-2xl text-lg leading-relaxed text-navy-secondary;
   }
-
   .section-shell {
-    @apply py-20 sm:py-24;
+    @apply py-16 sm:py-20;
+  }
+  .gradient-text {
+    @apply text-navy-primary;
   }
 
-  .cta-panel {
-    @apply bg-panel border border-line;
+  /* Cards */
+  .card {
+    @apply bg-paper-elevated 
+           border border-border 
+           rounded-lg 
+           shadow-sm
+           transition-all duration-200
+           hover:border-cyan-accent hover:shadow-md;
   }
 
-  .project-chip {
-    @apply border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-700
-           dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-300;
+  .card-flat {
+    @apply bg-paper-elevated 
+           border border-border-subtle 
+           rounded-lg;
+  }
+
+  /* Links */
+  .link {
+    @apply text-cyan-accent font-medium
+           transition-colors duration-150
+           hover:text-cyan-hover
+           focus-visible:outline-none focus-visible:ring-2 
+           focus-visible:ring-cyan-accent focus-visible:ring-offset-1;
+  }
+
+  .link-subtle {
+    @apply text-navy-secondary 
+           transition-colors duration-150
+           hover:text-cyan-accent
+           focus-visible:outline-none focus-visible:ring-2 
+           focus-visible:ring-cyan-accent focus-visible:ring-offset-1;
+  }
+
+  /* Tech badges */
+  .tech-badge {
+    @apply inline-flex items-center
+           px-2 py-1 
+           bg-paper-subtle 
+           text-navy-secondary text-xs 
+           font-mono font-medium
+           rounded-sm
+           border border-border-subtle;
+  }
+
+  /* Section spacing */
+  .section {
+    @apply py-16 sm:py-20 lg:py-24;
+  }
+
+  .section-sm {
+    @apply py-12 sm:py-14 lg:py-16;
+  }
+
+  .section-lg {
+    @apply py-20 sm:py-24 lg:py-32;
+  }
+
+  /* Section headings */
+  .section-heading {
+    @apply font-sans text-3xl sm:text-4xl lg:text-5xl 
+           font-semibold text-navy-primary 
+           tracking-tight leading-tight;
+  }
+
+  .section-subheading {
+    @apply text-lg text-navy-secondary 
+           leading-relaxed max-w-2xl;
+  }
+
+  /* Status indicators */
+  .status-badge {
+    @apply inline-flex items-center gap-1.5
+           px-2.5 py-1 
+           text-xs font-medium
+           rounded-full;
+  }
+
+  .status-live {
+    @apply status-badge bg-status-success-bg text-status-success;
+  }
+
+  .status-development {
+    @apply status-badge bg-status-warning-bg text-status-warning;
+  }
+
+  .status-archived {
+    @apply status-badge bg-paper-subtle text-navy-muted;
+  }
+
+  /* Dividers */
+  .divider {
+    @apply border-t border-border;
+  }
+
+  .divider-subtle {
+    @apply border-t border-border-subtle;
+  }
+
+  /* Skip link for accessibility */
+  .skip-link {
+    @apply sr-only 
+           focus:not-sr-only focus:fixed focus:top-4 focus:left-4 
+           focus:z-[100] focus:px-4 focus:py-2 
+           focus:bg-cyan-accent focus:text-white 
+           focus:rounded-md focus:font-medium focus:text-sm 
+           focus:shadow-lg;
   }
 }
 
+/* ============================================================
+   UTILITY CLASSES
+   ============================================================ */
+
 @layer utilities {
+  /* Text balance for headings */
   .text-balance {
     text-wrap: balance;
   }
 
-  .skip-link {
-    @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100]
-           focus:px-4 focus:py-2 focus:bg-primary-500 focus:text-white focus:rounded-lg
-           focus:font-semibold focus:text-sm focus:shadow-lg;
+  /* Scrollbar hide */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Focus visible */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 
+           focus-visible:ring-cyan-accent focus-visible:ring-offset-2;
   }
 }
 
-/* Atmospheric hero plane — restrained ink radial */
-.hero-gradient {
-  background:
-    radial-gradient(ellipse at 50% 40%, rgba(7, 11, 18, 0.85) 0%, transparent 70%);
-}
-
-/* Grid pattern overlay */
-.grid-pattern {
-  background-image:
-    linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
-
-/* Noise texture */
-.noise {
-  position: relative;
-}
-.noise::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  opacity: 0.4;
-  pointer-events: none;
-}
+/* ============================================================
+   ACCESSIBILITY - Reduced Motion
+   ============================================================ */
 
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -225,5 +274,19 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   PRINT STYLES
+   ============================================================ */
+
+@media print {
+  body {
+    @apply bg-white text-navy-primary;
+  }
+
+  .no-print {
+    display: none !important;
   }
 }

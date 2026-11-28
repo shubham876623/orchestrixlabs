@@ -108,7 +108,7 @@ export default function Reviews() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.1 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-white mb-5"
+            className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-navy-primary mb-5"
           >
             Trusted by clients{' '}
             <span className="gradient-text">worldwide</span>
@@ -135,12 +135,12 @@ export default function Reviews() {
               </svg>
               <span className="text-[#14a800] font-bold text-sm">Top Rated</span>
             </div>
-            <div className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-primary-500/10 border border-primary-500/20">
-              <FiCheckCircle className="text-primary-400" size={16} />
-              <span className="text-white font-bold text-sm">100% Job Success</span>
+            <div className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-cyan-subtle border border-cyan-accent">
+              <FiCheckCircle className="text-cyan-hover" size={16} />
+              <span className="text-navy-primary font-bold text-sm">100% Job Success</span>
             </div>
-            <div className="px-5 py-3 rounded-2xl bg-white/[0.04] border border-white/[0.08]">
-              <span className="text-slate-300 text-sm"><span className="font-bold text-white">{siteStats.years_experience}+</span> Years Experience</span>
+            <div className="px-5 py-3 rounded-2xl bg-paper-subtle border border-border">
+              <span className="text-navy-body text-sm"><span className="font-bold text-navy-primary">{siteStats.years_experience}+</span> Years Experience</span>
             </div>
           </motion.div>
 
@@ -154,9 +154,9 @@ export default function Reviews() {
             {badges.map(({ label, count }) => (
               <span
                 key={label}
-                className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.07] text-slate-400 text-xs font-medium"
+                className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-paper-subtle border border-border text-navy-secondary text-xs font-medium"
               >
-                <span className="w-5 h-5 rounded-full bg-primary-500/20 text-primary-400 text-[10px] font-bold flex items-center justify-center flex-shrink-0">
+                <span className="w-5 h-5 rounded-full bg-cyan-subtle text-cyan-hover text-[10px] font-bold flex items-center justify-center flex-shrink-0">
                   {count}
                 </span>
                 {label}
@@ -179,33 +179,33 @@ export default function Reviews() {
                   aria-label={`${t.rating || 5} star rating`}
                 >
                   {[...Array(Math.round(Number(t.rating || t.stars || 5)))].map((_, j) => (
-                    <FiStar key={j} className="text-amber-400" style={{ fill: '#FBBF24' }} size={13} aria-hidden="true" />
+                    <FiStar key={j} className="text-status-warning" style={{ fill: '#FBBF24' }} size={13} aria-hidden="true" />
                   ))}
                 </div>
                 {/* Quote */}
-                <p className="text-slate-300 text-sm leading-relaxed flex-1 mb-4 italic">
+                <p className="text-navy-body text-sm leading-relaxed flex-1 mb-4 italic">
                   "{t.quote || t.text}"
                 </p>
                 {/* Skill tags */}
                 {t.tags && t.tags.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mb-4">
                     {t.tags.map(tag => (
-                      <span key={tag} className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs">
+                      <span key={tag} className="px-2.5 py-0.5 rounded-full bg-status-success-bg border border-status-success/40 text-status-success text-xs">
                         {tag}
                       </span>
                     ))}
                   </div>
                 )}
                 {/* Author */}
-                <div className="pt-3 border-t border-white/[0.05] flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center flex-shrink-0">
-                    <span className="text-primary-400 text-xs font-bold">
+                <div className="pt-3 border-t border-border flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-full bg-cyan-subtle flex items-center justify-center flex-shrink-0">
+                    <span className="text-cyan-hover text-xs font-bold">
                       {(t.client_name || t.name || 'V').charAt(0).toUpperCase()}
                     </span>
                   </div>
                   <div>
-                    <p className="text-white font-semibold text-xs">{t.client_name || t.name}</p>
-                    <p className="text-slate-500 text-xs mt-0.5">{t.client_role || t.role} · {t.source || 'Upwork'}</p>
+                    <p className="text-navy-primary font-semibold text-xs">{t.client_name || t.name}</p>
+                    <p className="text-navy-muted text-xs mt-0.5">{t.client_role || t.role} · {t.source || 'Upwork'}</p>
                   </div>
                 </div>
               </motion.div>

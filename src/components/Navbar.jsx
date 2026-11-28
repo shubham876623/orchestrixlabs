@@ -1,192 +1,163 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
 import { HiMenuAlt3, HiX } from 'react-icons/hi'
-import { SiUpwork } from 'react-icons/si'
-import { FiArrowRight, FiMoon, FiSun } from 'react-icons/fi'
+import { FiSearch } from 'react-icons/fi'
 import BrandLogo from './BrandLogo'
+import BookCallLink from './BookCallLink'
+import SiteSearch from './SiteSearch'
 
 const navLinks = [
-  { name: 'Home', path: '/' },
   { name: 'Services', path: '/services' },
-  { name: 'Portfolio', path: '/portfolio' },
-  { name: 'Work History', path: '/work-history' },
+  { name: 'Portfolio', path: '/portfolio', also: ['/work-history'] },
   { name: 'Reviews', path: '/reviews' },
   { name: 'About', path: '/about' },
   { name: 'Contact', path: '/contact' },
 ]
 
-function useThemeMode() {
-  const [isDark, setIsDark] = useState(true)
-
-  useEffect(() => {
-    const stored = localStorage.getItem('orchestrix-theme')
-    const dark = stored ? stored === 'dark' : true
-    setIsDark(dark)
-    document.documentElement.classList.toggle('dark', dark)
-  }, [])
-
-  const toggle = () => {
-    setIsDark((prev) => {
-      const next = !prev
-      document.documentElement.classList.toggle('dark', next)
-      localStorage.setItem('orchestrix-theme', next ? 'dark' : 'light')
-      return next
-    })
-  }
-
-  return { isDark, toggle }
+function isActive(link, pathname) {
+  return [link.path, ...(link.also || [])].some((p) => pathname === p || pathname.startsWith(`${p}/`))
 }
+
+const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform || '')
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const location = useLocation()
-  const { isDark, toggle } = useThemeMode()
+  const [searchOpen, setSearchOpen] = useState(false)
+  const { pathname } = useLocation()
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24)
+    const onScroll = () => setScrolled(window.scrollY > 8)
+    onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  useEffect(() => setMobileOpen(false), [location])
+  useEffect(() => setMobileOpen(false), [pathname])
+
+  // Ctrl/Cmd+K anywhere, or "/" when not typing, opens search.
+  useEffect(() => {
+    const onKey = (e) => {
+      const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.target.isContentEditable
+      if ((e.key.toLowerCase() === 'k' && (e.metaKey || e.ctrlKey)) || (e.key === '/' && !typing)) {
+        e.preventDefault()
+        setMobileOpen(false)
+        setSearchOpen(true)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
+  // Mobile menu: Esc closes it and the page behind does not scroll.
+  useEffect(() => {
+    if (!mobileOpen) return undefined
+    const onKey = (e) => e.key === 'Escape' && setMobileOpen(false)
+    window.addEventListener('keydown', onKey)
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      document.body.style.overflow = prev
+    }
+  }, [mobileOpen])
 
   return (
-    <motion.header
-      initial={false}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'py-3 bg-panel/95 border-b border-line'
-          : 'py-4 bg-ink/80'
-      }`}
-    >
-      <div className="container flex items-center justify-between">
-        <BrandLogo variant="nav" />
+    <>
+      <header
+        className={`fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color,box-shadow] duration-200 ${
+          scrolled || mobileOpen
+            ? 'border-border bg-paper-elevated/95 shadow-xs backdrop-blur-md'
+            : 'border-transparent bg-paper-base/80 backdrop-blur-sm'
+        }`}
+      >
+        <div className="container flex h-16 items-center justify-between gap-4">
+          <BrandLogo variant="nav" />
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-1">
-          {navLinks.map(link => {
-            const active =
-              link.path === '/portfolio'
-                ? location.pathname.startsWith('/portfolio')
-                : location.pathname === link.path
-            return (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`relative px-4 py-2 text-sm font-medium transition-colors duration-200 ${
-                  active
-                    ? 'text-cyan-400'
-                    : 'text-mute hover:text-copy'
-                }`}
-              >
-                {active && (
+          <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">
+            {navLinks.map((link) => {
+              const active = isActive(link, pathname)
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  aria-current={active ? 'page' : undefined}
+                  className={`relative rounded-md px-3.5 py-2 text-[0.9375rem] font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-accent ${
+                    active ? 'text-navy-primary' : 'text-navy-secondary hover:text-navy-primary'
+                  }`}
+                >
+                  {link.name}
                   <span
-                    className="absolute left-2 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full bg-cyan-400"
-                    aria-hidden
+                    aria-hidden="true"
+                    className={`absolute inset-x-3.5 -bottom-[13px] h-0.5 rounded-full bg-cyan-hover transition-opacity duration-150 ${active ? 'opacity-100' : 'opacity-0'}`}
                   />
-                )}
-                <span className={active ? 'pl-1' : undefined}>{link.name}</span>
-              </Link>
-            )
-          })}
-        </nav>
+                </Link>
+              )
+            })}
+          </nav>
 
-        {/* CTA */}
-        <div className="hidden md:flex items-center gap-3">
-          <button
-            type="button"
-            onClick={toggle}
-            className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl border border-line text-mute transition-colors hover:bg-panel hover:text-copy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
-            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-          >
-            {isDark ? <FiSun size={16} /> : <FiMoon size={16} />}
-          </button>
-          <a
-            href="https://www.upwork.com/agencies/1464061503601672192/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-sm font-semibold px-4 py-2.5 rounded-xl border border-[#14a800]/40 text-[#14a800] hover:bg-[#14a800]/10 hover:border-[#14a800]/70 transition-all duration-200"
-          >
-            <SiUpwork size={15} />
-            Upwork
-          </a>
-          <Link to="/contact" className="btn-primary text-sm py-2.5 px-5">
-            Request Consultation <FiArrowRight size={14} />
-          </Link>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              className="hidden items-center gap-2 rounded-lg border border-border-strong bg-paper-elevated py-2 pl-3 pr-2 text-sm text-navy-secondary transition-colors hover:border-navy-primary hover:text-navy-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-accent sm:inline-flex"
+              aria-label="Search the site"
+            >
+              <FiSearch size={16} aria-hidden="true" />
+              <span>Search</span>
+              <kbd className="rounded border border-border bg-paper-subtle px-1.5 py-0.5 font-sans text-xs text-navy-muted">
+                {isMac ? '⌘K' : 'Ctrl K'}
+              </kbd>
+            </button>
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              className="rounded-lg p-2.5 text-navy-primary hover:bg-paper-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-accent sm:hidden"
+              aria-label="Search the site"
+            >
+              <FiSearch size={20} aria-hidden="true" />
+            </button>
+            <div className="hidden lg:block">
+              <BookCallLink className="btn-primary">Book a call</BookCallLink>
+            </div>
+            <button
+              type="button"
+              onClick={() => setMobileOpen((o) => !o)}
+              className="rounded-lg p-2.5 text-navy-primary hover:bg-paper-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-accent lg:hidden"
+              aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-menu"
+            >
+              {mobileOpen ? <HiX size={24} aria-hidden="true" /> : <HiMenuAlt3 size={24} aria-hidden="true" />}
+            </button>
+          </div>
         </div>
 
-        {/* Mobile toggle */}
-        <div className="flex items-center gap-1 md:hidden">
-          <button
-            type="button"
-            onClick={toggle}
-            className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl text-mute transition-colors hover:text-copy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
-            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-          >
-            {isDark ? <FiSun size={18} /> : <FiMoon size={18} />}
-          </button>
-          <button
-            type="button"
-            className="p-2 text-mute hover:text-copy transition-colors"
-            onClick={() => setMobileOpen(v => !v)}
-            aria-label="Toggle menu"
-            aria-expanded={mobileOpen}
-          >
-            {mobileOpen ? <HiX size={22} /> : <HiMenuAlt3 size={22} />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      <AnimatePresence>
         {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden overflow-hidden bg-panel/95 border-b border-line"
-          >
-            <nav className="container py-5 flex flex-col gap-1" aria-label="Mobile">
-              {navLinks.map(link => {
-                const active =
-                  link.path === '/portfolio'
-                    ? location.pathname.startsWith('/portfolio')
-                    : location.pathname === link.path
+          <div id="mobile-menu" className="h-[calc(100dvh-4rem)] overflow-y-auto border-t border-border bg-paper-elevated lg:hidden">
+            <nav className="container flex flex-col py-4" aria-label="Mobile">
+              {[{ name: 'Home', path: '/' }, ...navLinks].map((link) => {
+                const active = link.path === '/' ? pathname === '/' : isActive(link, pathname)
                 return (
                   <Link
                     key={link.path}
                     to={link.path}
-                    className={`min-h-[44px] px-4 py-3 rounded-lg text-sm font-medium transition-colors border-l-2 ${
-                      active
-                        ? 'text-cyan-400 border-cyan-400 bg-panel/50'
-                        : 'text-mute border-transparent hover:text-copy hover:bg-panel/30'
+                    aria-current={active ? 'page' : undefined}
+                    className={`flex min-h-[52px] items-center border-b border-border text-lg font-medium ${
+                      active ? 'text-navy-primary' : 'text-navy-secondary'
                     }`}
                   >
+                    {active && <span className="mr-3 h-5 w-0.5 rounded-full bg-cyan-hover" aria-hidden="true" />}
                     {link.name}
                   </Link>
                 )
               })}
-              <div className="pt-3 border-t border-line mt-2 flex flex-col gap-3">
-                <a
-                  href="https://www.upwork.com/agencies/1464061503601672192/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 text-sm font-semibold px-4 py-3 rounded-xl border border-[#14a800]/40 text-[#14a800] hover:bg-[#14a800]/10 transition-all duration-200"
-                >
-                  <SiUpwork size={15} />
-                  View Upwork Profile
-                </a>
-                <Link to="/contact" className="btn-primary w-full justify-center text-sm">
-                  Request Consultation
-                </Link>
-              </div>
+              <BookCallLink className="btn-primary btn-lg mt-6">Book a call</BookCallLink>
             </nav>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
-    </motion.header>
+      </header>
+      <SiteSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
+    </>
   )
 }

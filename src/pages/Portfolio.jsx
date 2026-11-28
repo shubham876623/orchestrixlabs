@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { FiArrowRight, FiSearch } from 'react-icons/fi'
@@ -145,17 +145,17 @@ export default function Portfolio() {
 
       <DraftPreviewBanner />
 
-      <section className="border-b border-line pb-10 pt-28 sm:pb-12 sm:pt-32">
+      <section className="border-b border-border pb-10 pt-28 sm:pb-12 sm:pt-32">
         <div className="container">
           <motion.h1
             {...fade(0.04)}
-            className="max-w-3xl font-display text-[2rem] font-semibold leading-[1.12] text-white sm:text-5xl"
+            className="max-w-3xl font-display text-[2rem] font-semibold leading-[1.12] text-navy-primary sm:text-5xl"
           >
             Engineering case studies for AI systems that ship
           </motion.h1>
           <motion.p
             {...fade(0.08)}
-            className="mt-4 max-w-2xl text-base leading-relaxed text-copy sm:mt-5 sm:text-lg"
+            className="mt-4 max-w-2xl text-base leading-relaxed text-navy-body sm:mt-5 sm:text-lg"
           >
             {allCards.length} curated engagements across voice AI, agents, automation, SaaS, CRM, and data systems —
             including {caseStudyCount} full case studies. Nothing is published without editorial approval.
@@ -171,17 +171,17 @@ export default function Portfolio() {
 
           <motion.div
             {...fade(0.16)}
-            className="mt-8 flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-5 text-sm text-mute"
+            className="mt-8 flex flex-wrap gap-x-6 gap-y-2 border-t border-border pt-5 text-sm text-navy-secondary"
           >
             <p>
-              <span className="font-semibold text-white">Founder credentials</span>
+              <span className="font-semibold text-navy-primary">Founder credentials</span>
               {' '}({SITE.founder}) — Top Rated on Upwork · {STATS.jss} Job Success · {SITE.founderExperienceYears}+ years engineering experience
             </p>
             <a
               href={SOCIAL.upwork}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-cyan-300 underline-offset-2 hover:underline"
+              className="font-medium text-cyan-hover underline-offset-2 hover:underline"
             >
               Upwork profile
             </a>
@@ -190,33 +190,31 @@ export default function Portfolio() {
       </section>
 
       {featured.length > 0 && (
-        <section className="border-b border-line py-8 sm:py-10">
+        <section className="border-b border-border py-8 sm:py-10">
           <div className="container">
             <div className="mb-2 flex flex-wrap items-end justify-between gap-3">
-              <h2 className="font-display text-xl font-semibold text-white">Featured case study</h2>
+              <h2 className="font-display text-xl font-semibold text-navy-primary">Featured case study</h2>
               <button
                 type="button"
-                className="text-sm font-semibold text-cyan-300 hover:text-cyan-200"
+                className="text-sm font-semibold text-cyan-hover hover:text-cyan-hover"
                 onClick={() => setDepth('case-studies')}
               >
                 View all case studies
               </button>
             </div>
-            <div className="border-t border-line">
+            <div className="border-t border-border">
               <ProjectCard project={{ ...featured[0], hasCaseStudy: true }} variant="row" />
             </div>
           </div>
         </section>
       )}
 
-      <section className="sticky top-[4.25rem] z-30 border-b border-line bg-ink py-4">
+      <section className="sticky top-[4.25rem] z-30 border-b border-border bg-paper-elevated py-4">
         <div className="container space-y-4">
           <div className="flex flex-wrap items-end justify-between gap-2">
             <div>
-              <p className="font-display text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-                All projects
-              </p>
-              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+              <h2 className="font-display text-base font-semibold text-navy-primary">All projects</h2>
+              <p className="mt-0.5 text-sm text-navy-secondary">
                 Filter by capability. Private Upwork contracts are never auto-published here.
               </p>
             </div>
@@ -242,11 +240,11 @@ export default function Portfolio() {
                     aria-pressed={selected}
                     onClick={() => setDepth(opt.id)}
                     className={[
-                      'min-h-[40px] border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition-colors',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500',
+                      'min-h-[40px] rounded-full border px-4 py-1.5 text-sm font-medium transition-colors',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-accent focus-visible:ring-offset-2',
                       selected
-                        ? 'border-slate-900 bg-slate-900 text-white dark:border-white dark:bg-white dark:text-slate-900'
-                        : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 dark:border-white/10 dark:bg-white/[0.02] dark:text-slate-300',
+                        ? 'border-navy-primary bg-navy-primary text-white'
+                        : 'border-border-strong bg-paper-elevated text-navy-secondary hover:border-navy-primary hover:text-navy-primary',
                     ].join(' ')}
                   >
                     {opt.label}
@@ -256,13 +254,13 @@ export default function Portfolio() {
             </div>
             <label className="relative block w-full max-w-md">
               <span className="sr-only">Search projects</span>
-              <FiSearch className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} aria-hidden="true" />
+              <FiSearch className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-navy-muted" size={16} aria-hidden="true" />
               <input
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search title, category, or technology"
-                className="min-h-[44px] w-full border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-800 placeholder:text-slate-400 focus:border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/30 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-200 dark:placeholder:text-slate-600"
+                className="min-h-[44px] w-full rounded-full border border-border-strong bg-paper-elevated py-2.5 pl-10 pr-4 text-sm text-navy-primary placeholder:text-navy-muted focus:border-cyan-accent focus:outline-none focus:ring-2 focus:ring-cyan-accent/30"
               />
             </label>
           </div>
@@ -271,16 +269,16 @@ export default function Portfolio() {
 
       <section className="py-10 sm:py-14" id="portfolio-panel" role="tabpanel" aria-labelledby="portfolio-tab-0">
         <div className="container">
-          <p className="mb-6 text-sm text-slate-500">
-            Showing <span className="font-medium text-slate-800 dark:text-slate-300">{filtered.length}</span> of {allCards.length} projects
+          <p className="mb-6 text-sm text-navy-muted">
+            Showing <span className="font-medium text-slate-800 ">{filtered.length}</span> of {allCards.length} projects
             {activeCategory !== 'All Projects' ? ` in ${activeCategory}` : ''}
             {depth === 'case-studies' ? ' · full case studies' : ''}
             {depth === 'summaries' ? ' · engagement summaries' : ''}
           </p>
 
           {filtered.length === 0 ? (
-            <div className="border border-dashed border-slate-200 bg-slate-50 px-6 py-16 text-center dark:border-white/10 dark:bg-dark-900/40">
-              <p className="font-display text-xl text-slate-900 dark:text-white">No projects in this view</p>
+            <div className="border border-dashed border-slate-200 bg-slate-50 px-6 py-16 text-center ">
+              <p className="font-display text-xl text-slate-900 ">No projects in this view</p>
               <button
                 type="button"
                 className="btn-outline mt-6"
@@ -295,7 +293,7 @@ export default function Portfolio() {
             </div>
           ) : (
             <>
-              <div className="flex flex-col border-t border-line">
+              <div className="flex flex-col border-t border-border">
                 {paged.map((project, i) => (
                   <motion.div
                     key={project.id}
@@ -322,7 +320,7 @@ export default function Portfolio() {
                   >
                     Previous
                   </button>
-                  <span className="text-sm text-slate-600 dark:text-slate-400">
+                  <span className="text-sm text-slate-600 ">
                     Page {safePage} of {pageCount}
                   </span>
                   <button

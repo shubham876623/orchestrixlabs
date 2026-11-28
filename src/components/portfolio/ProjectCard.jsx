@@ -14,19 +14,19 @@ export default function ProjectCard({ project, variant = 'grid' }) {
 
   if (variant === 'row') {
     return (
-      <article className="group border-b border-line py-6 sm:py-7">
+      <article className="group border-b border-border py-6 sm:py-7">
         <div className="grid gap-4 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.6fr)_auto] md:items-start md:gap-8">
           <div>
-            <p className="mb-2 text-xs text-mute">
+            <p className="mb-2 text-xs text-navy-muted">
               {project.primaryCategory} · {hasCaseStudy ? 'Case study' : 'Engagement summary'}
               {isDemo ? ' · Interactive demo' : ''}
               {project.flagshipRank === 1 ? ' · Flagship' : ''}
             </p>
-            <h3 className="font-display text-lg font-semibold leading-snug text-white">
+            <h3 className="font-display text-lg font-semibold leading-snug text-navy-primary">
               <Link
                 to={detailTo}
                 aria-label={`${detailLabel}: ${project.title}`}
-                className="transition-colors hover:text-cyan-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+                className="transition-colors hover:text-cyan-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
               >
                 {project.title}
               </Link>
@@ -34,9 +34,9 @@ export default function ProjectCard({ project, variant = 'grid' }) {
           </div>
 
           <div>
-            <p className="line-clamp-3 text-sm leading-relaxed text-copy">{project.summary}</p>
+            <p className="line-clamp-3 text-sm leading-relaxed text-navy-body">{project.summary}</p>
             {techPreview.length > 0 && (
-              <ul className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs text-mute" aria-label="Technologies">
+              <ul className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs text-navy-muted" aria-label="Technologies">
                 {techPreview.map((t) => (
                   <li key={t}>{t}</li>
                 ))}
@@ -47,13 +47,13 @@ export default function ProjectCard({ project, variant = 'grid' }) {
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 md:flex-col md:items-end md:gap-1">
             <Link
               to={detailTo}
-              className="inline-flex min-h-[44px] items-center gap-2 text-sm font-semibold text-cyan-300 transition-colors hover:text-cyan-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+              className="inline-flex min-h-[44px] items-center gap-2 text-sm font-semibold text-cyan-hover transition-colors hover:text-cyan-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
             >
               {detailLabel} <FiArrowUpRight size={16} aria-hidden="true" />
             </Link>
             <Link
               to={consultTo}
-              className="inline-flex min-h-[44px] items-center text-sm text-mute transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+              className="inline-flex min-h-[44px] items-center text-sm text-navy-muted transition-colors hover:text-navy-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
             >
               {consultLabel}
             </Link>
@@ -67,10 +67,10 @@ export default function ProjectCard({ project, variant = 'grid' }) {
     <article
       className={[
         'group flex h-full flex-col overflow-hidden border transition-all duration-300',
-        'border-slate-200/90 bg-white dark:border-white/[0.08] dark:bg-dark-900/80',
+        'border-slate-200/90 bg-white ',
         featured
-          ? 'rounded-none sm:rounded-sm md:flex-row md:items-stretch md:border-l-2 md:border-l-cyan-600/50 dark:md:border-l-cyan-400/40'
-          : 'rounded-sm hover:-translate-y-0.5 hover:border-cyan-700/25 dark:hover:border-cyan-400/20',
+          ? 'rounded-none sm:rounded-sm md:flex-row md:items-stretch md:border-l-2 md:border-l-cyan-600/50 '
+          : 'rounded-sm hover:-translate-y-0.5 hover:border-cyan-700/25 ',
       ].join(' ')}
     >
       <Link
@@ -93,62 +93,59 @@ export default function ProjectCard({ project, variant = 'grid' }) {
           <AbstractCover
             tone={project.coverTone}
             title={project.title}
+            stack={project.techPendingVerification ? [] : project.techCandidates || []}
             className={featured ? 'h-56 md:h-full min-h-[13rem]' : 'h-44 sm:h-48'}
           />
         )}
-        <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/35 via-transparent to-transparent opacity-60 dark:opacity-80"
-          aria-hidden="true"
-        />
       </Link>
 
       <div className={`flex flex-1 flex-col ${featured ? 'p-6 sm:p-8' : 'p-5 sm:p-6'}`}>
         <div className="mb-3 flex flex-wrap items-center gap-2">
-          <span className="border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-700 dark:border-white/10 dark:bg-white/[0.03] dark:text-slate-300">
+          <span className="border border-slate-200 bg-slate-50 rounded-full px-2.5 py-0.5 text-xs font-semibold text-slate-700 ">
             {project.primaryCategory}
           </span>
           {hasCaseStudy ? (
-            <span className="border border-emerald-600/25 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-800 dark:border-emerald-400/25 dark:text-emerald-200">
+            <span className="border border-status-success/40 bg-status-success-bg rounded-full px-2.5 py-0.5 text-xs font-semibold text-emerald-800 ">
               Case study
             </span>
           ) : (
-            <span className="border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600 dark:border-white/10 dark:bg-white/[0.02] dark:text-slate-400">
+            <span className="border border-slate-200 bg-slate-50 rounded-full px-2.5 py-0.5 text-xs font-semibold text-slate-600 ">
               Engagement summary
             </span>
           )}
           {isDemo && (
-            <span className="border border-sky-500/30 bg-sky-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-sky-800 dark:text-sky-200">
+            <span className="border border-border bg-paper-subtle rounded-full px-2.5 py-0.5 text-xs font-semibold text-sky-800 ">
               Interactive demo
             </span>
           )}
           {project.flagshipRank === 1 && (
-            <span className="border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-800 dark:text-cyan-200">
+            <span className="border border-cyan-accent bg-cyan-subtle rounded-full px-2.5 py-0.5 text-xs font-semibold text-cyan-800 ">
               Flagship
             </span>
           )}
         </div>
 
         <h3
-          className={`font-display font-semibold leading-snug text-slate-900 dark:text-white ${
+          className={`font-display font-semibold leading-snug text-slate-900 ${
             featured ? 'text-2xl sm:text-[1.65rem]' : 'text-xl'
           }`}
         >
           <Link
             to={detailTo}
-            className="transition-colors hover:text-cyan-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:hover:text-cyan-200"
+            className="transition-colors hover:text-cyan-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 "
           >
             {project.title}
           </Link>
         </h3>
 
         {project.subtitle && featured && (
-          <p className="mt-2 text-sm font-medium leading-relaxed text-slate-600 dark:text-slate-300">
+          <p className="mt-2 text-sm font-medium leading-relaxed text-slate-600 ">
             {project.subtitle}
           </p>
         )}
 
         <p
-          className={`mt-3 flex-1 leading-relaxed text-slate-600 dark:text-slate-400 ${
+          className={`mt-3 flex-1 leading-relaxed text-slate-600 ${
             featured ? 'text-[0.95rem] line-clamp-4' : 'text-sm line-clamp-3'
           }`}
         >
@@ -156,7 +153,7 @@ export default function ProjectCard({ project, variant = 'grid' }) {
         </p>
 
         {project.deliveryStatus && (
-          <p className="mt-3 text-xs leading-relaxed text-slate-500 line-clamp-2">
+          <p className="mt-3 text-xs leading-relaxed text-navy-muted line-clamp-2">
             {project.deliveryStatus}
           </p>
         )}
@@ -166,7 +163,7 @@ export default function ProjectCard({ project, variant = 'grid' }) {
             {techPreview.map((t) => (
               <span
                 key={t}
-                className="border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] text-slate-600 dark:border-white/[0.06] dark:bg-white/[0.03] dark:text-slate-400"
+                className="border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] text-slate-600 "
               >
                 {t}
               </span>
@@ -174,16 +171,16 @@ export default function ProjectCard({ project, variant = 'grid' }) {
           </div>
         )}
 
-        <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-200 pt-4 dark:border-white/[0.06]">
+        <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-200 pt-4 ">
           <Link
             to={detailTo}
-            className="inline-flex min-h-[44px] items-center gap-2 text-sm font-semibold text-cyan-800 transition-colors hover:text-cyan-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:text-cyan-300 dark:hover:text-cyan-200"
+            className="inline-flex min-h-[44px] items-center gap-2 text-sm font-semibold text-cyan-800 transition-colors hover:text-cyan-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 "
           >
             {detailLabel} <FiArrowUpRight size={16} aria-hidden="true" />
           </Link>
           <Link
             to={consultTo}
-            className="inline-flex min-h-[44px] items-center text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 dark:text-slate-400 dark:hover:text-slate-200"
+            className="inline-flex min-h-[44px] items-center text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 "
           >
             {consultLabel}
           </Link>

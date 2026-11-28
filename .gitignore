@@ -6,3 +6,12 @@ dist/
 .cache/
 *.log
 .DS_Store
+
+# Generated output and local-only data (never commit)
+/dist-review/
+/playwright-report/
+/test-results/
+/tmp-*.json
+/scripts/tmp-*
+/scripts/private-denylist.local.json
+.superpowers/sdd/*-review-pkg.md

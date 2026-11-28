@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
 import SEOHead from '../components/SEOHead'
-import { SITE } from '../lib/site'
+import { SITE, mapsOpenUrl } from '../lib/site'
 import { getSeoPage } from '../lib/seoPages'
 
 const EFFECTIVE_DATE = '18 November 2026'
-const LAST_UPDATED = '19 November 2026'
+const LAST_UPDATED = '28 November 2026'
 const ANALYTICS_RETENTION_DAYS = 90
 
 const SECTIONS = [
@@ -13,6 +13,7 @@ const SECTIONS = [
   { id: 'information-we-collect', title: 'Personal information we collect' },
   { id: 'sources', title: 'Sources of personal information' },
   { id: 'website-enquiries', title: 'Website enquiries and contact forms' },
+  { id: 'appointment-scheduling', title: 'Appointment scheduling (Cal.com)' },
   { id: 'meta-lead-forms', title: 'Facebook and Instagram lead-generation forms' },
   { id: 'business-communications', title: 'Email, messaging, and business communications' },
   { id: 'ai-services', title: 'AI services and customer-provided information' },
@@ -36,9 +37,9 @@ function SectionHeading({ id, number, children }) {
   return (
     <h2
       id={id}
-      className="scroll-mt-28 font-display text-xl font-semibold text-white sm:text-2xl"
+      className="scroll-mt-28 font-display text-xl font-semibold text-navy-primary sm:text-2xl"
     >
-      <span className="mr-2 text-cyan-400/90">{String(number).padStart(2, '0')}.</span>
+      <span className="mr-2 text-cyan-hover">{String(number).padStart(2, '0')}.</span>
       {children}
     </h2>
   )
@@ -61,19 +62,19 @@ export default function PrivacyPolicy() {
         <div className="container relative z-10">
           <p className="section-tag mb-5">Legal</p>
           <h1 className="section-heading mb-4 max-w-3xl">Privacy Policy</h1>
-          <p className="max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg">
+          <p className="max-w-2xl text-base leading-relaxed text-navy-secondary sm:text-lg">
             This Privacy Policy explains how Orchestrix Labs handles personal information when you visit
             our website, submit an enquiry, respond to our Meta lead forms, or engage us for technology
             services.
           </p>
-          <dl className="mt-6 flex flex-wrap gap-x-8 gap-y-2 text-sm text-slate-400">
+          <dl className="mt-6 flex flex-wrap gap-x-8 gap-y-2 text-sm text-navy-secondary">
             <div>
-              <dt className="inline text-slate-500">Effective date:&nbsp;</dt>
-              <dd className="inline text-slate-300">{EFFECTIVE_DATE}</dd>
+              <dt className="inline text-navy-muted">Effective date:&nbsp;</dt>
+              <dd className="inline text-navy-body">{EFFECTIVE_DATE}</dd>
             </div>
             <div>
-              <dt className="inline text-slate-500">Last updated:&nbsp;</dt>
-              <dd className="inline text-slate-300">{LAST_UPDATED}</dd>
+              <dt className="inline text-navy-muted">Last updated:&nbsp;</dt>
+              <dd className="inline text-navy-body">{LAST_UPDATED}</dd>
             </div>
           </dl>
         </div>
@@ -85,9 +86,9 @@ export default function PrivacyPolicy() {
             <aside className="lg:sticky lg:top-28 lg:self-start">
               <nav
                 aria-label="Privacy Policy contents"
-                className="rounded-2xl border border-white/[0.07] bg-dark-900/40 p-5"
+                className="rounded-2xl border border-border bg-paper-subtle p-5 max-lg:max-h-48 max-lg:overflow-y-auto"
               >
-                <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                <p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-navy-muted">
                   Contents
                 </p>
                 <ol className="max-h-[70vh] space-y-1.5 overflow-y-auto pr-1 text-sm">
@@ -95,7 +96,7 @@ export default function PrivacyPolicy() {
                     <li key={section.id}>
                       <a
                         href={`#${section.id}`}
-                        className="block rounded-lg px-2 py-1.5 text-slate-400 transition-colors hover:bg-white/[0.04] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+                        className="block rounded-lg px-2 py-1.5 text-navy-secondary transition-colors hover:bg-paper-subtle hover:text-navy-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
                       >
                         <span className="mr-1.5 text-slate-600">{String(index + 1).padStart(2, '0')}</span>
                         {section.title}
@@ -106,7 +107,7 @@ export default function PrivacyPolicy() {
               </nav>
             </aside>
 
-            <article className="max-w-3xl space-y-12 text-[15px] leading-relaxed text-slate-300 sm:text-base">
+            <article className="max-w-3xl space-y-12 text-[15px] leading-relaxed text-navy-body sm:text-base">
               <section className="space-y-4" aria-labelledby="introduction">
                 <SectionHeading id="introduction" number={1}>
                   Introduction and scope
@@ -119,7 +120,7 @@ export default function PrivacyPolicy() {
                 </p>
                 <p>
                   This Privacy Policy applies to personal information we collect through{' '}
-                  <a href={SITE.url} className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                  <a href={SITE.url} className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                     {SITE.url}
                   </a>
                   , our public business profiles, enquiry and lead forms (including Facebook and Instagram Instant
@@ -143,34 +144,41 @@ export default function PrivacyPolicy() {
                 <SectionHeading id="who-we-are" number={2}>
                   Who we are and how to contact us
                 </SectionHeading>
-                <ul className="list-disc space-y-2 pl-5 text-slate-300">
+                <ul className="list-disc space-y-2 pl-5 text-navy-body">
                   <li>
-                    <span className="text-slate-400">Brand / trading name:</span> Orchestrix Labs
+                    <span className="text-navy-secondary">Brand / trading name:</span> Orchestrix Labs
                   </li>
                   <li>
-                    <span className="text-slate-400">Website:</span>{' '}
-                    <a href={SITE.url} className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                    <span className="text-navy-secondary">Website:</span>{' '}
+                    <a href={SITE.url} className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                       {SITE.url}
                     </a>
                   </li>
                   <li>
-                    <span className="text-slate-400">General enquiries:</span>{' '}
-                    <a href={`mailto:${SITE.email}`} className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                    <span className="text-navy-secondary">General enquiries:</span>{' '}
+                    <a href={`mailto:${SITE.email}`} className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                       {SITE.email}
                     </a>
                   </li>
                   <li>
-                    <span className="text-slate-400">Privacy requests:</span>{' '}
-                    <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                    <span className="text-navy-secondary">Privacy requests:</span>{' '}
+                    <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                       {SITE.privacyEmail}
                     </a>
                   </li>
                   <li>
-                    <span className="text-slate-400">Operations location (public contact address):</span>{' '}
-                    {SITE.address.formatted}
+                    <span className="text-navy-secondary">Operations location (public contact address):</span>{' '}
+                    <a
+                      href={mapsOpenUrl()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline"
+                    >
+                      {SITE.address.formatted}
+                    </a>
                   </li>
                 </ul>
-                <p className="rounded-xl border border-amber-500/20 bg-amber-500/5 px-4 py-3 text-sm text-amber-100/90">
+                <p className="rounded-xl border border-status-warning/40 bg-status-warning-bg px-4 py-3 text-sm text-status-warning">
                   Registered legal entity name, company registration number, and registered office status are
                   subject to confirmation and are not stated as final facts in this Policy. If you need formal
                   contracting details, contact us before relying on this page for incorporation status.
@@ -184,21 +192,21 @@ export default function PrivacyPolicy() {
                 <p>Depending on how you interact with us, we may collect:</p>
                 <ul className="list-disc space-y-2 pl-5">
                   <li>
-                    <strong className="text-white font-medium">Identity and contact details</strong> — such as
+                    <strong className="text-navy-primary font-medium">Identity and contact details</strong> — such as
                     name, email address, phone or WhatsApp number (if you provide one), company name, job title,
                     and country or city.
                   </li>
                   <li>
-                    <strong className="text-white font-medium">Enquiry and project details</strong> — service
+                    <strong className="text-navy-primary font-medium">Enquiry and project details</strong> — service
                     interest, budget range (if provided), project description, requirements, files you choose to
                     send, and related business context.
                   </li>
                   <li>
-                    <strong className="text-white font-medium">Communication content</strong> — messages,
+                    <strong className="text-navy-primary font-medium">Communication content</strong> — messages,
                     emails, call notes, and follow-up correspondence.
                   </li>
                   <li>
-                    <strong className="text-white font-medium">Technical and usage data</strong> — when you opt in
+                    <strong className="text-navy-primary font-medium">Technical and usage data</strong> — when you opt in
                     to optional analytics: page paths (without query strings or fragments), sanitized referring
                     URL, coarse browser/device/OS category, screen size, language, and timezone. With the same
                     opt-in, Microsoft Clarity may also process interaction data on public pages. Separately, when
@@ -206,8 +214,12 @@ export default function PrivacyPolicy() {
                     prevention (not as optional marketing analytics).
                   </li>
                   <li>
-                    <strong className="text-white font-medium">Preference data</strong> — for example a theme
+                    <strong className="text-navy-primary font-medium">Preference data</strong> — for example a theme
                     preference stored locally in your browser.
+                  </li>
+                  <li>
+                    <strong className="text-navy-primary font-medium">Scheduling data</strong> — when you book via Cal.com:
+                    name, email, chosen time, timezone, and any notes you add in the scheduler.
                   </li>
                 </ul>
                 <p>
@@ -235,7 +247,7 @@ export default function PrivacyPolicy() {
                   Website enquiries and contact forms
                 </SectionHeading>
                 <p>
-                  Our <Link to="/contact" className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">Request Consultation</Link>{' '}
+                  Our <Link to="/contact" className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">Request Consultation</Link>{' '}
                   form may collect your name, email address, selected service, optional budget range, and message.
                   Submissions are sent to our backend systems, stored so we can respond and manage the enquiry, and
                   may trigger an internal email notification to our team.
@@ -247,19 +259,57 @@ export default function PrivacyPolicy() {
                 </p>
               </section>
 
+              <section className="space-y-4" aria-labelledby="appointment-scheduling">
+                <SectionHeading id="appointment-scheduling" number={6}>
+                  Appointment scheduling (Cal.com)
+                </SectionHeading>
+                <p>
+                  Our{' '}
+                  <Link to="/book" className="text-cyan-accent hover:text-cyan-hover underline-offset-2 hover:underline">
+                    Book a call
+                  </Link>{' '}
+                  page embeds a third-party scheduler operated by Cal.com, Inc. When you choose a time slot, Cal.com may
+                  collect your name, email address, timezone, optional notes you enter, and meeting preferences to create
+                  the booking. We receive booking confirmations so we can attend the meeting.
+                </p>
+                <p>
+                  Cal.com is configured to sync confirmed appointments with our Google Workspace calendar. Google may
+                  process attendee details under its own terms when calendar events are created. We do not collect your
+                  Google account password through the public website for scheduling.
+                </p>
+                <p>
+                  A separate confidential scheduling embed may be shared by direct link for sensitive topics; it uses the
+                  same Cal.com infrastructure and is governed by this Policy.
+                </p>
+                <p>
+                  Legal basis for scheduling is typically steps at your request before a contract or our legitimate
+                  interest in managing business meetings, subject to applicable law. For privacy requests about data held
+                  in Cal.com, contact us at {SITE.privacyEmail}; we may also direct you to{' '}
+                  <a
+                    href="https://cal.com/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-cyan-accent hover:text-cyan-hover underline-offset-2 hover:underline"
+                  >
+                    Cal.com&apos;s privacy notice
+                  </a>
+                  .
+                </p>
+              </section>
+
               <section className="space-y-4" aria-labelledby="meta-lead-forms">
-                <SectionHeading id="meta-lead-forms" number={6}>
+                <SectionHeading id="meta-lead-forms" number={7}>
                   Facebook and Instagram lead-generation forms
                 </SectionHeading>
                 <p>
                   When you submit a Facebook or Instagram lead form promoting Orchestrix Labs, Meta collects the
                   information you enter and makes that lead available to us. Our Instant Forms are configured to
-                  collect: <strong className="font-medium text-white">name</strong>,{' '}
-                  <strong className="font-medium text-white">email</strong>,{' '}
-                  <strong className="font-medium text-white">company information</strong>,{' '}
-                  <strong className="font-medium text-white">project requirements</strong>,{' '}
-                  <strong className="font-medium text-white">budget</strong>, and{' '}
-                  <strong className="font-medium text-white">timeline</strong>. If a particular form variant also
+                  collect: <strong className="font-medium text-navy-primary">name</strong>,{' '}
+                  <strong className="font-medium text-navy-primary">email</strong>,{' '}
+                  <strong className="font-medium text-navy-primary">company information</strong>,{' '}
+                  <strong className="font-medium text-navy-primary">project requirements</strong>,{' '}
+                  <strong className="font-medium text-navy-primary">budget</strong>, and{' '}
+                  <strong className="font-medium text-navy-primary">timeline</strong>. If a particular form variant also
                   asks for phone number or other optional business details, we will use those only to respond to
                   the same enquiry.
                 </p>
@@ -280,7 +330,7 @@ export default function PrivacyPolicy() {
                   Meta also processes information under its own terms and policies. Review Meta&apos;s privacy
                   materials for how Meta handles Instant Form data on its platform. You can request correction or
                   deletion of lead information we hold by emailing{' '}
-                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                     {SITE.privacyEmail}
                   </a>
                   .
@@ -288,7 +338,7 @@ export default function PrivacyPolicy() {
               </section>
 
               <section className="space-y-4" aria-labelledby="business-communications">
-                <SectionHeading id="business-communications" number={7}>
+                <SectionHeading id="business-communications" number={8}>
                   Email, messaging, and business communications
                 </SectionHeading>
                 <p>
@@ -299,7 +349,7 @@ export default function PrivacyPolicy() {
               </section>
 
               <section className="space-y-4" aria-labelledby="ai-services">
-                <SectionHeading id="ai-services" number={8}>
+                <SectionHeading id="ai-services" number={9}>
                   AI services and customer-provided information
                 </SectionHeading>
                 <p>
@@ -317,7 +367,7 @@ export default function PrivacyPolicy() {
               </section>
 
               <section className="space-y-4" aria-labelledby="purposes">
-                <SectionHeading id="purposes" number={9}>
+                <SectionHeading id="purposes" number={10}>
                   Purposes of processing
                 </SectionHeading>
                 <ul className="list-disc space-y-2 pl-5">
@@ -328,11 +378,12 @@ export default function PrivacyPolicy() {
                   <li>Communicating about projects, invoices, and support</li>
                   <li>Complying with legal obligations and defending legal claims where applicable</li>
                   <li>Preventing spam, fraud, and abuse</li>
+                  <li>Scheduling and holding discovery or confidential calls you request</li>
                 </ul>
               </section>
 
               <section className="space-y-4" aria-labelledby="legal-bases">
-                <SectionHeading id="legal-bases" number={10}>
+                <SectionHeading id="legal-bases" number={11}>
                   Legal bases and applicable frameworks
                 </SectionHeading>
                 <p>
@@ -361,7 +412,7 @@ export default function PrivacyPolicy() {
               </section>
 
               <section className="space-y-4" aria-labelledby="cookies-analytics">
-                <SectionHeading id="cookies-analytics" number={11}>
+                <SectionHeading id="cookies-analytics" number={12}>
                   Cookies, analytics, and advertising technologies
                 </SectionHeading>
                 <p>
@@ -378,7 +429,7 @@ export default function PrivacyPolicy() {
                   authorised internal users.
                 </p>
                 <p>
-                  With the same opt-in consent, we may also use <strong className="text-white font-medium">Microsoft Clarity</strong>{' '}
+                  With the same opt-in consent, we may also use <strong className="text-navy-primary font-medium">Microsoft Clarity</strong>{' '}
                   (session analytics and heatmaps; Clarity project configured for this site) on public marketing
                   pages. Clarity may set cookies or similar technologies and process interaction data such as clicks,
                   scrolls, and page views. Clarity is not initialised on the private admin dashboard. If you navigate
@@ -390,7 +441,7 @@ export default function PrivacyPolicy() {
                 </p>
                 <p>
                   You can accept or decline optional analytics on first visit, and change or withdraw that choice
-                  anytime using the persistent <strong className="text-white font-medium">Cookie Settings</strong>{' '}
+                  anytime using the persistent <strong className="text-navy-primary font-medium">Cookie Settings</strong>{' '}
                   control in the site footer. Withdrawing consent persists your denial, signals denied analytics
                   storage to Clarity, stops collection where supported, clears Clarity cookies we can remove from
                   this browser, and reloads the page when Clarity was previously active so it cannot re-initialise
@@ -417,36 +468,44 @@ export default function PrivacyPolicy() {
               </section>
 
               <section className="space-y-4" aria-labelledby="sharing">
-                <SectionHeading id="sharing" number={12}>
+                <SectionHeading id="sharing" number={13}>
                   Service providers and data sharing
                 </SectionHeading>
                 <p>We may share personal information with:</p>
                 <ul className="list-disc space-y-2 pl-5">
                   <li>
-                    <strong className="text-white font-medium">Infrastructure and hosting providers</strong> that
+                    <strong className="text-navy-primary font-medium">Infrastructure and hosting providers</strong> that
                     host our website frontend, backend APIs, and databases
                   </li>
                   <li>
-                    <strong className="text-white font-medium">Microsoft Clarity</strong> (Microsoft Corporation /
+                    <strong className="text-navy-primary font-medium">Microsoft Clarity</strong> (Microsoft Corporation /
                     Microsoft services), which processes session analytics and heatmap data when you opt in to
                     optional analytics on public marketing pages. Microsoft may process data in the United States
                     and other locations where Microsoft operates, subject to Microsoft&apos;s terms and privacy
                     documentation
                   </li>
                   <li>
-                    <strong className="text-white font-medium">Email delivery providers</strong> used to send
+                    <strong className="text-navy-primary font-medium">Cal.com, Inc.</strong> to host embedded appointment
+                    scheduling and sync bookings with our calendar
+                  </li>
+                  <li>
+                    <strong className="text-navy-primary font-medium">Google LLC</strong> when you use our embedded map
+                    (Google Maps) or when Cal.com creates Google Calendar events for confirmed bookings
+                  </li>
+                  <li>
+                    <strong className="text-navy-primary font-medium">Email delivery providers</strong> used to send
                     internal enquiry notifications or business email
                   </li>
                   <li>
-                    <strong className="text-white font-medium">Meta Platforms</strong> when you interact with our
+                    <strong className="text-navy-primary font-medium">Meta Platforms</strong> when you interact with our
                     Facebook or Instagram pages or lead forms
                   </li>
                   <li>
-                    <strong className="text-white font-medium">Professional advisers</strong> such as legal or
+                    <strong className="text-navy-primary font-medium">Professional advisers</strong> such as legal or
                     accounting advisers, where needed
                   </li>
                   <li>
-                    <strong className="text-white font-medium">Authorities</strong> when required by law or to
+                    <strong className="text-navy-primary font-medium">Authorities</strong> when required by law or to
                     protect rights, safety, and security
                   </li>
                 </ul>
@@ -458,7 +517,7 @@ export default function PrivacyPolicy() {
               </section>
 
               <section className="space-y-4" aria-labelledby="international-transfers">
-                <SectionHeading id="international-transfers" number={13}>
+                <SectionHeading id="international-transfers" number={14}>
                   International data transfers
                 </SectionHeading>
                 <p>
@@ -474,7 +533,7 @@ export default function PrivacyPolicy() {
               </section>
 
               <section className="space-y-4" aria-labelledby="security">
-                <SectionHeading id="security" number={14}>
+                <SectionHeading id="security" number={15}>
                   Data security
                 </SectionHeading>
                 <p>
@@ -487,7 +546,7 @@ export default function PrivacyPolicy() {
               </section>
 
               <section className="space-y-4" aria-labelledby="retention">
-                <SectionHeading id="retention" number={15}>
+                <SectionHeading id="retention" number={16}>
                   Retention and deletion
                 </SectionHeading>
                 <p>
@@ -499,12 +558,15 @@ export default function PrivacyPolicy() {
                   Optional first-party page-view analytics records are configured for approximately{' '}
                   {ANALYTICS_RETENTION_DAYS}-day retention and are eligible for automated purge after that period.
                   Contact enquiries, project records, and security-related logs may be retained longer where needed
-                  for business, legal, or abuse-prevention purposes. Microsoft Clarity retention for opted-in
-                  session data is also governed by Microsoft&apos;s product settings and policies.
+                  for business, legal, or abuse-prevention purposes. Appointment records tied to Cal.com and our
+                  calendar are retained for as long as needed to hold the meeting, follow up, and maintain business
+                  records, then deleted or archived per our internal schedule unless law requires longer retention.
+                  Microsoft Clarity retention for opted-in session data is also governed by Microsoft&apos;s product
+                  settings and policies.
                 </p>
                 <p>
                   You may request deletion or correction of personal information we hold about you by contacting{' '}
-                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                     {SITE.privacyEmail}
                   </a>
                   . We may retain limited information where we have a lawful need to do so (for example to complete
@@ -513,7 +575,7 @@ export default function PrivacyPolicy() {
               </section>
 
               <section className="space-y-4" aria-labelledby="rights">
-                <SectionHeading id="rights" number={16}>
+                <SectionHeading id="rights" number={17}>
                   Your privacy rights
                 </SectionHeading>
                 <p>
@@ -525,16 +587,46 @@ export default function PrivacyPolicy() {
                 </p>
                 <p>
                   To exercise available rights regarding information Orchestrix Labs controls, email{' '}
-                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                     {SITE.privacyEmail}
                   </a>
                   . We may need to verify your identity before fulfilling a request. If we process data only as a
                   service provider for a client, we may direct your request to that client.
                 </p>
+                <p className="text-sm text-navy-secondary">
+                  <strong className="text-navy-primary font-medium">Region-specific notes (informational):</strong>
+                </p>
+                <ul className="list-disc space-y-2 pl-5 text-sm">
+                  <li>
+                    <strong className="text-navy-primary font-medium">EEA / UK:</strong> Where the EU or UK GDPR applies,
+                    you may have rights of access, rectification, erasure, restriction, portability, objection, and
+                    complaint to your supervisory authority. Our lead establishment is in India; EU/UK representatives
+                    are not appointed in this Policy unless we notify you separately.
+                  </li>
+                  <li>
+                    <strong className="text-navy-primary font-medium">California (CCPA/CPRA):</strong> We do not sell or
+                    share personal information for cross-context behavioural advertising as those terms are defined in
+                    California law. California residents may request access, deletion, and correction, and may limit use
+                    of sensitive personal information where applicable thresholds and rights apply.
+                  </li>
+                  <li>
+                    <strong className="text-navy-primary font-medium">India (DPDP Act, 2023):</strong> Where the Act and
+                    notified Rules apply to our processing, data principals may have rights to access, correction,
+                    erasure, grievance redressal, and nomination as provided by law and commencement notifications.
+                  </li>
+                  <li>
+                    <strong className="text-navy-primary font-medium">Australia, Canada, UAE, and others:</strong> Analogous
+                    rights may exist under local privacy statutes; contact us to discuss applicability to your situation.
+                  </li>
+                </ul>
+                <p className="text-sm text-navy-secondary">
+                  We aim to respond to verified requests within timelines required by applicable law (for example 30 days
+                  under GDPR, or 45 days under CPRA where applicable, subject to permitted extensions).
+                </p>
               </section>
 
               <section className="space-y-4" aria-labelledby="marketing">
-                <SectionHeading id="marketing" number={17}>
+                <SectionHeading id="marketing" number={18}>
                   Marketing communications and opt-out
                 </SectionHeading>
                 <p>
@@ -547,7 +639,7 @@ export default function PrivacyPolicy() {
               </section>
 
               <section className="space-y-4" aria-labelledby="automated-processing">
-                <SectionHeading id="automated-processing" number={18}>
+                <SectionHeading id="automated-processing" number={19}>
                   Automated processing and AI-related disclosures
                 </SectionHeading>
                 <p>
@@ -559,7 +651,7 @@ export default function PrivacyPolicy() {
               </section>
 
               <section className="space-y-4" aria-labelledby="children">
-                <SectionHeading id="children" number={19}>
+                <SectionHeading id="children" number={20}>
                   Children&apos;s privacy
                 </SectionHeading>
                 <p>
@@ -570,18 +662,32 @@ export default function PrivacyPolicy() {
               </section>
 
               <section className="space-y-4" aria-labelledby="third-party-sites">
-                <SectionHeading id="third-party-sites" number={20}>
+                <SectionHeading id="third-party-sites" number={21}>
                   Third-party websites and integrations
                 </SectionHeading>
                 <p>
                   Our site may link to third-party sites and profiles (including Upwork, LinkedIn, GitHub,
-                  Instagram, and Google Maps). Those services have their own privacy policies. We are not responsible
-                  for their content or practices.
+                  Instagram, Google Maps, and Cal.com when you book a call on our site). Those services have their own
+                  privacy policies. We are not responsible for their content or practices.
+                </p>
+                <p>
+                  When you book a call through our embedded scheduler,{' '}
+                  <a
+                    href="https://cal.com/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline"
+                  >
+                    Cal.com
+                  </a>{' '}
+                  processes your name, email, and chosen time slot to create the appointment. Cal.com is configured by
+                  Orchestrix Labs to sync with our Google Calendar; we do not embed Google sign-in on this website for
+                  booking.
                 </p>
               </section>
 
               <section className="space-y-4" aria-labelledby="updates">
-                <SectionHeading id="updates" number={21}>
+                <SectionHeading id="updates" number={22}>
                   Policy updates
                 </SectionHeading>
                 <p>
@@ -593,7 +699,7 @@ export default function PrivacyPolicy() {
               </section>
 
               <section className="space-y-4" aria-labelledby="contact-requests">
-                <SectionHeading id="contact-requests" number={22}>
+                <SectionHeading id="contact-requests" number={23}>
                   Privacy-related contact requests
                 </SectionHeading>
                 <p>
@@ -601,24 +707,24 @@ export default function PrivacyPolicy() {
                   contact:
                 </p>
                 <p>
-                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                  <a href={`mailto:${SITE.privacyEmail}`} className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                     {SITE.privacyEmail}
                   </a>
                 </p>
                 <p>
                   General project enquiries can continue to use{' '}
-                  <Link to="/contact" className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                  <Link to="/contact" className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                     our contact form
                   </Link>{' '}
                   or{' '}
-                  <a href={`mailto:${SITE.email}`} className="text-cyan-300 hover:text-white underline-offset-2 hover:underline">
+                  <a href={`mailto:${SITE.email}`} className="text-cyan-hover hover:text-navy-primary underline-offset-2 hover:underline">
                     {SITE.email}
                   </a>
                   .
                 </p>
               </section>
 
-              <p className="border-t border-white/[0.06] pt-8 text-sm text-slate-500">
+              <p className="border-t border-border pt-8 text-sm text-navy-muted">
                 This page is provided for transparency and Meta lead-generation use. It is not legal advice. Formal
                 compliance assessment for specific jurisdictions should be completed with qualified counsel before
                 relying on any compliance representation.
