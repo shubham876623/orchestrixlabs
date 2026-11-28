@@ -1,66 +1,66 @@
 {
   "version": 1,
   "host": "orchestrixlabs.com",
-  "updatedAt": "2026-11-24T10:03:48.938Z",
+  "updatedAt": "2026-11-28T12:19:33.096Z",
   "lastResponse": {
     "status": 200,
-    "at": "2026-11-24T10:03:48.938Z",
+    "at": "2026-11-28T12:19:33.096Z",
     "count": 18
   },
   "entries": {
     "https://orchestrixlabs.com/": {
-      "fingerprint": "9d4bd0c17f4c39dd42b5965e9b8d3f3a6f542cde335eb468f6976208cc418f15"
+      "fingerprint": "e041a0cb17cfca17e1c2a92c31b12e8e0363c6759ef6fbbd75e7f4ea697372ec"
     },
     "https://orchestrixlabs.com/services": {
-      "fingerprint": "96709ce4bb9e262c506b95c5b737137af6064b4e80c1a9f9add3b4778e42373f"
+      "fingerprint": "a20cc3bb385e85dd81bf203117ab6b58ff2fef4c4a585ed053648e0ccf24349c"
     },
     "https://orchestrixlabs.com/portfolio": {
-      "fingerprint": "1032165f2a197c9a803f5b4b47fd3519962cc3072a96b59b9b9433d88abe3cf3"
+      "fingerprint": "70c4ad2b0d7221a43872a3d8576563fc912a3cb214d9b186477b845834c499c0"
     },
     "https://orchestrixlabs.com/work-history": {
-      "fingerprint": "41849e5fd9096f125c1ff790ffd3a2ab63ccfe946be38643e04187f10b6e28a7"
+      "fingerprint": "8b66f1f77aa6f94f62b9f0efb7e1f25084e36893245ce66bd0be0796f6db331c"
     },
     "https://orchestrixlabs.com/portfolio/ai-estimating-field-ops": {
-      "fingerprint": "9f7df4f2882aa63d48125f20052fde67b21f4b4c8f3822b5e1978d0aa94c589b"
+      "fingerprint": "c8c74d47a9e25891e9a6960a2882e9e056e3f122e7dffa3c230bd507c8c12ab9"
     },
     "https://orchestrixlabs.com/portfolio/restaurant-voice-ordering": {
-      "fingerprint": "1dc5ab0f61114af256a59e2a784f1b1f995c7a53e6524105279806de15103ed8"
+      "fingerprint": "55d8f46fbd839f1647d7e5b08eac30ce0344d458cba5d5728d5f8e1f82c43a12"
     },
     "https://orchestrixlabs.com/portfolio/hubspot-voice-lead-qualification": {
-      "fingerprint": "c42c359d7934cf10d91575c90c75d60a15e5bbe65dc0fcd728a4ae18b45794fa"
+      "fingerprint": "ff7ccce136ea98c6e886ef12a25abc20707cb9828bcbbdefbf9070aaf05bdc6b"
     },
     "https://orchestrixlabs.com/portfolio/twilio-outbound-call-center": {
-      "fingerprint": "f40633d01e2b2299b7c74f57c3b4f6c08c89f215353af0aa5a791fb82f501c19"
+      "fingerprint": "25920afd38f9a09cb6da2648eafa1e1f16f2ebb4d8e163c1b0b5084a2ca30e12"
     },
     "https://orchestrixlabs.com/portfolio/bilingual-hr-ai-assistant": {
-      "fingerprint": "504a83c33b7d49136753ffef01c0fa933cd6d5639d0d7cd20bf473d68d9ce9f8"
+      "fingerprint": "9d1faf8f0948aa434c248f1b44ad90289f23e16e80242a1d344a77a2a5d53e4b"
     },
     "https://orchestrixlabs.com/portfolio/django-ecommerce-data-pipeline": {
-      "fingerprint": "dfc5e17da787cbafeaea9fe73c91142754c826fd8e8976dc6a4c57c86a627038"
+      "fingerprint": "c6845b30af57e8d9b6ebc10da4989fda95c94b31b45be0c5fff37f501efa61d5"
     },
     "https://orchestrixlabs.com/portfolio/legacy-desktop-to-flask": {
-      "fingerprint": "b4d8235c733978b16e95260a1e70b42ae657cdcf0caea3c1d94bda13c98d9120"
+      "fingerprint": "4f5211efdc479a64aa7bae7ed9a19ab054472bdb0c79bdfb53b193074c2982d9"
     },
     "https://orchestrixlabs.com/portfolio/ml-background-removal": {
-      "fingerprint": "4be3586673aeb9b9058b330d9222df88b0caf84bc3c66e67a652c5fa97fc2b83"
+      "fingerprint": "8a4679b111284017512cf17ed2550f7594d96cb72fbf25b0445663e3d4c173ff"
     },
     "https://orchestrixlabs.com/portfolio/healthcare-ops-sales-demo": {
-      "fingerprint": "30995c2fc653bb0d791c2fbdbc8eb6c716efcee587b2458e4ee0e7ee4e332f82"
+      "fingerprint": "67b8af23b68dcfcdf7b0c96d77c46d555d39beff0e9469fa6cd6720ee9ef8511"
     },
     "https://orchestrixlabs.com/portfolio/retail-flooring-automation-suite": {
-      "fingerprint": "ac70c10f93934adf11f67d34efef017e42650e03d8c592259b7f5ec26c5ca897"
+      "fingerprint": "97c85f824f235d890bc05b9b2f6b56d6d57eb0ea8c4dd45ae410ddc6a568488e"
     },
     "https://orchestrixlabs.com/about": {
-      "fingerprint": "3ef74c54fd3b397209a0e46f00923b7eecfd7bcfa186dc377e509344a34813fe"
+      "fingerprint": "f742a3840aecb0a6fc40c4c41527ef7f1c3477feb987512efd9218cb6510a206"
     },
     "https://orchestrixlabs.com/reviews": {
-      "fingerprint": "cd9a3278abf15ecf204b0f368d704e823d7d11919876cd008413c2e14caceffd"
+      "fingerprint": "2b394a7ae3ca57d997dd06eed791b0fa835efdde1bcefa4c88c3ecb4ee024adb"
     },
     "https://orchestrixlabs.com/contact": {
-      "fingerprint": "f7722ad86324b6393b9e6a82543526c4d6aeca839389ba2aad5c717d5f1958f3"
+      "fingerprint": "c21d7442de699e36bc32ffa0c063964d88cca7232b5f30bf50c7592eb23c5060"
     },
     "https://orchestrixlabs.com/privacy-policy": {
-      "fingerprint": "e5eb60fbe7ba36d2cf0b121ef43f26cabe904fa9863ea2e0c09ff842e1abdd74"
+      "fingerprint": "5a38f71857e71bc5682ad3787ec5be4b2dfa279d8dd612e50d8e49ea1ed5dc3c"
     }
   }
 }
