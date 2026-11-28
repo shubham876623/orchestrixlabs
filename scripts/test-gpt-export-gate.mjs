@@ -6,6 +6,7 @@ import { readFileSync, existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { spawnSync } from 'node:child_process'
+import { privateList } from './lib/privateDenylist.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..')
@@ -46,13 +47,10 @@ const blob = [
 ].join('\n')
 
 const forbidden = [
-  'Hunter Jonasen',
-  'All Cleared Pty',
-  'contracts.csv',
+  ...privateList('test-gpt-export-gate#1'),
   'original_record',
   'hourly_rate',
-  'FieldForge Partners',
-  'Choices Flooring',
+  ...privateList('test-gpt-export-gate#2'),
 ]
 for (const n of forbidden) {
   assert(`GPT export excludes confidential marker: ${n}`, !blob.includes(n))

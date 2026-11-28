@@ -11,6 +11,7 @@ import { mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { APPROVED_PUBLIC_PROJECTS } from '../src/data/portfolioApprovedProjects.js'
+import { privateList } from './lib/privateDenylist.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const knowledge = join(__dirname, '..', '..', 'portfolio-knowledge')
@@ -19,16 +20,7 @@ const reviewsDir = join(outRoot, 'approval-reviews')
 const profilesDir = join(outRoot, 'gpt-profiles')
 
 const FORBIDDEN_SUBSTRINGS = [
-  'Hunter Jonasen',
-  'All Cleared Pty',
-  'FieldForge Partners',
-  'Choices Flooring',
-  'Hessah',
-  'Leonidas',
-  'Mitchell Pollock',
-  'Matify',
-  'ExecConnect',
-  'contracts.csv',
+  ...privateList('build-phase7-approval-packs#1'),
   'hourly_rate',
   'total_charges',
 ]

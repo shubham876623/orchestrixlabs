@@ -2,27 +2,10 @@ import { writeFileSync } from 'node:fs'
 import { EXPANDED_PORTFOLIO_CARDS } from '../src/data/portfolioExpandedCards.js'
 import { DRAFT_ONLY_PROJECTS } from '../src/data/portfolioDraftCatalog.js'
 import { APPROVED_PUBLIC_PROJECTS } from '../src/data/portfolioApprovedProjects.js'
+import { privatePatternPairs, privateRegex } from './lib/privateDenylist.mjs'
 
 const CONFIDENTIAL = [
-  [/Choices\s*Flooring/i, 'Choices Flooring'],
-  [/iFork/i, 'iFork'],
-  [/Matify/i, 'Matify'],
-  [/Hunter\s*Jonasen/i, 'Hunter Jonasen'],
-  [/All\s*Cleared\s*Pty/i, 'All Cleared Pty'],
-  [/FieldForge/i, 'FieldForge'],
-  [/Hessah/i, 'Hessah'],
-  [/Leonidas/i, 'Leonidas'],
-  [/Mitchell\s*Pollock/i, 'Mitchell Pollock'],
-  [/Nicholas\s*Green/i, 'Nicholas Green'],
-  [/Matthew\s*Massaband/i, 'Matthew Massaband'],
-  [/ExecConnect/i, 'ExecConnect'],
-  [/Attractive\s*AI/i, 'Attractive AI'],
-  [/Kariwala/i, 'Kariwala'],
-  [/psychiatrist/i, 'psychiatrist'],
-  [/Gradio/i, 'Gradio'],
-  [/PaddleHub/i, 'PaddleHub'],
-  [/SnapScan/i, 'SnapScan'],
-  [/PayFast/i, 'PayFast'],
+  ...privatePatternPairs('audit-34-publication#1'),
 ]
 
 const draftBySlug = new Map(DRAFT_ONLY_PROJECTS.map((p) => [p.slug, p]))
@@ -96,10 +79,10 @@ function auditCard(c, n) {
   }
 
   // Sensitive domain retitle
-  if (c.slug === 'private-document-rag-assistant' && /psychiatrist|clinical decision/i.test(publicSurface)) {
+  if (c.slug === 'private-document-rag-assistant' && privateRegex('audit-34-publication#2').test(publicSurface)) {
     issues.push('SENSITIVE_CLINICAL_WORDING')
   }
-  if (/psychiatrist|execconnect|matify/i.test(c.slug || '')) {
+  if (privateRegex('audit-34-publication#3').test(c.slug || '')) {
     issues.push('SENSITIVE_OR_BRAND_SLUG')
   }
 

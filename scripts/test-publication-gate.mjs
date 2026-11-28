@@ -24,6 +24,7 @@ import { EXPANDED_PORTFOLIO_CARDS } from '../src/data/portfolioExpandedCards.js'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
+import { privateList } from './lib/privateDenylist.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..')
@@ -43,7 +44,7 @@ assert(
   APPROVED_PUBLIC_PROJECTS.every((p) => p.publicationApproved === true)
 )
 assert(
-  'Factory excluded from approved module',
+  ...privateList('test-publication-gate#1'),
   !APPROVED_PUBLIC_PROJECTS.some((p) => p.slug === 'factory-automation-suite')
 )
 assert('Draft module still has nine case-study modules', DRAFT_ONLY_PROJECTS.length === 9, `n=${DRAFT_ONLY_PROJECTS.length}`)
@@ -140,18 +141,10 @@ assert(
 )
 
 const confidential = [
-  'Hunter Jonasen',
-  'All Cleared Pty',
+  ...privateList('test-publication-gate#2'),
   'Portfolio_Knowledge',
   '00_Company_Management',
-  'contracts.csv',
-  'Hessah',
-  'Leonidas',
-  'Mitchell Pollock',
-  'FieldForge Partners',
-  'Choices Flooring',
-  'Matify',
-  'ExecConnect',
+  ...privateList('test-publication-gate#3'),
 ]
 const approvedText = readFileSync(join(root, 'src/data/portfolioApprovedProjects.js'), 'utf8')
 for (const needle of confidential) {
@@ -163,7 +156,7 @@ for (const needle of confidential) {
   assert('Expanded catalog still 35 families', EXPANDED_PORTFOLIO_CARDS.length === 35)
   assert('Factory remains unpublished in expanded cards', factoryCard?.publicationApproved !== true)
   assert(
-    '34 expanded cards publicationApproved',
+    ...privateList('test-publication-gate#4'),
     EXPANDED_PORTFOLIO_CARDS.filter((c) => c.publicationApproved === true).length === 34
   )
   const cardSrc = readFileSync(join(root, 'src/components/portfolio/ProjectCard.jsx'), 'utf8')

@@ -11,9 +11,15 @@ import {
 } from 'react-icons/fi'
 
 const STORAGE_KEY = 'orchestrix_dash_secret'
+// The dashboard secret is a master credential: keep it only for this tab (sessionStorage) and
+// wipe the copy older builds left in localStorage, where it survived browser restarts.
+const secretStore = typeof window !== 'undefined' ? window.sessionStorage : null
+if (typeof window !== 'undefined') {
+  try { window.localStorage.removeItem(STORAGE_KEY) } catch { /* storage unavailable */ }
+}
 
 function authHeader() {
-  const s = localStorage.getItem(STORAGE_KEY) || ''
+  const s = secretStore?.getItem(STORAGE_KEY) || ''
   return { Authorization: `Bearer ${s}` }
 }
 
@@ -634,7 +640,7 @@ function LoginScreen({ onLogin }) {
         setError('API did not return dashboard data. The site proxy may be misconfigured — try again after redeploy.')
         return
       }
-      localStorage.setItem(STORAGE_KEY, secret)
+      secretStore?.setItem(STORAGE_KEY, secret)
       onLogin()
     } catch (err) {
       if (!err?.response) {
@@ -1456,7 +1462,7 @@ const PAGES = [
 ]
 
 export default function Dashboard() {
-  const [authed, setAuthed] = useState(() => !!localStorage.getItem(STORAGE_KEY))
+  const [authed, setAuthed] = useState(() => !!secretStore?.getItem(STORAGE_KEY))
   const [stats, setStats] = useState(null)
   const [contacts, setContacts] = useState([])
   const [page, setPage] = useState('overview')
@@ -1466,7 +1472,7 @@ export default function Dashboard() {
   const [loadError, setLoadError] = useState('')
 
   const forceLogout = useCallback(() => {
-    localStorage.removeItem(STORAGE_KEY)
+    secretStore?.removeItem(STORAGE_KEY)
     setAuthed(false)
     setStats(null)
     setContacts([])

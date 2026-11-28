@@ -12,6 +12,7 @@ import {
   HOMEPAGE_FEATURED_SLUGS,
 } from '../src/data/publishedProjects.js'
 import { APPROVED_PUBLIC_PROJECTS } from '../src/data/portfolioApprovedProjects.js'
+import { privateList } from './lib/privateDenylist.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..')
@@ -61,10 +62,9 @@ const marketingBlob = [
   readFileSync(join(root, 'src/pages/Portfolio.jsx'), 'utf8'),
 ].join('\n')
 for (const bad of [
-  'Hunter Jonasen',
-  'All Cleared Pty',
+  ...privateList('test-phase81-release-audit#1'),
   'gptExportApproved\":true',
-  'contracts.csv',
+  ...privateList('test-phase81-release-audit#2'),
   'original_record',
   'hourly_rate',
 ]) {
@@ -117,8 +117,7 @@ assert('Bundle JS under 2.5MB uncompressed sum', totalJs < 2.5 * 1024 * 1024, `b
 warn('Bundle CSS under 400KB uncompressed sum', totalCss < 400 * 1024, `bytes=${totalCss}`)
 
 for (const bad of [
-  'Hunter Jonasen',
-  'All Cleared Pty',
+  ...privateList('test-phase81-release-audit#3'),
   'portfolioDraftCatalog',
   'DRAFT_ONLY_PROJECTS',
   'Factory Operations Automation Suite',

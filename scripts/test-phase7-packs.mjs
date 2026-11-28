@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url'
 import { spawnSync } from 'node:child_process'
 import { APPROVED_PUBLIC_PROJECTS } from '../src/data/portfolioApprovedProjects.js'
 import { getIndexableCaseStudySlugs } from '../src/data/publishedProjects.js'
+import { privateList } from './lib/privateDenylist.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..')
@@ -59,13 +60,10 @@ const blob = [
 ].join('\n')
 
 for (const bad of [
-  'Hunter Jonasen',
-  'All Cleared Pty',
-  'FieldForge Partners',
-  'Choices Flooring',
+  ...privateList('test-phase7-packs#1'),
   'hourly_rate',
   'total_charges',
-  'contracts.csv',
+  ...privateList('test-phase7-packs#2'),
 ]) {
   assert(`Phase 7 packs exclude: ${bad}`, !blob.includes(bad))
 }
