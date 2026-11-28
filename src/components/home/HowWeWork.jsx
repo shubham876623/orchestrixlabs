@@ -37,7 +37,7 @@ export default function HowWeWork() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {steps.map((step, index) => (
+          {steps.map((step) => (
             <div
               key={step.number}
               className="card-flat p-6 hover:border-cyan-accent transition-all duration-200"
@@ -63,9 +63,6 @@ export default function HowWeWork() {
               </p>
 
               {/* Connector line to next step (except last) */}
-              {index < steps.length - 1 && index % 2 === 0 && (
-                <div className="hidden md:block absolute top-1/2 right-0 w-6 border-t-2 border-dashed border-border" aria-hidden="true"></div>
-              )}
             </div>
           ))}
         </div>
