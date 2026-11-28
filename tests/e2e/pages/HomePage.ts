@@ -13,19 +13,19 @@ export class HomePage {
   readonly ctaButton: Locator
   readonly workflowSteps: Locator
   readonly caseStudyCards: Locator
+  readonly navDrawer: Locator
 
   constructor(page: Page) {
     this.page = page
-    
-    // Navigation - target nav element specifically
-    const nav = page.locator('nav').first()
+
     this.logo = page.locator('a[href="/"]').first()
-    this.navHome = nav.locator('a[href="/"]', { hasText: 'Home' })
-    this.navServices = nav.locator('a[href="/services"]').first()
-    this.navPortfolio = nav.locator('a[href="/portfolio"]').first()
-    this.navAbout = nav.locator('a[href="/about"]').first()
-    this.navContact = nav.locator('a[href="/contact"]').first()
-    this.bookCallButton = page.locator('header a', { hasText: 'Book a call' }).first()
+    this.navDrawer = page.getByRole('navigation', { name: 'Mobile' })
+    this.navHome = page.locator('header a[href="/"]', { hasText: /^Home$/ })
+    this.navServices = page.locator('header a[href="/services"]', { hasText: 'Services' })
+    this.navPortfolio = page.locator('header a[href="/portfolio"]', { hasText: 'Portfolio' })
+    this.navAbout = page.locator('header a[href="/about"]', { hasText: 'About' })
+    this.navContact = page.locator('header a[href="/contact"]', { hasText: 'Contact' })
+    this.bookCallButton = page.locator('header a[href="/book"]')
     
     // Hero Section
     this.heroHeading = page.locator('h1').first()
@@ -41,26 +41,44 @@ export class HomePage {
     await this.page.waitForLoadState('networkidle')
   }
 
+  /** Desktop nav is hidden below `md`; open the drawer so link locators work on mobile projects. */
+  async openMobileNavIfNeeded() {
+    const width = this.page.viewportSize()?.width ?? 1280
+    if (width >= 768) return
+    await this.page.getByRole('button', { name: /open menu/i }).click()
+    await this.navDrawer.getByRole('link', { name: 'Services' }).waitFor({ state: 'visible' })
+  }
+
+  private async clickNavLink(name: string, href: string) {
+    await this.openMobileNavIfNeeded()
+    const width = this.page.viewportSize()?.width ?? 1280
+    if (width < 768) {
+      await this.navDrawer.getByRole('link', { name }).click()
+      return
+    }
+    await this.page.locator(`header nav a[href="${href}"]`, { hasText: name }).click()
+  }
+
   async navigateToServices() {
-    await this.navServices.click()
+    await this.clickNavLink('Services', '/services')
     await this.page.waitForURL('**/services')
     await this.page.waitForLoadState('networkidle')
   }
 
   async navigateToPortfolio() {
-    await this.navPortfolio.click()
+    await this.clickNavLink('Portfolio', '/portfolio')
     await this.page.waitForURL('**/portfolio')
     await this.page.waitForLoadState('networkidle')
   }
 
   async navigateToAbout() {
-    await this.navAbout.click()
+    await this.clickNavLink('About', '/about')
     await this.page.waitForURL('**/about')
     await this.page.waitForLoadState('networkidle')
   }
 
   async navigateToContact() {
-    await this.navContact.click()
+    await this.clickNavLink('Contact', '/contact')
     await this.page.waitForURL('**/contact')
     await this.page.waitForLoadState('networkidle')
   }

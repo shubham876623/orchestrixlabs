@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { FiGithub, FiLinkedin, FiMail, FiInstagram, FiMapPin } from 'react-icons/fi'
 import { SiUpwork } from 'react-icons/si'
-import { SITE, SOCIAL } from '../lib/site'
+import { SITE, SOCIAL, mapsOpenUrl } from '../lib/site'
 import { openPrivacyPreferences } from '../lib/analyticsConsent'
 import BrandLogo from './BrandLogo'
 
@@ -47,10 +47,15 @@ export default function Footer() {
               <a href={`mailto:${SITE.email}`} className="text-navy-secondary hover:text-cyan-accent text-sm transition-colors block">
                 {SITE.email}
               </a>
-              <p className="flex items-start gap-2 text-navy-muted text-xs leading-relaxed max-w-sm">
+              <a
+                href={mapsOpenUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-2 text-navy-muted hover:text-cyan-accent text-xs leading-relaxed max-w-sm transition-colors"
+              >
                 <FiMapPin className="flex-shrink-0 mt-0.5" size={12} aria-hidden="true" focusable="false" />
                 {SITE.address.formatted}
-              </p>
+              </a>
             </div>
             <div className="flex items-center gap-3 mt-6">
               {socials.map(({ icon: Icon, href, label }) => (

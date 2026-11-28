@@ -37,7 +37,74 @@ export const SOCIAL = {
   linkedin: 'https://linkedin.com/company/orchestrix-labs',
   github: 'https://github.com/orchestrixlabs',
   upwork: 'https://www.upwork.com/agencies/1464061503601672192/',
-  instagram: 'https://www.instagram.com/orchestrix_labs__ai_dev_agency',
+  instagram: 'https://www.instagram.com/orchestrixlabs',
+  instagramHandle: '@orchestrixlabs',
+}
+
+/** Open Google Maps in a new tab (search by formatted address). */
+export function mapsOpenUrl(addressFormatted = SITE.address.formatted) {
+  return `https://maps.google.com/?q=${encodeURIComponent(addressFormatted)}`
+}
+
+/** Lazy iframe embed — no API key required. */
+export function mapsEmbedUrl(addressFormatted = SITE.address.formatted) {
+  const q = encodeURIComponent(addressFormatted)
+  return `https://maps.google.com/maps?q=${q}&output=embed`
+}
+
+export const BOOKING = {
+  durationLabel: '30-min call',
+  eventLabel: 'Discovery call',
+}
+
+export const SECURE_BOOKING = {
+  durationLabel: '15-min private call',
+  eventLabel: 'Confidential meeting',
+}
+
+/** Public Cal.com event URL from Vite env; empty when unset. */
+export function getCalComBookingUrl() {
+  const raw =
+    typeof import.meta !== 'undefined' && import.meta.env
+      ? import.meta.env.VITE_CALCOM_BOOKING_URL
+      : undefined
+  return typeof raw === 'string' && raw.trim() ? raw.trim() : ''
+}
+
+export function hasCalComBooking() {
+  return getCalComBookingUrl().length > 0
+}
+
+/** Hidden / confidential Cal.com event (not listed in nav). */
+export function getCalComSecureBookingUrl() {
+  const raw =
+    typeof import.meta !== 'undefined' && import.meta.env
+      ? import.meta.env.VITE_CALCOM_SECURE_BOOKING_URL
+      : undefined
+  return typeof raw === 'string' && raw.trim() ? raw.trim() : ''
+}
+
+export function hasCalComSecureBooking() {
+  return getCalComSecureBookingUrl().length > 0
+}
+
+/** iframe-friendly Cal.com URL. */
+export function calComEmbedUrl(bookingUrl = getCalComBookingUrl()) {
+  if (!bookingUrl) return ''
+  try {
+    const u = new URL(bookingUrl)
+    u.searchParams.set('embed', 'true')
+    return u.toString()
+  } catch {
+    return ''
+  }
+}
+
+export const BOOKING_PATH = '/book'
+
+/** Primary “book a call” route — dedicated scheduling page when Cal is configured. */
+export function contactBookHref() {
+  return hasCalComBooking() ? BOOKING_PATH : '/contact'
 }
 
 /**
@@ -95,5 +162,6 @@ export const ROUTES = [
   { path: '/about', title: 'About', changefreq: 'monthly', priority: '0.8' },
   { path: '/reviews', title: 'Reviews', changefreq: 'monthly', priority: '0.8' },
   { path: '/contact', title: 'Contact', changefreq: 'monthly', priority: '0.9' },
+  { path: '/book', title: 'Book a call', changefreq: 'monthly', priority: '0.85' },
   { path: '/privacy-policy', title: 'Privacy Policy', changefreq: 'yearly', priority: '0.5' },
 ]

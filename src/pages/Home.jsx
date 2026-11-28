@@ -1,5 +1,6 @@
 ﻿import { Link } from 'react-router-dom'
 import { FiArrowRight, FiStar } from 'react-icons/fi'
+import BookCallLink from '../components/BookCallLink'
 import SEOHead from '../components/SEOHead'
 import FAQSection from '../components/FAQSection'
 import ConsultationCTA from '../components/ConsultationCTA'
@@ -23,8 +24,8 @@ function Hero() {
   return (
     <section className="relative min-h-[85vh] flex flex-col justify-center border-b border-border pt-24 pb-16 sm:pt-28 sm:pb-20">
       <div className="container">
-        {/* Logo - shown once on first screen */}
-        <div className="mb-10">
+        {/* Wordmark on first screen — hidden on small viewports (nav already shows mark) */}
+        <div className="mb-10 hidden sm:block">
           <img
             src="/brand/logo-wordmark-dark.svg"
             alt="Orchestrix Labs"
@@ -47,9 +48,7 @@ function Hero() {
 
         {/* Single CTA */}
         <div className="mt-10">
-          <Link to="/contact" className="btn-primary">
-            Book a 30-min call
-          </Link>
+          <BookCallLink />
         </div>
 
         {/* Production pipeline - shows shipping process visually */}
@@ -134,9 +133,7 @@ function FeaturedWork() {
             <p className="text-xl font-medium text-navy-primary mb-6">
               Featured case studies coming soon
             </p>
-            <Link to="/contact" className="btn-primary">
-              Book a 30-min call
-            </Link>
+            <BookCallLink />
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

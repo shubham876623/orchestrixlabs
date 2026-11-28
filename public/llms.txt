@@ -51,7 +51,7 @@ Python, Django, FastAPI, Flask, React, Vite, Tailwind CSS, OpenAI GPT-4, LangCha
 - LinkedIn: https://linkedin.com/company/orchestrix-labs
 - GitHub: https://github.com/orchestrixlabs
 - Upwork Agency: https://www.upwork.com/agencies/1464061503601672192/
-- Instagram: https://www.instagram.com/orchestrix_labs__ai_dev_agency
+- Instagram: https://www.instagram.com/orchestrixlabs
 
 ## Contact
 

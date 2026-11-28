@@ -17,6 +17,7 @@ const PortfolioCaseStudy = lazy(() => import('./pages/PortfolioCaseStudy'))
 const PortfolioWorkHistory = lazy(() => import('./pages/PortfolioWorkHistory'))
 const About = lazy(() => import('./pages/About'))
 const Contact = lazy(() => import('./pages/Contact'))
+const Book = lazy(() => import('./pages/Book'))
 const Reviews = lazy(() => import('./pages/Reviews'))
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
@@ -61,6 +62,7 @@ function AppInner() {
             <Route path="/work-history" element={<PortfolioWorkHistory />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/book" element={<Book />} />
             <Route path="/reviews" element={<Reviews />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/dashboard" element={<Dashboard />} />

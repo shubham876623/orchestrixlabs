@@ -28,7 +28,10 @@ export default defineConfig({
     },
     {
       name: 'mobile',
-      use: { ...devices['iPhone 12'] },
+      use: {
+        ...devices['Pixel 5'],
+        defaultBrowserType: 'chromium',
+      },
     },
   ],
   
@@ -37,5 +40,13 @@ export default defineConfig({
     url: 'http://localhost:5174',
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
+    env: {
+      VITE_CALCOM_BOOKING_URL:
+        process.env.VITE_CALCOM_BOOKING_URL ||
+        'https://cal.com/shubham-saini-r9dscz/30min',
+      VITE_CALCOM_SECURE_BOOKING_URL:
+        process.env.VITE_CALCOM_SECURE_BOOKING_URL ||
+        'https://cal.com/shubham-saini-r9dscz/secret',
+    },
   },
 })

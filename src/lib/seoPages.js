@@ -66,6 +66,14 @@ export const PUBLIC_SEO_PAGES = [
       'Read verified Upwork feedback about working with Orchestrix Labs on AI, automation, and custom software engagements.',
   },
   {
+    path: '/book',
+    title: 'Book a discovery call',
+    description:
+      'Schedule a discovery call with Orchestrix Labs for voice AI, automation, or custom software. Times shown in your local timezone.',
+    h1: 'Book a 30-min call',
+    lead: 'Pick a time that works for you. We meet on video to understand your stack, constraints, and what needs to ship first.',
+  },
+  {
     path: '/contact',
     title: 'Request Consultation',
     description:

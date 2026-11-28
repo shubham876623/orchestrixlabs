@@ -40,15 +40,15 @@ export default function ConsultationCTA({
   return (
     <aside
       className={[
-        'border border-line bg-panel',
+        'border border-border bg-paper-subtle',
         compact ? 'p-5 sm:p-6' : 'p-6 sm:p-8',
         className,
       ].join(' ')}
     >
-      <h2 className="font-display text-xl font-semibold tracking-tight text-slate-900 dark:text-navy-primary sm:text-2xl">
+      <h2 className="text-navy-primary font-bold text-xl sm:text-2xl">
         {config.title}
       </h2>
-      <p className="mt-3 max-w-xl text-sm leading-relaxed text-slate-600 dark:text-slate-300 sm:text-base">
+      <p className="mt-3 max-w-xl text-sm leading-relaxed text-navy-body sm:text-base">
         {config.body}
       </p>
       <Link to={to} className="btn-primary mt-5">

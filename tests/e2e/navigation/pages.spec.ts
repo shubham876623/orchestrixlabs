@@ -39,12 +39,25 @@ test.describe('Page Navigation', () => {
     await expect(page.locator('h1')).toBeVisible()
   })
 
-  test('should have all navigation links visible', async () => {
-    await expect(homePage.navHome).toBeVisible()
-    await expect(homePage.navServices).toBeVisible()
-    await expect(homePage.navPortfolio).toBeVisible()
-    await expect(homePage.navAbout).toBeVisible()
-    await expect(homePage.navContact).toBeVisible()
-    await expect(homePage.bookCallButton).toBeVisible()
+  test('should have all navigation links visible', async ({ page }, testInfo) => {
+  const isMobile = testInfo.project.name === 'mobile'
+    if (isMobile) {
+      await homePage.openMobileNavIfNeeded()
+      await expect(homePage.navDrawer.getByRole('link', { name: 'Home' })).toBeVisible()
+      await expect(homePage.navDrawer.getByRole('link', { name: 'Services' })).toBeVisible()
+      await expect(homePage.navDrawer.getByRole('link', { name: 'Portfolio' })).toBeVisible()
+      await expect(homePage.navDrawer.getByRole('link', { name: 'About' })).toBeVisible()
+      await expect(homePage.navDrawer.getByRole('link', { name: 'Contact' })).toBeVisible()
+    } else {
+      await expect(homePage.navServices.first()).toBeVisible()
+      await expect(homePage.navPortfolio.first()).toBeVisible()
+      await expect(homePage.navAbout.first()).toBeVisible()
+      await expect(homePage.navContact.first()).toBeVisible()
+    }
+    if (isMobile) {
+      await expect(homePage.ctaButton).toBeVisible()
+    } else {
+      await expect(homePage.bookCallButton.filter({ hasText: 'Book a call' })).toBeVisible()
+    }
   })
 })

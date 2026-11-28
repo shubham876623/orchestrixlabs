@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { HiMenuAlt3, HiX } from 'react-icons/hi'
 import BrandLogo from './BrandLogo'
+import BookCallLink from './BookCallLink'
 
 const navLinks = [
   { name: 'Home', path: '/' },
@@ -68,9 +69,7 @@ export default function Navbar() {
 
         {/* CTA */}
         <div className="hidden md:block">
-          <Link to="/contact" className="btn-primary text-sm">
-            Book a call
-          </Link>
+          <BookCallLink className="btn-primary text-sm">Book a call</BookCallLink>
         </div>
 
         {/* Mobile Menu Button */}
@@ -114,9 +113,7 @@ export default function Navbar() {
                   </Link>
                 )
               })}
-              <Link to="/contact" className="btn-primary mt-2">
-                Book a call
-              </Link>
+              <BookCallLink className="btn-primary mt-2">Book a call</BookCallLink>
             </nav>
           </motion.div>
         )}

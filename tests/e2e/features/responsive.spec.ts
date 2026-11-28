@@ -28,7 +28,7 @@ test.describe('Responsive Design', () => {
     await homePage.goto()
     
     await expect(homePage.heroHeading).toBeVisible()
-    await expect(homePage.bookCallButton).toBeVisible()
+    await expect(homePage.bookCallButton.filter({ hasText: 'Book a call' })).toBeVisible()
     
     // Take tablet screenshot
     await page.screenshot({ 

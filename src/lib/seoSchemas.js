@@ -37,7 +37,9 @@ export function organizationSchema() {
         url: `${SITE.url}/contact`,
       },
     ],
-    sameAs: Object.values(SOCIAL),
+    sameAs: Object.entries(SOCIAL)
+      .filter(([key]) => key !== 'instagramHandle')
+      .map(([, url]) => url),
     founder: {
       '@type': 'Person',
       name: SITE.founder,
@@ -83,7 +85,9 @@ export function professionalServiceSchema() {
       ratingCount: '133',
       reviewCount: '133',
     },
-    sameAs: Object.values(SOCIAL),
+    sameAs: Object.entries(SOCIAL)
+      .filter(([key]) => key !== 'instagramHandle')
+      .map(([, url]) => url),
   }
 }
 

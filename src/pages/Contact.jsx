@@ -9,7 +9,9 @@ import {
 import { SiUpwork } from 'react-icons/si'
 import api from '../lib/axios'
 import SEOHead from '../components/SEOHead'
-import { SITE, SOCIAL } from '../lib/site'
+import { Link } from 'react-router-dom'
+import ContactFindUsSection from '../components/ContactFindUsSection'
+import { SITE, SOCIAL, BOOKING_PATH, hasCalComBooking, mapsOpenUrl } from '../lib/site'
 import { getSeoPage } from '../lib/seoPages'
 import { getPublishedProjectBySlug } from '../data/publishedProjects'
 
@@ -40,13 +42,13 @@ const services = [
 
 const contactInfo = [
   { icon: FiMail, label: 'Email', value: SITE.email, href: `mailto:${SITE.email}` },
-  { icon: FiMapPin, label: 'Office', value: SITE.address.formatted, href: `https://maps.google.com/?q=${encodeURIComponent(SITE.address.formatted)}` },
+  { icon: FiMapPin, label: 'Office', value: SITE.address.formatted, href: mapsOpenUrl() },
   { icon: FiClock, label: 'Business Hours', value: `${SITE.businessHours} (${SITE.timezone})`, href: null },
   { icon: FiGlobe, label: 'Serving', value: 'Clients worldwide — remote-first agency', href: null },
   { icon: FiLinkedin, label: 'LinkedIn', value: 'linkedin.com/company/orchestrix-labs', href: SOCIAL.linkedin },
   { icon: SiUpwork, label: 'Upwork', value: 'Top Rated Agency — 100% Job Success', href: SOCIAL.upwork },
   { icon: FiGithub, label: 'GitHub', value: 'github.com/orchestrixlabs', href: SOCIAL.github },
-  { icon: FiInstagram, label: 'Instagram', value: '@orchestrix_labs__ai_dev_agency', href: SOCIAL.instagram },
+  { icon: FiInstagram, label: 'Instagram', value: SOCIAL.instagramHandle, href: SOCIAL.instagram },
 ]
 
 const initialForm = { name: '', email: '', service: '', budget: '', message: '', website: '' }
@@ -187,6 +189,11 @@ export default function Contact() {
                       {SITE.responseTime} with clear next steps.
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                      {hasCalComBooking() && (
+                        <Link to={BOOKING_PATH} className="btn-primary text-sm px-5 py-2.5">
+                          Pick a time on the calendar
+                        </Link>
+                      )}
                       <a href={`mailto:${SITE.email}`} className="btn-outline text-sm px-5 py-2.5">
                         Email {SITE.email}
                       </a>
@@ -247,9 +254,9 @@ export default function Contact() {
                         className={`${inputClass('service')} appearance-none cursor-pointer`}
                         required
                       >
-                        <option value="" className="bg-dark-900">Select a service...</option>
+                        <option value="" className="bg-paper-elevated">Select a service...</option>
                         {services.map(s => (
-                          <option key={s} value={s} className="bg-dark-900">{s}</option>
+                          <option key={s} value={s} className="bg-paper-elevated">{s}</option>
                         ))}
                       </select>
                       {errors.service && <p className="text-red-400 text-xs mt-1">{errors.service}</p>}
@@ -262,9 +269,9 @@ export default function Contact() {
                         name="budget" value={form.budget} onChange={handleChange}
                         className={`${inputClass('budget')} appearance-none cursor-pointer`}
                       >
-                        <option value="" className="bg-dark-900">Select budget range...</option>
+                        <option value="" className="bg-paper-elevated">Select budget range...</option>
                         {['Under $1,000', '$1,000 – $5,000', '$5,000 – $15,000', '$15,000+', 'Not sure yet'].map(b => (
-                          <option key={b} value={b} className="bg-dark-900">{b}</option>
+                          <option key={b} value={b} className="bg-paper-elevated">{b}</option>
                         ))}
                       </select>
                     </div>
@@ -391,6 +398,8 @@ export default function Contact() {
           </div>
         </div>
       </Section>
+
+      <ContactFindUsSection />
     </>
   )
 }
